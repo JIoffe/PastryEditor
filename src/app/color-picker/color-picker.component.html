@@ -1,0 +1,47 @@
+<div class="modal color-picker">
+    <div class="modal-content">
+        <div class="caption">Color Picker</div>
+        <table>
+            <tr>
+                <td>
+                    <app-color-slider data-mask="0xFF0000" [color]="color" (colorUpdated)="onColorUpdated($event)"></app-color-slider>
+                    <app-color-slider data-mask="0x00FF00" [color]="color" (colorUpdated)="onColorUpdated($event)"></app-color-slider>
+                    <app-color-slider data-mask="0x0000FF" [color]="color" (colorUpdated)="onColorUpdated($event)"></app-color-slider>
+                </td>
+                <td>
+                    <div>
+                        <canvas #hueSatPicker class="huesat-picker" (mousedown)="hueSaturationPicker_onMouse($event)" (mousemove)="hueSaturationPicker_onMouse($event)"></canvas>
+                        <canvas #lightnessPicker class="lightness-picker" (mousedown)="lightnessPicker_onMouse($event)" (mousemove)="lightnessPicker_onMouse($event)"></canvas>
+                    </div>
+                    <div>
+                        <table>
+                            <tr><td>Hue:</td><td><input type="text" readonly value="{{hsl[0] | number:'1.0-0'}}"/></td></tr>
+                            <tr><td>Saturation:</td><td><input type="text" readonly value="{{hsl[1] | number:'1.0-0'}}"/></td></tr>
+                            <tr><td>Lightness:</td><td><input type="text" readonly value="{{hsl[2] | number:'1.0-0'}}"/></td></tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="palette-swatch" [ngStyle]="{'backgroundColor': color.toCSS()}"></div>
+                            </td>
+                            <td>
+                                <label>Sega MD Word:<br/>
+                                <input type="text" readonly value="{{color.toSegaMDString()}}"/>
+                                </label>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <hr/>
+        <button (click)="ok_click($event)">OK</button>
+        <button (click)="cancel_click($event)">CANCEL</button>
+    </div>
+</div>

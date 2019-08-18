@@ -1,0 +1,49 @@
+/* .color-slider{
+    display: inline-block;
+    margin-right: 8px;
+} */
+.color-slider h3 {
+    margin: 0;
+    padding: 0;
+}
+.color-slider > svg{
+    width: 258px;
+    height: 80px;
+    margin-right: 8px;
+}
+.color-slider-trackbar {
+    transform: translate(8px,18px);
+}
+
+.track-bg, .track-fill {
+    width: 240px;
+    height: 4px;
+    transform: translate(0, -2px);
+}
+
+.track-fill{
+    fill: blue;
+}
+
+.track-thumb{
+    fill: blue;
+    stroke: black;
+    stroke-width: 2;
+    cursor: pointer;;
+}
+
+.color-track-preview > rect{
+    width: 30px;
+    height: 30px;
+    fill: black;
+}
+
+.color-track-preview {
+    transform: translate(8px, 38px);
+}
+.color-slider input[type="text"] {
+    display: inline-block;
+    width: 30px;
+    position: relative;
+    top: -56px;
+}

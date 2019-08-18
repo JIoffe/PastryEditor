@@ -1,0 +1,31 @@
+.pastry-grid {
+    display: grid;
+    grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    min-height: 800px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+    padding: 5px;
+}
+
+header {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+    .header {
+        background: #888;
+        border-bottom: 1px solid #000;
+    }
+
+    .header select {
+        height: calc(100% - 1px);
+        width: 100%;
+        font-size: 20px;
+        background: #AAA;
+    }

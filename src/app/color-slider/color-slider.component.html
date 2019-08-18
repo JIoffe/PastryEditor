@@ -1,0 +1,22 @@
+<div class="color-slider">
+    <h3 class="no-select">{{title}}</h3>
+    <svg (mousedown)="trackbar_onMouse($event)" (mousemove)="trackbar_onMouse($event)" #trackbar>
+        <g class="color-slider-trackbar">
+            <rect class="track-bg"/>
+            <rect class="track-fill" [ngStyle]="{'fill': fillColor.toCSS(), 'width': (intensity * 240) + 'px' }"/>
+            <ellipse class="track-thumb" [attr.cx]="intensity * 240" cy="0" rx="8" ry="16" [ngStyle]="{'fill': fillColor.toCSS() }"/>
+        </g>
+        <g class="color-track-preview">
+            <rect x="0"     [ngStyle]="{'fill': previewColors[0].toCSS()}"/>
+            <rect x="30"    [ngStyle]="{'fill': previewColors[1].toCSS()}"/>
+            <rect x="60"    [ngStyle]="{'fill': previewColors[2].toCSS()}"/>
+            <rect x="90"    [ngStyle]="{'fill': previewColors[3].toCSS()}"/>
+            <rect x="120"   [ngStyle]="{'fill': previewColors[4].toCSS()}"/>
+            <rect x="150"   [ngStyle]="{'fill': previewColors[5].toCSS()}"/>
+            <rect x="180"   [ngStyle]="{'fill': previewColors[6].toCSS()}"/>
+            <rect x="210"   [ngStyle]="{'fill': previewColors[7].toCSS()}"/>
+        </g>
+    </svg>
+    <input type="text" readonly value="{{channelValue}}"/>
+</div>
+

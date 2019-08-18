@@ -1,0 +1,24 @@
+.color-picker .palette-swatch {
+    width: 80px;
+    height: 80px;
+}
+
+.color-picker td {
+    vertical-align: top;
+}
+
+.color-picker canvas{
+    display: inline-block;
+}
+
+.color-picker .lightness-picker, .color-picker .huesat-picker{
+    height: 224px;
+    cursor: crosshair;
+}
+.color-picker .huesat-picker {
+    width: 400px;
+}
+.color-picker .lightness-picker {
+    width: 50px;
+    margin-left: 10px;
+}
