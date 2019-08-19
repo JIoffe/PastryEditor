@@ -40,6 +40,7 @@ export class Color{
         this.b = this.clampChannelToSegaMD(this.b);
     }
 
+    /* FACTORIES */
     static fromHexRGB(rgb: number){
         const r = (rgb & 0xFF0000) >> 16;
         const g = (rgb & 0x00FF00) >> 8;
@@ -55,6 +56,14 @@ export class Color{
 
     static fromColor(src: Color){
         return new Color(src.r, src.g, src.b);
+    }
+
+    static fromSegaMDWord(v: number){
+        let r = SEGA_MD_COLORRAMP[SEGA_MD_CHANNEL_POSSIBILITIES.indexOf(v & 0x000E)],
+            g = SEGA_MD_COLORRAMP[SEGA_MD_CHANNEL_POSSIBILITIES.indexOf((v & 0x00E0) >> 4)],
+            b = SEGA_MD_COLORRAMP[SEGA_MD_CHANNEL_POSSIBILITIES.indexOf((v & 0x0E00) >> 8)];
+
+        return new Color(r,g,b);
     }
     /*
         COLOR UTILITIES

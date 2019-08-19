@@ -41,6 +41,58 @@ canvas {
     border: 2px ridge;
     display: inline-block;
 }
+
+.control-group{
+    padding: 6px;
+    width: 100%;
+    height: 100%;
+}
+    .control-group .tool-status {
+        background: #DDD;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 16px;
+    }
+    .control-content {
+        border: 2px ridge;
+        box-shadow: 0 0 2px;
+        height: 100%;
+        width: 100%;
+        background: #000;
+        position: relative;
+        padding-top: 26px;
+    }
+
+    .control-content.tab-group{
+        padding-top: 0;
+    }
+
+    .control-content > .caption {
+        font-size: 16px;
+        background: #888;
+        padding: 4px;
+        width: 100%;
+        height: 26px;
+        position: absolute;
+        top: 0;
+    }
+    .control-content > .fill-over-status{
+        height: calc(100% - 16px);
+        position: relative;
+    }
+    .control-group .caption .btn-code {
+        background: #666;
+        border: none;
+        box-shadow: inset 0 0 2px;
+        float: right;
+        cursor: pointer;
+        padding: 3px 6px;
+        color: #DDD;
+        font-size: 12px;
+    }
+    
 /*
     MODALS
 */
