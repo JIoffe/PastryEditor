@@ -92,7 +92,44 @@ canvas {
         color: #DDD;
         font-size: 12px;
     }
-    
+
+/* TABS */
+
+/* TAB CONTROLS */
+.tab-group {
+    list-style: none;
+    margin: 0;
+    height: 100%;
+    padding: 0;
+    width: 100%;
+    font-family: Arial Black,Arial Bold,Gadget,sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tab-group > li {
+    float: left;
+    background: #DDD;
+    height: 100%;
+    padding: 5px 10px;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+}
+
+.tab-group:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.tab-group > li:not(:last-child) {
+    border-right: 2px solid #FFF;
+}
+
+.tab-group > li:hover, .tab-group > .active {
+    color: #FFF;
+    background: #DDF;
+    box-shadow: inset 0 0 5px #AAF;
+}
 /*
     MODALS
 */

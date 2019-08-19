@@ -54,8 +54,8 @@ export class PaletteLibraryComponent implements OnInit {
   onCodeChanged(code: string){
     this.showCodeEditor = false;
     if(code !== null){
-      const colorMatches = code.match(/\$[0-9a-fA-F]{4}/g);
-      const nPalettes = Math.ceil(colorMatches.length / 16);
+      const colorMatches = code.match(/\$[0-9a-fA-F]{4}/g) || [];
+      const nPalettes = Math.max(4, Math.ceil(colorMatches.length / 16));
       const palettes = new Array(nPalettes);
       for(let i = 0; i < nPalettes; ++i){
         palettes[i] = new Array(16);
@@ -78,8 +78,8 @@ export class PaletteLibraryComponent implements OnInit {
         }
       }
 
-      console.log(palettes);
       this.palettesUpdated.emit(palettes);
+      this.code = code;
     }
   }
 }

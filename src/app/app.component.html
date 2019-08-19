@@ -1,6 +1,14 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <main class="pastry-grid">
     <header class="header"><h1 class="caption">Pastry</h1></header><div id="console-selection" class="header"><select><option>Sega Genesis/Mega Drive</option></select></div>
+    <div class="control-group mode-selection">
+        <ul class="control-content tab-group">
+            <li class="active">Tile</li>
+            <li>Sprite (Group)</li>
+            <li>Animations</li>
+            <li>Plane</li>
+        </ul>
+    </div>
     <app-palette-library [activePalette]="activePalette" [palettes]="palettes" (swatchSelected)="onSwatchSelected($event)" (paletteSelected)="onPaletteSelected($event)" (palettesUpdated)=onPalettesUpdated($event)></app-palette-library>
     <!-- MODALS can come last-->
     <app-color-picker [color]="activeSwatch" [hidden]="!showColorPicker" (colorSelected)="onColorSelected($event)"></app-color-picker>
