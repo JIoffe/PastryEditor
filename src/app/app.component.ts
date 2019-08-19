@@ -17,7 +17,7 @@ export class AppComponent {
   ];
   activePalette = this.palettes[0];
   title = 'Pastry';
-  codeOutput = '';
+
 
   onColorSelected(color: Color) {
     this.showColorPicker = false;
@@ -35,5 +35,12 @@ export class AppComponent {
   onSwatchSelected(color: Color){
     this.activeSwatch = color;
     this.showColorPicker = true;
+  }
+
+  onPalettesUpdated(palettes: Color[][]){
+    if(palettes !== null){
+      this.palettes = palettes;
+      this.activePalette = this.palettes[0];
+    }
   }
 }

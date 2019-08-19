@@ -1,6 +1,6 @@
 <div class="control-group" (mouseleave)="palettes_onMouseLeave($event)">
     <div class="control-content clear">
-        <div class="caption">Palettes<button class="btn-code">Edit Code</button></div>
+        <div class="caption">Palettes<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="fill-over-status palette-selection">
             <div *ngFor="let palette of palettes; index as i">
                 <input type="radio" name="active-palette" value="{{i}}" [checked]="palette == activePalette" (change)="palettes_onChange($event, palette)"/>
@@ -12,3 +12,4 @@
         <div class="tool-status">{{tooltip}}</div>
     </div>
 </div>
+<app-code-editor [hidden]="!showCodeEditor" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

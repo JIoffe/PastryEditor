@@ -1,8 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <main class="pastry-grid">
     <header class="header"><h1 class="caption">Pastry</h1></header><div id="console-selection" class="header"><select><option>Sega Genesis/Mega Drive</option></select></div>
-    <app-palette-library [activePalette]="activePalette" [palettes]="palettes" (swatchSelected)="onSwatchSelected($event)" (paletteSelected)="onPaletteSelected($event)"></app-palette-library>
+    <app-palette-library [activePalette]="activePalette" [palettes]="palettes" (swatchSelected)="onSwatchSelected($event)" (paletteSelected)="onPaletteSelected($event)" (palettesUpdated)=onPalettesUpdated($event)></app-palette-library>
     <!-- MODALS can come last-->
     <app-color-picker [color]="activeSwatch" [hidden]="!showColorPicker" (colorSelected)="onColorSelected($event)"></app-color-picker>
+    <!-- <app-code-editor [hidden]="!showCodeEditor" [code]="codeOutput" (codeChanged)="onCodeChanged($event)"></app-code-editor> -->
 </main>
 <router-outlet></router-outlet>

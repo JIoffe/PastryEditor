@@ -1,0 +1,13 @@
+<div class="modal code-editor">
+    <div class="modal-content">
+        <div class="caption">Code Editor</div>
+        <div class="code-editor">
+            <textarea rows="16" cols="80" class="code" [(ngModel)]="code"></textarea>
+        </div>           
+        <hr/>
+        <div class="buttons-container">
+            <button class="btn-ok" (click)="ok_click($event)">OK</button>
+            <button class="btn-cancel" (click)="cancel_click($event)">CANCEL</button>
+        </div>
+    </div>
+</div>
