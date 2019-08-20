@@ -11,12 +11,14 @@ export class TileLibraryComponent implements OnInit, OnChanges {
   @Input() palette: Color[];
   @Input() tiles: Uint8Array[];
   @Input() activeTile: Uint8Array;
+  @Output() tileSetReplaced = new EventEmitter<Uint8Array[]>();
   @Output() tileSelected = new EventEmitter<Uint8Array>();
   @Output() tileDeleted = new EventEmitter<Uint8Array>();
   
   tileIcons = [];
   lastPalette = null;
   tooltip = '';
+  showCodeEditor = false;
   code = '';
 
   constructor(private applicationState: ApplicationState) {
@@ -65,6 +67,57 @@ export class TileLibraryComponent implements OnInit, OnChanges {
     }
 
     this.tileDeleted.emit(this.activeTile);
+  }
+
+  code_onClick(ev: MouseEvent){
+    this.code = 'Tiles:\r\n';
+
+    this.tiles.forEach((tile, tileIndex) => {
+      this.code += `Tile${tileIndex}:\r\n`;
+
+      for(let i = 0; i < 64; i += 8){
+        const line = Array.from(tile.slice(i, i+8)).map(n => n.toString(16).toUpperCase()).reduce((p,c) => p + c, '');
+        this.code += `   dc.l $${line}`;
+        this.code += '\r\n';
+      }
+    });
+
+    this.showCodeEditor = true;
+  }
+
+  onCodeChanged(code: string){
+    if(code !== null){
+      const matches = code.match(/\$[0-9A-Ea-e]{8}/g);
+      let tileset: Uint8Array[];
+
+      if(matches === null){
+        tileset = [new Uint8Array(64)];
+      }else{
+        const indices = Array.from(matches.reduce((p,c) => p + c.substr(1),''));
+
+        if(indices.length % 64 !== 0){
+          const r = 64 - (indices.length % 64);
+          for(let i = 0; i < r; ++i){
+            indices.push('0');
+          }
+        }
+
+        tileset = new Array(indices.length / 64);
+        for(let i = 0; i < tileset.length; ++i){
+          tileset[i] = new Uint8Array(64);
+        }
+
+        indices.forEach((index, i) => {
+            const tileIndex = Math.floor(i/64);
+            const colorIndex = i % 64;
+
+            tileset[tileIndex][colorIndex] = parseInt(index, 16);
+          });
+      }
+
+      this.tileSetReplaced.emit(tileset);
+    }
+    this.showCodeEditor = false;
   }
 
   private updateIcons(){

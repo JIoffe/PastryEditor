@@ -13,6 +13,8 @@ export class TileEditorComponent implements OnInit, OnChanges {
   @Input() palette: Color[];
   @Output() tileUpdated = new EventEmitter<Uint8Array>();
   
+  showCodeEditor = false;
+  code = '';
   activeColor = 0;
   
   constructor(private applicationState: ApplicationState) {
@@ -49,6 +51,42 @@ export class TileEditorComponent implements OnInit, OnChanges {
 
   swatch_onClick(ev: MouseEvent, index: number){
     this.activeColor = index;
+  }
+
+  code_onClick(ev: MouseEvent){
+    this.code = '';
+    const tile = this.activeTile;
+
+    for(let i = 0; i < 64; i += 8){
+        const line = Array.from(tile.slice(i, i+8)).map(n => n.toString(16).toUpperCase()).reduce((p,c) => p + c, '');
+        this.code += `   dc.l $${line}`;
+        this.code += '\r\n';
+    }
+
+    this.showCodeEditor = true;
+  }
+
+  onCodeChanged(code: string){
+    if(code !== null){
+      const matches = code.match(/\$[0-9A-Ea-e]{8}/g);
+
+      if(matches === null){
+        for(let i = 0; i < 64; ++i)
+          this.activeTile[i] = 0;
+      }else{
+        const indices = Array.from(matches.reduce((p,c) => p + c.substr(1),''));
+
+        while(indices.length < 64)
+          indices.push('0');
+
+        indices.forEach((index, i) => {
+            this.activeTile[i] = parseInt(index, 16);
+          });
+      }
+
+      this.applicationState.TileUpdatedObservable.next(this.activeTile);
+    }
+    this.showCodeEditor = false;
   }
 
   updateCanvas(){

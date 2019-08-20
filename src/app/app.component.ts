@@ -53,6 +53,13 @@ export class AppComponent {
       this.activeTile = this.tiles[0];
     }
   }
+  
+  onTileSetReplaced(tileset: Uint8Array[]){
+    if(tileset !== null){
+      this.tiles = tileset;
+      this.activeTile = tileset[0];
+    }
+  }
 
   onActiveTileUpdated(tile: Uint8Array){
     this.activeTile.set(tile);

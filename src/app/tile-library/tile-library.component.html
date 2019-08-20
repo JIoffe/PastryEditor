@@ -1,6 +1,6 @@
 <div class="control-group tile-library">
     <div class="control-content">
-        <div class="caption">Tile Library&nbsp;({{tiles.length}})<button class="btn-code">Edit Code</button></div>
+        <div class="caption">Tile Library&nbsp;({{tiles.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="button-container">
             <button class="btn-add" (click)="add_onClick($event)">Add</button>
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
@@ -11,3 +11,4 @@
         <div class="tool-status">{{tooltip}}</div>
     </div>
 </div>
+<app-code-editor *ngIf="showCodeEditor" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

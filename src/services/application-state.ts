@@ -8,4 +8,5 @@ import { Color } from 'src/model/color';
 export class ApplicationState {
     PaletteObservable: Subject<Color[]> = new Subject();
     TileUpdatedObservable: Subject<Uint8Array> = new Subject();
+    TilesetObservable: Subject<Uint8Array[]> = new Subject();
 }

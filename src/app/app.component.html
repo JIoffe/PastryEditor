@@ -10,7 +10,7 @@
         </ul>
     </div>
     <app-palette-library [activePalette]="activePalette" [palettes]="palettes" (swatchSelected)="onSwatchSelected($event)" (paletteSelected)="onPaletteSelected($event)" (palettesUpdated)=onPalettesUpdated($event)></app-palette-library>
-    <app-tile-library [tiles]="tiles" [palette]="activePalette" [activeTile]="activeTile" (tileSelected)="onTileSelected($event)" (tileDeleted)="onTileDeleted($event)"></app-tile-library>
+    <app-tile-library [tiles]="tiles" [palette]="activePalette" [activeTile]="activeTile" (tileSelected)="onTileSelected($event)" (tileDeleted)="onTileDeleted($event)" (tileSetReplaced)="onTileSetReplaced($event)"></app-tile-library>
     <app-tile-editor [palette]="activePalette" [activeTile]="activeTile" (tileUpdated)="onActiveTileUpdated($event)"></app-tile-editor>
     <!-- MODALS can come last-->
     <app-color-picker [color]="activeSwatch" *ngIf="showColorPicker" (colorSelected)="onColorSelected($event)"></app-color-picker>
