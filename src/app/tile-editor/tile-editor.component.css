@@ -10,6 +10,7 @@
     width: 40px;
     float: left;
     border-right: ridge;
+    background: black;
 }
 
 .color-selection > .palette-swatch {
@@ -34,4 +35,11 @@
     margin-top: -200px;
     margin-left: -200px;
     cursor: crosshair;
+}
+:host .button-container {
+    background: #ddd;
+}
+
+:host .button-container label:not(:last-child){
+    margin-right: 26px;
 }

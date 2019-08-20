@@ -6,6 +6,11 @@
                 <div *ngFor="let color of palette; index as i" [ngClass]="{'active': i === activeColor, 'palette-swatch': true}" [ngStyle]="{'backgroundColor': color.toCSS()}" (click)="swatch_onClick($event, i)"></div>                    
             </div>
             <div class="draw-canvas-container">
+                <div class="button-container">
+                    Transparent Pixels: 
+                    <label>Use Palette Color: <input name="transparentPixelMode" type="radio" checked="checked" value="palette" [(ngModel)]="transparentPixelMode" (change)="updateCanvas()"></label>
+                    <label>Use Pattern: <input name="transparentPixelMode" type="radio" value="pattern" [(ngModel)]="transparentPixelMode" (change)="updateCanvas()"></label>
+                </div>  
                 <canvas #drawCanvas class="drawing-surface" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)"></canvas>
             </div>
         </div>

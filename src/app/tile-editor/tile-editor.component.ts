@@ -16,6 +16,7 @@ export class TileEditorComponent implements OnInit, OnChanges {
   showCodeEditor = false;
   code = '';
   activeColor = 0;
+  transparentPixelMode = 'palette';
   
   constructor(private applicationState: ApplicationState) {
     applicationState.PaletteObservable.subscribe(palette => {
@@ -103,16 +104,21 @@ export class TileEditorComponent implements OnInit, OnChanges {
     pixelHeight = h / 8;
 
     //Draw transparent pattern
-    let darker = true;
-    const patternW = pixelWidth / 2;
-    const patternH = pixelHeight / 2;
-    for(let i = 0; i < 16; ++i){
-      for(let j = 0; j < 16; ++j){
-          ctx.fillStyle = darker ? '#D4D4D4' : '#FEFEFE';
-          darker = !darker;
-          ctx.fillRect(i * patternW, j * patternH, patternW, patternH);
+    if(this.transparentPixelMode === 'pattern'){
+      let darker = true;
+      const patternW = pixelWidth / 2;
+      const patternH = pixelHeight / 2;
+      for(let i = 0; i < 16; ++i){
+        for(let j = 0; j < 16; ++j){
+            ctx.fillStyle = darker ? '#D4D4D4' : '#FEFEFE';
+            darker = !darker;
+            ctx.fillRect(i * patternW, j * patternH, patternW, patternH);
+        }
+        darker = !darker;
       }
-      darker = !darker;
+    }else{
+      ctx.fillStyle = this.palette[0].toCSS();
+      ctx.fillRect(0,0,w,h);
     }
 
     for(let x = 0; x < 8; ++x){
@@ -129,17 +135,19 @@ export class TileEditorComponent implements OnInit, OnChanges {
     }
 
     ctx.strokeStyle = '#DDD';
-    for(let i = 0; i < 8; ++i){
+    for(let i = 0; i <= 8; ++i){
       ctx.beginPath();
-      ctx.moveTo(i * pixelWidth, 0);
-      ctx.lineTo(i * pixelWidth, h);
+      var x = Math.min(i * pixelWidth, w);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
       ctx.stroke();
     }
 
-    for(let i = 0; i < 8; ++i){
+    for(let i = 0; i <= 8; ++i){
       ctx.beginPath();
-      ctx.moveTo(0, i * pixelHeight);
-      ctx.lineTo(w, i * pixelHeight);
+      var y = Math.min(i * pixelHeight, h);
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
       ctx.stroke();
     }
   }
