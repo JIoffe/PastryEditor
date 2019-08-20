@@ -92,7 +92,17 @@ canvas {
         color: #DDD;
         font-size: 12px;
     }
-
+    .control-group .button-container {
+        height: 20px;
+    }
+    
+    .control-group button {
+        height: 100%;
+    }
+    
+    .control-group button:not(:last-child) {
+        margin-right: 10px;
+    }
 /* TABS */
 
 /* TAB CONTROLS */
@@ -137,6 +147,7 @@ canvas {
     position: fixed;
     top: 100px;
     left: 50px;
+    z-index: 10;
 }
     .modal:after {
         content: '';

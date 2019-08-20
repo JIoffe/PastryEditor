@@ -29,7 +29,6 @@ export class ColorPickerComponent implements OnInit {
   }
 
   refreshToColor(color: Color){
-    console.log(color.r, color.g, color.b);
     this.color = color;
     this.color.clampToSegaMD();
     this.redrawLightnessBar();
