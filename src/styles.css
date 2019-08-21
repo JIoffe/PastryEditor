@@ -9,6 +9,12 @@ body,html{
     padding: 0;
     background: #dedede;
 }
+.pastry-grid {
+    display: grid;
+    grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    min-height: 800px;
+}
 h1,h2,h3,h4,h5,h6{
     font-family: Arial Black,Arial Bold,Gadget,sans-serif; 
 }
@@ -116,30 +122,38 @@ canvas {
     font-size: 14px;
     cursor: pointer;
 }
+    .tab-group > li{
+        float: left;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
 
-.tab-group > li {
-    float: left;
-    background: #DDD;
-    height: 100%;
-    padding: 5px 10px;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
-}
+    .tab-group a, .tab-group a:visited {
+        background: #DDD;
+        height: 100%;
+        padding: 5px 10px;
+        box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+        text-decoration: none;
+        display: inline-block;
+    }
 
-.tab-group:after {
-    display: block;
-    content: '';
-    clear: both;
-}
+    .tab-group:after {
+        display: block;
+        content: '';
+        clear: both;
+    }
 
-.tab-group > li:not(:last-child) {
-    border-right: 2px solid #FFF;
-}
+    .tab-group > li:not(:last-child) {
+        border-right: 2px solid #FFF;
+    }
 
-.tab-group > li:hover, .tab-group > .active {
-    color: #FFF;
-    background: #DDF;
-    box-shadow: inset 0 0 5px #AAF;
-}
+    .tab-group a:hover, .tab-group a.active {
+        color: #FFF;
+        background: #DDF;
+        box-shadow: inset 0 0 5px #AAF;
+        text-decoration: none;
+    }
 /*
     MODALS
 */

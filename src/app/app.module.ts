@@ -10,6 +10,15 @@ import { PaletteLibraryComponent } from './palette-library/palette-library.compo
 import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { TileLibraryComponent } from './tile-library/tile-library.component';
 import { TileEditorComponent } from './tile-editor/tile-editor.component';
+import { TilePageComponent } from './tile-page/tile-page.component';
+import { RouterModule, Routes } from '@angular/router';
+import { TileStampPageComponent } from './tile-stamp-page/tile-stamp-page.component';
+
+const appRoutes: Routes = [
+  { path: 'edit-tiles', component: TilePageComponent },
+  { path: 'edit-tile-stamps', component: TileStampPageComponent },
+  { path: '**', component: TilePageComponent }
+];
 
 @NgModule({
   declarations: [
@@ -19,9 +28,15 @@ import { TileEditorComponent } from './tile-editor/tile-editor.component';
     PaletteLibraryComponent,
     CodeEditorComponent,
     TileLibraryComponent,
-    TileEditorComponent
+    TileEditorComponent,
+    TilePageComponent,
+    TileStampPageComponent
   ],
   imports: [
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    ),
     BrowserModule,
     AppRoutingModule,
     FormsModule

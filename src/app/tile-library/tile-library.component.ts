@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Color } from 'src/model/color';
 import { ApplicationState } from 'src/services/application-state';
 
@@ -7,43 +7,45 @@ import { ApplicationState } from 'src/services/application-state';
   templateUrl: './tile-library.component.html',
   styleUrls: ['./tile-library.component.css']
 })
-export class TileLibraryComponent implements OnInit, OnChanges {
+export class TileLibraryComponent implements OnInit {
   @Input() palette: Color[];
   @Input() tiles: Uint8Array[];
   @Input() activeTile: Uint8Array;
-  @Output() tileSetReplaced = new EventEmitter<Uint8Array[]>();
-  @Output() tileSelected = new EventEmitter<Uint8Array>();
-  @Output() tileDeleted = new EventEmitter<Uint8Array>();
   
   tileIcons = [];
   tooltip = '';
-  showCodeEditor = false;
-  code = '';
+
+  code = null;
 
   constructor(private applicationState: ApplicationState) {
     applicationState.TileUpdatedObservable.subscribe(tile => {
+      console.log('library updated!');
       let i = this.tiles.indexOf(tile);
       if(i >= 0){
         this.updateIconAtIndex(i);
       }
     })
 
+    applicationState.TileSelectedObservable.subscribe(tile => {
+      this.activeTile = tile;
+    })
+
     applicationState.PaletteObservable.subscribe(palette => {
       this.palette = palette;
+      this.updateIcons();
+    })
+
+    applicationState.TilesetObservable.subscribe(tiles => {
+      this.tiles = tiles;
       this.updateIcons();
     })
   }
 
   ngOnInit() {
-
-  }
-
-  ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
+    this.tiles = this.applicationState.tiles;
+    this.activeTile = this.applicationState.activeTile;
+    this.palette = this.applicationState.activePalette;;
     this.updateIcons();
-  }
-
-  icon_onClick(ev: MouseEvent, i: number){
-    this.tileSelected.emit(this.tiles[i]);
   }
 
   library_onMouseLeave(ev: MouseEvent){
@@ -54,9 +56,15 @@ export class TileLibraryComponent implements OnInit, OnChanges {
     this.tooltip = `Tile: ${i}`;
   }
 
+  icon_onClick(ev: MouseEvent, i: number){
+    this.applicationState.TileSelectedObservable.next(this.tiles[i]);
+  }
+
   add_onClick(ev: MouseEvent){
-    this.tiles.push(new Uint8Array(64));
-    this.tileSelected.emit(this.tiles[this.tiles.length - 1]);
+    const tile = new Uint8Array(64);
+    this.tiles.push(tile);
+    this.applicationState.TilesetObservable.next(this.tiles);
+    this.applicationState.TileSelectedObservable.next(this.tiles[this.tiles.length - 1]);
   }
 
   remove_onClick(ev: MouseEvent){
@@ -65,7 +73,9 @@ export class TileLibraryComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.tileDeleted.emit(this.activeTile);
+    this.tiles.splice(this.tiles.indexOf(this.activeTile), 1);
+    this.applicationState.TilesetObservable.next(this.tiles);
+    this.applicationState.TileSelectedObservable.next(this.tiles[this.tiles.length - 1]);
   }
 
   code_onClick(ev: MouseEvent){
@@ -80,8 +90,6 @@ export class TileLibraryComponent implements OnInit, OnChanges {
         this.code += '\r\n';
       }
     });
-
-    this.showCodeEditor = true;
   }
 
   onCodeChanged(code: string){
@@ -114,9 +122,11 @@ export class TileLibraryComponent implements OnInit, OnChanges {
           });
       }
 
-      this.tileSetReplaced.emit(tileset);
+      this.applicationState.TilesetObservable.next(tileset);
+      this.applicationState.TileSelectedObservable.next(tileset[0]);
     }
-    this.showCodeEditor = false;
+
+    this.code = null;
   }
 
   private updateIcons(){

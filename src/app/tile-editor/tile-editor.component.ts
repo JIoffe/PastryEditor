@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { Color } from 'src/model/color';
 import { ApplicationState } from 'src/services/application-state';
 
@@ -7,11 +7,10 @@ import { ApplicationState } from 'src/services/application-state';
   templateUrl: './tile-editor.component.html',
   styleUrls: ['./tile-editor.component.css']
 })
-export class TileEditorComponent implements OnInit, OnChanges {
+export class TileEditorComponent implements OnInit {
   @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
   @Input() activeTile: Uint8Array;
   @Input() palette: Color[];
-  @Output() tileUpdated = new EventEmitter<Uint8Array>();
   
   showCodeEditor = false;
   code = '';
@@ -28,12 +27,21 @@ export class TileEditorComponent implements OnInit, OnChanges {
         this.updateCanvas();
       }
     });
+
+    applicationState.TileSelectedObservable.subscribe(tile => {
+      this.activeTile = tile;
+      this.updateCanvas();
+    });
+
+    applicationState.PaletteObservable.subscribe(palette => {
+      this.palette = palette;
+      this.updateCanvas();
+    });
   }
 
   ngOnInit() {
-  }
-
-  ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
+    this.palette = this.applicationState.activePalette;
+    this.activeTile = this.applicationState.activeTile;
     this.updateCanvas();
   }
 

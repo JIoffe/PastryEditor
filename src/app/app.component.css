@@ -1,14 +1,13 @@
-.pastry-grid {
-    display: grid;
-    grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
-    grid-template-columns: 20% 20% 20% 20% 20%;
-    min-height: 800px;
-}
-
 h1 {
     margin: 0;
     font-size: 24px;
     padding: 5px;
+}
+
+.pastry-header {
+    display: grid;
+    grid-template-rows: 50px 50px;
+    grid-template-columns: 20% 20% 20% 20% 20%;
 }
 
 header {

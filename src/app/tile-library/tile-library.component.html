@@ -11,4 +11,4 @@
         <div class="tool-status">{{tooltip}}</div>
     </div>
 </div>
-<app-code-editor *ngIf="showCodeEditor" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

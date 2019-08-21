@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Color } from 'src/model/color';
+import { ApplicationState } from 'src/services/application-state';
 
 @Component({
   selector: 'app-palette-library',
@@ -9,21 +10,27 @@ import { Color } from 'src/model/color';
 export class PaletteLibraryComponent implements OnInit {
   @Input() palettes: Color[][];
   @Input() activePalette: Color[];
-  @Output() swatchSelected = new EventEmitter<Color>();
-  @Output() paletteSelected = new EventEmitter<Color[]>();
-  @Output() palettesUpdated = new EventEmitter<Color[][]>();
 
   tooltip = '';
-  code = '';
-  showCodeEditor = false;
+  code = null;
+  activeSwatch = null;
 
-  constructor() { }
+  constructor(private applicationState: ApplicationState) {
+    applicationState.PaletteSetObservable.subscribe(palettes => {
+      this.palettes = palettes;
+      this.activePalette = palettes[0];
+      applicationState.PaletteObservable.next(this.activePalette);
+    })
+  }
 
   ngOnInit() {
+    this.palettes = this.applicationState.palettes;
+    this.activePalette = this.applicationState.activePalette;
   }
 
   palettes_onChange(ev: MouseEvent, palette: Color[]){
-    this.paletteSelected.emit(palette);
+    this.activePalette = palette;
+    this.applicationState.PaletteObservable.next(palette);
   }
 
   palettes_onMouseLeave(ev: MouseEvent){
@@ -34,10 +41,22 @@ export class PaletteLibraryComponent implements OnInit {
     this.tooltip = `Palette: ${paletteIndex}, Color: ${colorIndex}`;
   }
 
+  /* COLOR EDITING */
   swatch_onClick(ev: MouseEvent, color: Color){
-    this.swatchSelected.emit(color);
+    this.activeSwatch = color;
   }
 
+  onColorSelected(color: Color){
+    if(color !== null){
+      this.activeSwatch.r = color.r;
+      this.activeSwatch.g = color.g;
+      this.activeSwatch.b = color.b;
+      this.applicationState.PaletteObservable.next(this.activePalette);
+    }
+    this.activeSwatch = null;
+  }
+
+  /* CODE EDITING */
   code_onClick(ev: MouseEvent){
     let code = 'Palettes:\r\n';
     this.palettes.forEach((palette, i) => {
@@ -48,11 +67,9 @@ export class PaletteLibraryComponent implements OnInit {
     });
 
     this.code = code;
-    this.showCodeEditor = true;
   }
 
   onCodeChanged(code: string){
-    this.showCodeEditor = false;
     if(code !== null){
       const colorMatches = code.match(/\$[0-9a-fA-F]{4}/g) || [];
       const nPalettes = Math.max(4, Math.ceil(colorMatches.length / 16));
@@ -78,8 +95,10 @@ export class PaletteLibraryComponent implements OnInit {
         }
       }
 
-      this.palettesUpdated.emit(palettes);
-      this.code = code;
+      this.applicationState.PaletteSetObservable.next(palettes);
+      this.applicationState.PaletteObservable.next(palettes[0]);
     }
+
+    this.code = null;
   }
 }
