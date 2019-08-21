@@ -73,9 +73,11 @@ export class TileLibraryComponent implements OnInit {
       return;
     }
 
-    this.tiles.splice(this.tiles.indexOf(this.activeTile), 1);
+    const i = this.tiles.indexOf(this.activeTile);
+    this.tiles.splice(i, 1);
     this.applicationState.TilesetObservable.next(this.tiles);
-    this.applicationState.TileSelectedObservable.next(this.tiles[this.tiles.length - 1]);
+
+    this.applicationState.TileSelectedObservable.next(this.tiles[Math.max(i - 1, 0)]);
   }
 
   code_onClick(ev: MouseEvent){
