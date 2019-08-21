@@ -16,7 +16,6 @@ export class TileLibraryComponent implements OnInit, OnChanges {
   @Output() tileDeleted = new EventEmitter<Uint8Array>();
   
   tileIcons = [];
-  lastPalette = null;
   tooltip = '';
   showCodeEditor = false;
   code = '';
@@ -123,15 +122,10 @@ export class TileLibraryComponent implements OnInit, OnChanges {
   private updateIcons(){
     //Only re-render everything if we are grossly out of date
     //Otherwise we will see lag while drawing
-    if(this.lastPalette !== this.palette || this.tileIcons.length !== this.tiles.length){
-      this.tileIcons = new Array(this.tiles.length);
+    this.tileIcons = new Array(this.tiles.length);
 
-      for(let i = 0; i < this.tiles.length; ++i){
-        this.updateIconAtIndex(i);
-      }
-      this.lastPalette = this.palette;
-    }else{
-      this.updateIconAtIndex(this.tiles.indexOf(this.activeTile));
+    for(let i = 0; i < this.tiles.length; ++i){
+      this.updateIconAtIndex(i);
     }
   }
 
