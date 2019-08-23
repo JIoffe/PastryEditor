@@ -5,8 +5,11 @@
             <button class="btn-add" (click)="add_onClick($event)">Add</button>
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
         </div>  
-        <div class="fill-over-status icons-container clear">      
-            <img *ngFor="let icon of icons; index as i" src="{{icon}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamps[i] === activeStamp}"/>     
+        <div class="fill-over-status icons-container clear">
+            <div class="icon" *ngFor="let stamp of stamps; index as i" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
+
+            </div>   
+            <!-- <img *ngFor="let icon of icons; index as i" src="{{icon}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamps[i] === applicationState.activeStamp}"/>      -->
         </div>
         <div class="tool-status">{{tooltip}}</div>
     </div>
@@ -15,8 +18,14 @@
 <div class="modal" *ngIf="showNewStampDialog">
     <div class="modal-content">
         <div class="caption">Create New Stamp</div>
-        <label>Width:&nbsp; <input type="number" [(ngModel)]="stampDialogWidth"/></label><br/>
-        <label>Height: <input type="number" [(ngModel)]="stampDialogHeight"/></label> 
+        <label>Width:&nbsp; <input type="number" [(ngModel)]="stampDialogWidth"/> Tiles</label><br/>
+        <label>Height: <input type="number" [(ngModel)]="stampDialogHeight"/> Tiles</label>
+        <div class="screen-preview">
+            <div class="size-preview" [ngStyle]="{'width': stampDialogWidth * 8 + 'px', 'height': stampDialogHeight * 8 + 'px'}">
+                <span *ngIf="stampDialogWidth > 10 && stampDialogHeight > 2">({{stampDialogWidth*8}}x{{stampDialogHeight*8}}px)</span>
+            </div>
+        </div>
+        (Genesis NTSC: 320 x 224px)
         <hr/>
         <div class="buttons-container">
             <button class="btn-ok" (click)="addStamp($event)">OK</button>

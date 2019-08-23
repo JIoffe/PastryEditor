@@ -61,8 +61,12 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
       }),
 
       this.applicationState.TileUpdatedObservable.subscribe(tile => {
-        if(this.stamp !== null && this.stamp.tiles.indexOf(tile) >= 0){
-          this.redrawCanvas();
+        if(!this.stamp)
+          return;
+        
+        const tileIndex = this.stamp.tiles.indexOf(tile);
+        if(tileIndex >= 0){
+          this.redrawCanvasWhereDirty(tileIndex);
         }
       })
     )
@@ -85,6 +89,16 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
 
     const updatedTile = this.stamp.setTexel(x, y, this.activeColor);
     this.applicationState.TileUpdatedObservable.next(updatedTile);
+  }
+
+  redrawCanvasWhereDirty(tileIndex: number){
+    const ctx = this.drawCanvas.nativeElement.getContext('2d');
+    const imageData = this.tileRenderer.renderTileImageData(ctx, this.stamp.tiles[tileIndex], this.palette);
+
+    const x = (tileIndex % this.stamp.width) * 8,
+          y = Math.floor(tileIndex / this.stamp.width) * 8;
+    
+    ctx.putImageData(imageData, x, y);
   }
 
   redrawCanvas(){

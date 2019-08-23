@@ -11,9 +11,7 @@ import { TileRenderer } from 'src/services/tile-renderer';
 })
 export class TileStampLibraryComponent extends BaseSubscriberComponent implements OnInit {
   stamps: Stamp[] = null;
-  activeStamp: Stamp = null;
   code: string = null;
-  icons: string[] = null;
   tooltip = '';
 
   showNewStampDialog = false;
@@ -30,21 +28,14 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent implement
         this.stamps = stamps;
         this.redrawAllStamps();
       }),
-
-      this.applicationState.StampSelectedObservable.subscribe(stamp => this.activeStamp = stamp),
-
-      this.applicationState.TileUpdatedObservable.subscribe(tile => {
-        this.redrawAllStamps();
-      })
     )
     this.stamps = this.applicationState.stamps;
-    this.activeStamp = this.applicationState.activeStamp;
     
     this.redrawAllStamps();
   }
 
   redrawAllStamps(){
-    this.icons = this.stamps.map(stamp => this.tileRenderer.renderStampDataUrl(stamp, this.applicationState.activePalette));
+    //this.icons = this.stamps.map(stamp => this.tileRenderer.renderStampDataUrl(stamp, this.applicationState.activePalette));
   }
 
   add_onClick(ev: MouseEvent){
@@ -54,26 +45,26 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent implement
   }
 
   remove_onClick(ev: MouseEvent){
-    if(!this.activeStamp)
+    if(!this.applicationState.activeStamp)
       return;
 
-    const n = this.activeStamp.width * this.activeStamp.height;
-    let i = this.applicationState.tiles.indexOf(this.activeStamp.tiles[0]);
+    const n = this.applicationState.activeStamp.width * this.applicationState.activeStamp.height;
+    let i = this.applicationState.tiles.indexOf(this.applicationState.activeStamp.tiles[0]);
 
     this.applicationState.tiles.splice(i, n);
 
-    i = this.applicationState.stamps.indexOf(this.activeStamp);
+    i = this.applicationState.stamps.indexOf(this.applicationState.activeStamp);
     this.applicationState.stamps.splice(i, 1);
 
     this.applicationState.TilesetObservable.next(this.applicationState.tiles);
     this.applicationState.StampsetUpdatedObservable.next(this.applicationState.stamps);
 
     if(this.applicationState.stamps.length > 0)
-      this.activeStamp = this.applicationState.stamps[Math.max(0, i - 1)];
+      this.applicationState.activeStamp = this.applicationState.stamps[Math.max(0, i - 1)];
     else
-      this.activeStamp = null;
+      this.applicationState.activeStamp = null;
 
-    this.applicationState.StampSelectedObservable.next(this.activeStamp);
+    this.applicationState.StampSelectedObservable.next(this.applicationState.activeStamp);
   }
 
   addStamp(ev: MouseEvent){

@@ -247,15 +247,38 @@ canvas {
 .icons-container.fill-over-status {
     height: calc(100% - 36px);
 }
-.icons-container > img {
+.icons-container img {
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+}
+.icons-container > .icon{
     float: left;
     margin: 4px;
 }
-.icons-container > img:hover, .icons-container > img.active {
+.icons-container > .icon:hover, .icons-container > .icon.active {
     cursor: pointer;
     outline: 2px solid #FFF;
+}
+.screen-preview {
+    height: 224px;
+    width: 320px;
+    position: relative;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.size-preview {
+    width: 100px;
+    height: 100px;
+    background: #0D0;
+    border: 1px solid #0F0;
+    color: #FFF;
+    text-shadow: 1px 1px #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

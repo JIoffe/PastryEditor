@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Color } from 'src/model/color';
 import { ApplicationState } from 'src/services/application-state';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
+import { TileRenderer } from 'src/services/tile-renderer';
 
 @Component({
   selector: 'app-tile-library',
@@ -18,7 +19,7 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
 
   code = null;
 
-  constructor(private applicationState: ApplicationState) {
+  constructor(private applicationState: ApplicationState, private tileRenderer: TileRenderer) {
     super();
   }
 
@@ -146,39 +147,7 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
   }
 
   private updateIconAtIndex(index){
-    const canvas = document.createElement('canvas');    
-    canvas.setAttribute('width', '8');
-    canvas.setAttribute('height', '8');
-
-    const ctx =  canvas.getContext('2d');
-    const imageData = ctx.createImageData(8, 8);
-
     const tile = this.tiles[index];
-
-    for(let x = 0; x < 8; ++x){
-      for(let y = 0; y < 8; ++y){
-        const i = x + y * 8,
-              colorIndex = tile[i],
-              pixelI = i * 4;
-
-        //Ignore Transparent index
-        if(colorIndex === 0){
-            imageData.data[pixelI] = 0;
-            imageData.data[pixelI + 1] = 0;
-            imageData.data[pixelI + 2] = 0;
-            imageData.data[pixelI + 3] = 0;
-            continue;
-        }
-
-        const color = this.palette[colorIndex];
-        imageData.data[pixelI] = color.r;
-        imageData.data[pixelI + 1] = color.g;
-        imageData.data[pixelI + 2] = color.b;
-        imageData.data[pixelI + 3] = 255;
-      }
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-    this.tileIcons[index] = canvas.toDataURL("image/png");
+    this.tileIcons[index] = this.tileRenderer.renderTileDataUrl(tile, this.palette);
   }
 }
