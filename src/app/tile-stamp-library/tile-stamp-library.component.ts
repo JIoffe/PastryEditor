@@ -54,7 +54,26 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent implement
   }
 
   remove_onClick(ev: MouseEvent){
+    if(!this.activeStamp)
+      return;
 
+    const n = this.activeStamp.width * this.activeStamp.height;
+    let i = this.applicationState.tiles.indexOf(this.activeStamp.tiles[0]);
+
+    this.applicationState.tiles.splice(i, n);
+
+    i = this.applicationState.stamps.indexOf(this.activeStamp);
+    this.applicationState.stamps.splice(i, 1);
+
+    this.applicationState.TilesetObservable.next(this.applicationState.tiles);
+    this.applicationState.StampsetUpdatedObservable.next(this.applicationState.stamps);
+
+    if(this.applicationState.stamps.length > 0)
+      this.activeStamp = this.applicationState.stamps[Math.max(0, i - 1)];
+    else
+      this.activeStamp = null;
+
+    this.applicationState.StampSelectedObservable.next(this.activeStamp);
   }
 
   addStamp(ev: MouseEvent){
