@@ -1,0 +1,28 @@
+<div class="control-group edit-active-tile">
+    <div class="control-content">
+        <div class="caption">Edit Stamp<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="fill-over-status clear">
+            <div class="color-selection">
+                <div *ngFor="let color of palette; index as i" [ngClass]="{'active': i === activeColor, 'palette-swatch': true}" [ngStyle]="{'backgroundColor': color.toCSS()}" (click)="swatch_onClick($event, i)"></div>                    
+            </div>
+            <div class="button-container">
+                <span>
+                    Transparent Pixels: 
+                    <label>Palette: <input name="transparentPixelMode" type="radio" checked="checked" value="palette" [(ngModel)]="transparentPixelMode" (change)="updateCanvas()"></label>
+                    <label>Pattern: <input name="transparentPixelMode" type="radio" value="pattern" [(ngModel)]="transparentPixelMode" (change)="updateCanvas()"></label>
+                </span>
+                <span>
+                    Zoom:
+                    <input type="range" min="10" max="10000" [(ngModel)]="zoom"/>
+                    {{zoom | number:'1.0-0'}}%
+                </span>
+            </div>
+            <div class="draw-canvas-container" #canvasContainer [ngStyle]="{'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px'}">
+                <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div>
+                <canvas (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></canvas>
+            </div>
+        </div>
+        <div class="tool-status">Stamp: {{stamp.width}}x{{stamp.height}} tiles.  ({{stamp.width * 8}}x{{stamp.height * 8}} pixels)</div>
+    </div>
+</div>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

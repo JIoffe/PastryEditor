@@ -13,6 +13,8 @@ import { TileEditorComponent } from './tile-editor/tile-editor.component';
 import { TilePageComponent } from './tile-page/tile-page.component';
 import { RouterModule, Routes } from '@angular/router';
 import { TileStampPageComponent } from './tile-stamp-page/tile-stamp-page.component';
+import { TileStampLibraryComponent } from './tile-stamp-library/tile-stamp-library.component';
+import { StampEditorComponent } from './stamp-editor/stamp-editor.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -30,7 +32,9 @@ const appRoutes: Routes = [
     TileLibraryComponent,
     TileEditorComponent,
     TilePageComponent,
-    TileStampPageComponent
+    TileStampPageComponent,
+    TileStampLibraryComponent,
+    StampEditorComponent
   ],
   imports: [
     RouterModule.forRoot(

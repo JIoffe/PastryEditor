@@ -1,0 +1,28 @@
+<div class="control-group tile-library">
+    <div class="control-content">
+        <div class="caption">Stamp Library&nbsp;({{stamps.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="button-container">
+            <button class="btn-add" (click)="add_onClick($event)">Add</button>
+            <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
+        </div>  
+        <div class="fill-over-status icons-container clear">      
+            <img *ngFor="let icon of icons; index as i" src="{{icon}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamps[i] === activeStamp}"/>     
+        </div>
+        <div class="tool-status">{{tooltip}}</div>
+    </div>
+</div>
+
+<div class="modal" *ngIf="showNewStampDialog">
+    <div class="modal-content">
+        <div class="caption">Create New Stamp</div>
+        <label>Width:&nbsp; <input type="number" [(ngModel)]="stampDialogWidth"/></label><br/>
+        <label>Height: <input type="number" [(ngModel)]="stampDialogHeight"/></label> 
+        <hr/>
+        <div class="buttons-container">
+            <button class="btn-ok" (click)="addStamp($event)">OK</button>
+            <button class="btn-cancel" (click)="cancelStampDialog($event)">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

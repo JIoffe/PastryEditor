@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { Color } from 'src/model/color';
 import { ApplicationState } from 'src/services/application-state';
+import { BaseSubscriberComponent } from '../base-subscriber.component';
 
 @Component({
   selector: 'app-tile-editor',
   templateUrl: './tile-editor.component.html',
   styleUrls: ['./tile-editor.component.css']
 })
-export class TileEditorComponent implements OnInit {
+export class TileEditorComponent extends BaseSubscriberComponent implements OnInit {
   @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
   @Input() activeTile: Uint8Array;
   @Input() palette: Color[];
@@ -18,28 +19,32 @@ export class TileEditorComponent implements OnInit {
   transparentPixelMode = 'palette';
   
   constructor(private applicationState: ApplicationState) {
-    applicationState.PaletteObservable.subscribe(palette => {
-      this.updateCanvas();
-    });
-
-    applicationState.TileUpdatedObservable.subscribe(tile => {
-      if(tile === this.activeTile){
-        this.updateCanvas();
-      }
-    });
-
-    applicationState.TileSelectedObservable.subscribe(tile => {
-      this.activeTile = tile;
-      this.updateCanvas();
-    });
-
-    applicationState.PaletteObservable.subscribe(palette => {
-      this.palette = palette;
-      this.updateCanvas();
-    });
+    super();
   }
 
   ngOnInit() {
+    this.subscribe(
+      this.applicationState.PaletteObservable.subscribe(palette => {
+        this.updateCanvas();
+      }),
+  
+      this.applicationState.TileUpdatedObservable.subscribe(tile => {
+        if(tile === this.activeTile){
+          this.updateCanvas();
+        }
+      }),
+  
+      this.applicationState.TileSelectedObservable.subscribe(tile => {
+        this.activeTile = tile;
+        this.updateCanvas();
+      }),
+  
+      this.applicationState.PaletteObservable.subscribe(palette => {
+        this.palette = palette;
+        this.updateCanvas();
+      })
+    )
+    
     this.palette = this.applicationState.activePalette;
     this.activeTile = this.applicationState.activeTile;
     this.updateCanvas();
@@ -149,9 +154,7 @@ export class TileEditorComponent implements OnInit {
       ctx.moveTo(x, 0);
       ctx.lineTo(x, h);
       ctx.stroke();
-    }
 
-    for(let i = 0; i <= 8; ++i){
       ctx.beginPath();
       var y = Math.min(i * pixelHeight, h);
       ctx.moveTo(0, y);

@@ -197,3 +197,65 @@ canvas {
         font-size: 18px;
         margin-left: 10px;
     }
+
+/* Common editing controls */
+.color-selection {
+    height: 100%;
+    padding: 6px 4px 4px 4px;
+    width: 40px;
+    float: left;
+    border-right: ridge;
+    background: black;
+}
+
+.color-selection > .palette-swatch {
+    float: none;
+    height: calc(6.25% - 4px);
+    max-height: 34px;
+    margin-right: 0;
+    width: 100%;
+    cursor: pointer;
+}    
+
+.color-selection .palette-swatch.active, .color-selection .palette-swatch:hover {
+    border: 4px solid #FFF;
+    box-shadow: inset 0 0 5px 2px #000;
+}
+.button-container {
+    background: #aaa;
+}
+.button-container input[type="range"] {
+    height: 10px;
+}
+.draw-canvas-container{
+    position: relative;
+}
+.grid{
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+}
+.grid > div{
+    float: left;
+    border: 1px solid #FFF;
+}
+/* Common selection controls */
+.icons-container {
+    overflow-y: scroll;
+}
+.icons-container.fill-over-status {
+    height: calc(100% - 36px);
+}
+.icons-container > img {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    float: left;
+    margin: 4px;
+}
+.icons-container > img:hover, .icons-container > img.active {
+    cursor: pointer;
+    outline: 2px solid #FFF;
+}

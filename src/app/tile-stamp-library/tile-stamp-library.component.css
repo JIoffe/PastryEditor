@@ -5,3 +5,8 @@
     grid-row-end: 16;
     cursor: crosshair;
 }
+
+:host .icons-container > img {
+    width: 64px;
+    height: 64px;
+}

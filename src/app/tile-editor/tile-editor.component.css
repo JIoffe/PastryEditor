@@ -4,27 +4,6 @@
     grid-row-start: 1;
     grid-row-end: 16;
 }
-.color-selection {
-    height: 100%;
-    padding: 6px 4px 4px 4px;
-    width: 40px;
-    float: left;
-    border-right: ridge;
-    background: black;
-}
-
-.color-selection > .palette-swatch {
-    float: none;
-    height: calc(6.25% - 4px);
-    margin-right: 0;
-    width: 100%;
-    cursor: pointer;
-}    
-
-.color-selection .palette-swatch.active, .color-selection .palette-swatch:hover {
-    border: 4px solid #FFF;
-    box-shadow: inset 0 0 5px 2px #000;
-}
 
 .drawing-surface {
     width: 400px;
@@ -36,10 +15,10 @@
     margin-left: -200px;
     cursor: crosshair;
 }
-:host .button-container {
-    background: #ddd;
-}
-
 :host .button-container label:not(:last-child){
     margin-right: 26px;
+}
+
+.draw-canvas-container{
+    position: static;
 }

@@ -1,1 +1,5 @@
-<p>tile-stamp-page works!</p>
+<main class="pastry-grid">
+    <app-palette-library></app-palette-library>
+    <app-tile-stamp-library></app-tile-stamp-library>
+    <app-stamp-editor *ngIf="applicationState.activeStamp !== null"></app-stamp-editor>
+</main>

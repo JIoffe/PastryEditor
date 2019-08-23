@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Color } from 'src/model/color';
 import { ApplicationState } from 'src/services/application-state';
+import { BaseSubscriberComponent } from '../base-subscriber.component';
 
 @Component({
   selector: 'app-palette-library',
   templateUrl: './palette-library.component.html',
   styleUrls: ['./palette-library.component.css']
 })
-export class PaletteLibraryComponent implements OnInit {
+export class PaletteLibraryComponent extends BaseSubscriberComponent implements OnInit {
   @Input() palettes: Color[][];
   @Input() activePalette: Color[];
 
@@ -16,16 +17,20 @@ export class PaletteLibraryComponent implements OnInit {
   activeSwatch = null;
 
   constructor(private applicationState: ApplicationState) {
-    applicationState.PaletteSetObservable.subscribe(palettes => {
-      this.palettes = palettes;
-      this.activePalette = palettes[0];
-      applicationState.PaletteObservable.next(this.activePalette);
-    })
+    super();
   }
 
   ngOnInit() {
     this.palettes = this.applicationState.palettes;
     this.activePalette = this.applicationState.activePalette;
+
+    this.subscribe(
+      this.applicationState.PaletteSetObservable.subscribe(palettes => {
+        this.palettes = palettes;
+        this.activePalette = palettes[0];
+        this.applicationState.PaletteObservable.next(this.activePalette);
+      })
+    )
   }
 
   palettes_onChange(ev: MouseEvent, palette: Color[]){

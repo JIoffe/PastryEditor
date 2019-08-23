@@ -1,13 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Color } from 'src/model/color';
 import { ApplicationState } from 'src/services/application-state';
+import { BaseSubscriberComponent } from '../base-subscriber.component';
 
 @Component({
   selector: 'app-tile-library',
   templateUrl: './tile-library.component.html',
   styleUrls: ['./tile-library.component.css']
 })
-export class TileLibraryComponent implements OnInit {
+export class TileLibraryComponent extends BaseSubscriberComponent implements OnInit {
   @Input() palette: Color[];
   @Input() tiles: Uint8Array[];
   @Input() activeTile: Uint8Array;
@@ -18,30 +19,33 @@ export class TileLibraryComponent implements OnInit {
   code = null;
 
   constructor(private applicationState: ApplicationState) {
-    applicationState.TileUpdatedObservable.subscribe(tile => {
-      console.log('library updated!');
-      let i = this.tiles.indexOf(tile);
-      if(i >= 0){
-        this.updateIconAtIndex(i);
-      }
-    })
-
-    applicationState.TileSelectedObservable.subscribe(tile => {
-      this.activeTile = tile;
-    })
-
-    applicationState.PaletteObservable.subscribe(palette => {
-      this.palette = palette;
-      this.updateIcons();
-    })
-
-    applicationState.TilesetObservable.subscribe(tiles => {
-      this.tiles = tiles;
-      this.updateIcons();
-    })
+    super();
   }
 
   ngOnInit() {
+    this.subscribe(
+      this.applicationState.TileUpdatedObservable.subscribe(tile => {
+        let i = this.tiles.indexOf(tile);
+        if(i >= 0){
+          this.updateIconAtIndex(i);
+        }
+      }),
+  
+      this.applicationState.TileSelectedObservable.subscribe(tile => {
+        this.activeTile = tile;
+      }),
+  
+      this.applicationState.PaletteObservable.subscribe(palette => {
+        this.palette = palette;
+        this.updateIcons();
+      }),
+  
+      this.applicationState.TilesetObservable.subscribe(tiles => {
+        this.tiles = tiles;
+        this.updateIcons();
+      })
+    );
+
     this.tiles = this.applicationState.tiles;
     this.activeTile = this.applicationState.activeTile;
     this.palette = this.applicationState.activePalette;;

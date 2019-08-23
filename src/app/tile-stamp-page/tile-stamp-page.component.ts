@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApplicationState } from 'src/services/application-state';
 
 @Component({
   selector: 'app-tile-stamp-page',
@@ -7,9 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TileStampPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private applicationState: ApplicationState) { }
 
   ngOnInit() {
   }
-
 }
