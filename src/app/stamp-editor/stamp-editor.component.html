@@ -16,7 +16,7 @@
                 </span>
             </div>
             <div class="draw-canvas-container" #canvasContainer [ngStyle]="{'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px'}">
-                <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div>
+                <!-- <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div> -->
                 <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></canvas>
             </div>
         </div>
