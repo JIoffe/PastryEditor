@@ -1,15 +1,14 @@
 <div class="control-group tile-library">
     <div class="control-content">
-        <div class="caption">Stamp Library&nbsp;({{stamps.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="caption">Stamp Library&nbsp;({{applicationState.stamps.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="button-container">
             <button class="btn-add" (click)="add_onClick($event)">Add</button>
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
         </div>  
         <div class="fill-over-status icons-container clear">
-            <div class="icon" *ngFor="let stamp of stamps; index as i" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
-
+            <div class="icon clear" *ngFor="let stamp of applicationState.stamps; index as i" [ngStyle]="{width: stamp.width * 16 + 'px', height: stamp.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
+                <img *ngFor="let tile of stamp.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}" [ngStyle]="{width: (1 / stamp.width) * 100 + '%', height: (1 / stamp.height) * 100 + '%'}"/>
             </div>   
-            <!-- <img *ngFor="let icon of icons; index as i" src="{{icon}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamps[i] === applicationState.activeStamp}"/>      -->
         </div>
         <div class="tool-status">{{tooltip}}</div>
     </div>

@@ -6,18 +6,21 @@ import { Color } from 'src/model/color';
     providedIn: 'root',
 })
 export class TileRenderer{
-    constructor(){ }
+    private canvas: HTMLCanvasElement;
+    private ctx: any;
+
+    constructor(){
+        this.canvas = document.createElement('canvas');
+        this.canvas.setAttribute('width', '8');
+        this.canvas.setAttribute('height', '8');
+        this.ctx = this.canvas.getContext('2d');
+    }
 
     renderTileDataUrl(tile: Uint8Array, palette: Color[]){
-        const canvas = document.createElement('canvas');    
-        canvas.setAttribute('width', '8');
-        canvas.setAttribute('height', '8');
-    
-        const ctx =  canvas.getContext('2d');
-        const imageData = this.renderTileImageData(ctx, tile, palette);
-        ctx.putImageData(imageData, 0, 0);
+        const imageData = this.renderTileImageData(this.ctx, tile, palette);
+        this.ctx.putImageData(imageData, 0, 0);
 
-        return canvas.toDataURL("image/png");
+        return this.canvas.toDataURL("image/png");
     }
 
     renderTileImageData(ctx: any, tile: Uint8Array, palette: Color[]){
@@ -29,15 +32,6 @@ export class TileRenderer{
             const i = x + y * 8,
                   colorIndex = tile[i],
                   pixelI = i * 4;
-    
-            //Ignore Transparent index
-            if(colorIndex === 0){
-                data[pixelI] = 0;
-                data[pixelI + 1] = 0;
-                data[pixelI + 2] = 0;
-                data[pixelI + 3] = 0;
-                continue;
-            }
     
             const color = palette[colorIndex];
             data[pixelI] = color.r;

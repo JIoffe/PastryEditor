@@ -1,5 +1,5 @@
 <main class="pastry-grid">
     <app-palette-library></app-palette-library>
     <app-tile-library></app-tile-library>
-    <app-tile-editor></app-tile-editor>
+    <app-tile-editor *ngIf="!!applicationState.activeTile"></app-tile-editor>
 </main>

@@ -15,6 +15,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TileStampPageComponent } from './tile-stamp-page/tile-stamp-page.component';
 import { TileStampLibraryComponent } from './tile-stamp-library/tile-stamp-library.component';
 import { StampEditorComponent } from './stamp-editor/stamp-editor.component';
+import { DrawColorSelectorComponent } from './draw-color-selector/draw-color-selector.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -34,7 +35,8 @@ const appRoutes: Routes = [
     TilePageComponent,
     TileStampPageComponent,
     TileStampLibraryComponent,
-    StampEditorComponent
+    StampEditorComponent,
+    DrawColorSelectorComponent
   ],
   imports: [
     RouterModule.forRoot(

@@ -5,8 +5,8 @@
             <button class="btn-add" (click)="add_onClick($event)">Add</button>
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
         </div>  
-        <div class="fill-over-status tiles-container clear">      
-            <img *ngFor="let icon of tileIcons; index as i" src="{{icon}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tiles[i] === activeTile}"/>     
+        <div class="fill-over-status icons-container clear" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">      
+            <img class="icon" *ngFor="let tile of tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>     
         </div>
         <div class="tool-status">{{tooltip}}</div>
     </div>

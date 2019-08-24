@@ -26,25 +26,21 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
   ngOnInit() {
     this.subscribe(
       this.applicationState.TileUpdatedObservable.subscribe(tile => {
-        let i = this.tiles.indexOf(tile);
-        if(i >= 0){
-          this.updateIconAtIndex(i);
-        }
       }),
   
-      this.applicationState.TileSelectedObservable.subscribe(tile => {
-        this.activeTile = tile;
-      }),
+    //   // this.applicationState.TileSelectedObservable.subscribe(tile => {
+    //   //   this.activeTile = tile;
+    //   // }),
   
-      this.applicationState.PaletteObservable.subscribe(palette => {
-        this.palette = palette;
-        this.updateIcons();
-      }),
+    //   // this.applicationState.PaletteObservable.subscribe(palette => {
+    //   //   this.palette = palette;
+    //   //   this.updateIcons();
+    //   // }),
   
-      this.applicationState.TilesetObservable.subscribe(tiles => {
-        this.tiles = tiles;
-        this.updateIcons();
-      })
+    //   // this.applicationState.TilesetObservable.subscribe(tiles => {
+    //   //   this.tiles = tiles;
+    //   //   this.updateIcons();
+    //   // })
     );
 
     this.tiles = this.applicationState.tiles;

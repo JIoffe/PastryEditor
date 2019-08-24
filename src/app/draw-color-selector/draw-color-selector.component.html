@@ -1,0 +1,3 @@
+<div class="color-selection">
+    <div *ngFor="let color of applicationState.activePalette; index as i" class="no-select" [ngClass]="{'active': i === applicationState.activeColor, 'palette-swatch': true}" [ngStyle]="{'backgroundColor': color.toCSS()}" (click)="swatch_onClick($event, i)"></div>                    
+</div>

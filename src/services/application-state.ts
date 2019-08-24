@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Color } from 'src/model/color';
 import { Stamp } from 'src/model/stamp';
+import { TileRenderer } from './tile-renderer';
 
 @Injectable({
     providedIn: 'root',
@@ -34,23 +35,40 @@ export class ApplicationState {
         [0x0000, 0x0000, 0x0EEE, 0x0E00, 0x00E0, 0x000E, 0x00EE, 0x0E0E, 0x0EE0, 0x0222, 0x0444, 0x0666, 0x0888, 0x0AAA, 0x0CCC, 0x0EEE].map(Color.fromSegaMDWord)
       ];
     activePalette = this.palettes[0];
+    activeColor = 0;
 
-    tiles = [
-        new Uint8Array(64)
-      ];
+    tiles: Uint8Array[] = [];
     activeTile = this.tiles[0];
+    tileImageData: Map<Uint8Array, string> = new Map();
 
     stamps: Stamp[] = [];
     activeStamp: Stamp = null;
 
-    constructor(){
+    constructor(private tileRenderer: TileRenderer){
+        //This is a singleton so these watchers do not need to be cleared
+        this.TileUpdatedObservable.subscribe(tile => {
+          console.log(tile);
+          this.tileImageData.set(tile, this.tileRenderer.renderTileDataUrl(tile, this.activePalette));
+        });
         this.TileSelectedObservable.subscribe(tile => this.activeTile = tile);
-        this.TilesetObservable.subscribe(tiles => this.tiles = tiles);
+        this.TilesetObservable.subscribe(tiles => {
+          this.tiles = tiles;
+          this.redrawAllTiles();
+        });
 
-        this.PaletteObservable.subscribe(palette => this.activePalette = palette);
+        this.PaletteObservable.subscribe(palette => {
+          this.activePalette = palette;
+          this.redrawAllTiles();
+        });
+
         this.PaletteSetObservable.subscribe(palettes => this.palettes = palettes);
 
         this.StampSelectedObservable.subscribe(stamp => this.activeStamp = stamp);
         this.StampsetUpdatedObservable.subscribe(stamps => this.stamps = stamps);
+    }
+
+    redrawAllTiles(){
+      this.tileImageData.clear();
+      this.tiles.forEach(tile => this.tileImageData.set(tile, this.tileRenderer.renderTileDataUrl(tile, this.activePalette)));
     }
 }

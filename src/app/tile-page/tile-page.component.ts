@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApplicationState } from 'src/services/application-state';
 
 @Component({
   selector: 'app-tile-page',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TilePageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private applicationState: ApplicationState) { }
 
   ngOnInit() {
   }

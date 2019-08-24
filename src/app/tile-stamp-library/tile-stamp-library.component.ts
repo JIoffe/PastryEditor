@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApplicationState } from 'src/services/application-state';
 import { Stamp } from 'src/model/stamp';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
@@ -9,8 +9,7 @@ import { TileRenderer } from 'src/services/tile-renderer';
   templateUrl: './tile-stamp-library.component.html',
   styleUrls: ['./tile-stamp-library.component.css']
 })
-export class TileStampLibraryComponent extends BaseSubscriberComponent implements OnInit {
-  stamps: Stamp[] = null;
+export class TileStampLibraryComponent extends BaseSubscriberComponent {
   code: string = null;
   tooltip = '';
 
@@ -20,22 +19,6 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent implement
 
   constructor(private applicationState: ApplicationState, private tileRenderer: TileRenderer) {
     super();
-  }
-
-  ngOnInit() {
-    this.subscribe(
-      this.applicationState.StampsetUpdatedObservable.subscribe(stamps => {
-        this.stamps = stamps;
-        this.redrawAllStamps();
-      }),
-    )
-    this.stamps = this.applicationState.stamps;
-    
-    this.redrawAllStamps();
-  }
-
-  redrawAllStamps(){
-    //this.icons = this.stamps.map(stamp => this.tileRenderer.renderStampDataUrl(stamp, this.applicationState.activePalette));
   }
 
   add_onClick(ev: MouseEvent){
@@ -90,6 +73,11 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent implement
 
   cancelStampDialog(ev: MouseEvent){
     this.showNewStampDialog = false;
+  }
+
+
+  icon_onClick(ev: MouseEvent, i: number){
+    this.applicationState.StampSelectedObservable.next(this.applicationState.stamps[i]);
   }
 
   library_onMouseLeave(ev: MouseEvent){

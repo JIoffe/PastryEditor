@@ -14,10 +14,8 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
   @ViewChild('canvasContainer', null) canvasContainer:ElementRef;
   @ViewChild('grid', null) grid:ElementRef;
   @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
-  @Input() palette: Color[];
   @Input() stamp: Stamp = null;
 
-  activeColor: number;
   code = null;
   zoom = 100.0;
 
@@ -44,13 +42,10 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
   }
 
   ngOnInit() {
-    this.palette = this.applicationState.activePalette;
     this.stamp = this.applicationState.activeStamp;
-    this.activeColor = 0;
 
     this.subscribe(
       this.applicationState.PaletteObservable.subscribe(palette => {
-        this.palette = palette;
         this.redrawCanvas();
       }),
   
@@ -87,13 +82,13 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     const x = Math.floor(((ev.pageX - rect.left) / w) * this.stamp.width  * 8),
           y = Math.floor(((ev.pageY - rect.top)  / h) * this.stamp.height * 8);
 
-    const updatedTile = this.stamp.setTexel(x, y, this.activeColor);
+    const updatedTile = this.stamp.setTexel(x, y, this.applicationState.activeColor);
     this.applicationState.TileUpdatedObservable.next(updatedTile);
   }
 
   redrawCanvasWhereDirty(tileIndex: number){
     const ctx = this.drawCanvas.nativeElement.getContext('2d');
-    const imageData = this.tileRenderer.renderTileImageData(ctx, this.stamp.tiles[tileIndex], this.palette);
+    const imageData = this.tileRenderer.renderTileImageData(ctx, this.stamp.tiles[tileIndex], this.applicationState.activePalette);
 
     const x = (tileIndex % this.stamp.width) * 8,
           y = Math.floor(tileIndex / this.stamp.width) * 8;
@@ -106,13 +101,12 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     if(!this.drawCanvas || !this.stamp)
       return;
 
-    const ctx = this.drawCanvas.nativeElement.getContext('2d');
-    const imageData = this.tileRenderer.renderStampImageData(ctx, this.stamp, this.palette);
+    this.drawCanvas.nativeElement.setAttribute('width', this.stamp.width * 8 + '');
+    this.drawCanvas.nativeElement.setAttribute('height', this.stamp.height * 8 + '');
 
-    this.drawCanvas.nativeElement.setAttribute('width', imageData.width + '');
-    this.drawCanvas.nativeElement.setAttribute('height', imageData.height + '');
-
-    ctx.putImageData(imageData, 0, 0);
+    for(let i = this.stamp.tiles.length - 1; i >= 0; --i){
+      this.redrawCanvasWhereDirty(i);
+    }
   }
 
   get showGrid(){
@@ -140,9 +134,5 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
 
   changeZoom(ev: MouseEvent, delta: number){
     this.zoom = Math.max(0.1, this.zoom + delta);
-  }
-
-  swatch_onClick(ev: MouseEvent, index: number){
-    this.activeColor = index;
   }
 }

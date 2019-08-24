@@ -5,25 +5,15 @@
     grid-row-end: 16;
     cursor: crosshair;
 }
-    .tiles-container > img {
-        width: 32px;
-        height: 32px;
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -webkit-crisp-edges;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-        float: left;
-        margin: 4px;
-    }
-    
-    .tiles-container > img:hover, .tiles-container > img.active {
-        cursor: pointer;
-        outline: 2px solid #FFF;
-    }
-    
+
     :host .control-content > .fill-over-status {
         height: calc(100% - 36px);
     }
     .tiles-container {
         overflow-y: scroll;
+    }
+
+    .icon{
+        width: 32px;
+        height: 32px;
     }
