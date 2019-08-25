@@ -22,3 +22,29 @@
 .button-container button{
     height: 18px;
 }
+
+/* Modal for image selection */
+td {
+    border: 1px solid;
+    padding: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+h2 {
+    font-size: 20px;
+    border: 4px double;
+    padding: 6px;
+    border-radius: 5px;
+}
+.modal-content img {
+    width: 400px;
+}
+
+.modal-content canvas{
+    width: 400px;
+    height: 400px;
+}

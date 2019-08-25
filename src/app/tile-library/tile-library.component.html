@@ -1,12 +1,12 @@
 <div class="control-group tile-library">
     <div class="control-content">
-        <div class="caption">Tile Library&nbsp;({{tiles.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="caption">Tile Library&nbsp;({{applicationState.tiles.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="button-container">
             <button class="btn-add" (click)="add_onClick($event)">Add</button>
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
         </div>  
         <div class="fill-over-status icons-container clear" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">      
-            <img class="icon" *ngFor="let tile of tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>     
+            <img class="icon" *ngFor="let tile of applicationState.tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>     
         </div>
         <div class="tool-status">{{tooltip}}</div>
     </div>

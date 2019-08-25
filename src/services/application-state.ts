@@ -49,7 +49,6 @@ export class ApplicationState {
     constructor(private tileRenderer: TileRenderer){
         //This is a singleton so these watchers do not need to be cleared
         this.TileUpdatedObservable.subscribe(tile => {
-          console.log(tile);
           this.tileImageData.set(tile, this.tileRenderer.renderTileDataUrl(tile, this.activePalette));
         });
         this.TileSelectedObservable.subscribe(tile => this.activeTile = tile);

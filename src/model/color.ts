@@ -40,6 +40,14 @@ export class Color{
         this.b = this.clampChannelToSegaMD(this.b);
     }
 
+    squaredDistance(r, g, b){
+        const dR = this.r - r,
+              dG = this.g - g,
+              dB = this.b - b;
+        
+        return dR*dR + dG*dG + dB*dB;
+    }
+
     /* FACTORIES */
     static fromHexRGB(rgb: number){
         const r = (rgb & 0xFF0000) >> 16;
@@ -156,6 +164,21 @@ export class Color{
      */
     static getSegaMDRamp(){
         return SEGA_MD_COLORRAMP.map(v => new Color(v,v,v));
+    }
+
+    static getNearestColor(colors: Color[], r, g, b){
+        let nearestColor = colors[colors.length - 1];
+        let d = nearestColor.squaredDistance(r,g,b);
+
+        for(let i = colors.length - 2; i >= 0; --i){
+            let di = colors[i].squaredDistance(r,g,b);
+            if(di < d){
+                d = di;
+                nearestColor = colors[i];
+            }
+        }
+
+        return nearestColor;
     }
 
     private clampChannelToSegaMD(v){

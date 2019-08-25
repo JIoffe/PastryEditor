@@ -15,6 +15,9 @@
                     <label>Name: <input type="text" [(ngModel)]="stamp.name"/></label>
                 </span>
                 <span>
+                    <button (click)="importImageClick($event)">Import Image</button>
+                </span>
+                <span>
                     Zoom:
                     <input type="range" min="10" max="10000" [(ngModel)]="zoom"/>
                     {{zoom | number:'1.0-0'}}%
@@ -26,6 +29,54 @@
             </div>
         </div>
         <div class="tool-status">Stamp: {{stamp.width}}x{{stamp.height}} tiles.  ({{stamp.width * 8}}x{{stamp.height * 8}} pixels)   {{backgroundMode}}</div>
+    </div>
+</div>
+<div class="modal" *ngIf="showImageSelection" (paste)="onImagePaste($event)">
+    <div class="modal-content">
+        <div class="caption">Select Image</div>
+        <table>
+            <tr>
+                <th>
+                    Source
+                </th>
+                <th>
+                    Options
+                </th>
+                <th>
+                    Output
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <h2 *ngIf="selectedImage === null">Drag or Paste an Image</h2>
+                    <img #imageImportSource [hidden]="selectedImage === null" src="{{selectedImage}}" crossorigin="anonymous"/>
+                </td>
+                <td>
+                    <label>Palette:<br/>
+                        <select>
+                            <option>Use Active Palette</option>
+                            <option>Replace Active Palette</option>
+                        </select>
+                    </label>
+                    <br/><br/>
+                    <label>
+                        Dithering:<br/>
+                        <select [(ngModel)]="ditheringMode" (change)="reprocessImage()">
+                            <option value="none">None</option>
+                            <option value="floyd-steinberg">Floyd-Steinberg</option>
+                        </select>
+                    </label>
+                </td>
+                <td>
+                    <canvas #imageImportCanvas></canvas>
+                </td>
+            </tr>
+        </table>
+        *Image may be stretched to fit pixel dimensions of target<br/>
+        *Output preview may not have correct aspect ratio
+        <hr/>
+        <button (click)="ok_click($event)">OK</button>
+        <button (click)="cancel_click($event)">CANCEL</button>
     </div>
 </div>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

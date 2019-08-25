@@ -10,11 +10,6 @@ import { TileRenderer } from 'src/services/tile-renderer';
   styleUrls: ['./tile-library.component.css']
 })
 export class TileLibraryComponent extends BaseSubscriberComponent implements OnInit {
-  @Input() palette: Color[];
-  @Input() tiles: Uint8Array[];
-  @Input() activeTile: Uint8Array;
-  
-  tileIcons = [];
   tooltip = '';
 
   code = null;
@@ -24,29 +19,6 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
   }
 
   ngOnInit() {
-    this.subscribe(
-      this.applicationState.TileUpdatedObservable.subscribe(tile => {
-      }),
-  
-    //   // this.applicationState.TileSelectedObservable.subscribe(tile => {
-    //   //   this.activeTile = tile;
-    //   // }),
-  
-    //   // this.applicationState.PaletteObservable.subscribe(palette => {
-    //   //   this.palette = palette;
-    //   //   this.updateIcons();
-    //   // }),
-  
-    //   // this.applicationState.TilesetObservable.subscribe(tiles => {
-    //   //   this.tiles = tiles;
-    //   //   this.updateIcons();
-    //   // })
-    );
-
-    this.tiles = this.applicationState.tiles;
-    this.activeTile = this.applicationState.activeTile;
-    this.palette = this.applicationState.activePalette;;
-    this.updateIcons();
   }
 
   library_onMouseLeave(ev: MouseEvent){
@@ -58,33 +30,28 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
   }
 
   icon_onClick(ev: MouseEvent, i: number){
-    this.applicationState.TileSelectedObservable.next(this.tiles[i]);
+    this.applicationState.TileSelectedObservable.next(this.applicationState.tiles[i]);
   }
 
   add_onClick(ev: MouseEvent){
     const tile = new Uint8Array(64);
-    this.tiles.push(tile);
-    this.applicationState.TilesetObservable.next(this.tiles);
-    this.applicationState.TileSelectedObservable.next(this.tiles[this.tiles.length - 1]);
+    this.applicationState.tiles.push(tile);
+    this.applicationState.TilesetObservable.next(this.applicationState.tiles);
+    this.applicationState.TileSelectedObservable.next(this.applicationState.tiles[this.applicationState.tiles.length - 1]);
   }
 
   remove_onClick(ev: MouseEvent){
-    if(this.tiles.length === 1){
-      alert("Must have at least one tile!");
-      return;
-    }
+    const i = this.applicationState.tiles.indexOf(this.applicationState.activeTile);
+    this.applicationState.tiles.splice(i, 1);
+    this.applicationState.TilesetObservable.next(this.applicationState.tiles);
 
-    const i = this.tiles.indexOf(this.activeTile);
-    this.tiles.splice(i, 1);
-    this.applicationState.TilesetObservable.next(this.tiles);
-
-    this.applicationState.TileSelectedObservable.next(this.tiles[Math.max(i - 1, 0)]);
+    this.applicationState.TileSelectedObservable.next(this.applicationState.tiles[Math.max(i - 1, 0)]);
   }
 
   code_onClick(ev: MouseEvent){
-    this.code = `;${this.tiles.length} tile(s)\r\nTiles:\r\n`;
+    this.code = `;${this.applicationState.tiles.length} tile(s)\r\nTiles:\r\n`;
 
-    this.tiles.forEach((tile, tileIndex) => {
+    this.applicationState.tiles.forEach((tile, tileIndex) => {
       for(let i = 0; i < 64; i += 8){
         const line = Array.from(tile.slice(i, i+8)).map(n => n.toString(16).toUpperCase()).reduce((p,c) => p + c, '');
         this.code += `   dc.l $${line}`;
@@ -128,20 +95,5 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
     }
 
     this.code = null;
-  }
-
-  private updateIcons(){
-    //Only re-render everything if we are grossly out of date
-    //Otherwise we will see lag while drawing
-    this.tileIcons = new Array(this.tiles.length);
-
-    for(let i = 0; i < this.tiles.length; ++i){
-      this.updateIconAtIndex(i);
-    }
-  }
-
-  private updateIconAtIndex(index){
-    const tile = this.tiles[index];
-    this.tileIcons[index] = this.tileRenderer.renderTileDataUrl(tile, this.palette);
   }
 }
