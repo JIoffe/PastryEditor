@@ -82,11 +82,9 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
   }
 
   code_onClick(ev: MouseEvent){
-    this.code = 'Tiles:\r\n';
+    this.code = `;${this.tiles.length} tile(s)\r\nTiles:\r\n`;
 
     this.tiles.forEach((tile, tileIndex) => {
-      this.code += `Tile${tileIndex}:\r\n`;
-
       for(let i = 0; i < 64; i += 8){
         const line = Array.from(tile.slice(i, i+8)).map(n => n.toString(16).toUpperCase()).reduce((p,c) => p + c, '');
         this.code += `   dc.l $${line}`;

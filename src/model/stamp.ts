@@ -6,6 +6,7 @@ export class Stamp{
     width: number;
     height: number;
     palette: Color[];
+    name: string;
 
     /**
      * Returns the tile that was updated for the given coordinates

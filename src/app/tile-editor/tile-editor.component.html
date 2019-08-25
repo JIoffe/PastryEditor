@@ -3,8 +3,17 @@
         <div class="caption">Edit Tile<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="fill-over-status clear">
             <app-draw-color-selector></app-draw-color-selector>
+            <div class="button-container">
+                <span>
+                    Background:
+                    <select [(ngModel)]="backgroundMode">
+                        <option value="backdrop">Backdrop</option>
+                        <option value="trace">Trace</option>
+                    </select>
+                </span>
+            </div>
             <div class="draw-canvas-container">
-                <img #drawingSurface draggable="false" ondragstart="return false;" class="drawing-surface no-select" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
+                <img #drawingSurface draggable="false" ondragstart="return false;" class="drawing-surface no-select" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none}" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
             </div>
         </div>
         <div class="tool-status"></div>

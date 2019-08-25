@@ -106,29 +106,10 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     }
   }
 
-  // get showGrid(){
-  //   const texelWidth  = this.stamp.width * 8;
-  //   return (1 / texelWidth)  * (this.stamp.width * 8 * (this.zoom/100)) > 30
-  // }
+  code_onClick(ev: MouseEvent){
 
-  // redrawGrid(){
-  //   const grid = this.grid.nativeElement;
-  //   grid.innerHTML = '';
-
-  //   const texelWidth  = this.stamp.width * 8,
-  //         texelHeight = this.stamp.height * 8,
-  //         texels      = texelWidth * texelHeight;
-
-  //   const gridUnitWidth   = (1 / texelWidth)  * 100 + '%';
-  //   const gridUnitHeight  = (1 / texelHeight) * 100 + '%';
-  //   for(let i = texels - 1; i >= 0; --i){
-  //     let gridpixel = document.createElement('div');
-  //     gridpixel.style.width = gridUnitWidth;
-  //     gridpixel.style.height = gridUnitHeight;
-  //     grid.appendChild(gridpixel);
-  //   }
-  // }
-
+  }
+  
   changeZoom(ev: MouseEvent, delta: number){
     this.zoom = Math.max(0.1, this.zoom + delta);
   }

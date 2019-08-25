@@ -12,6 +12,9 @@
                     </select>
                 </span>
                 <span>
+                    <label>Name: <input type="text" [(ngModel)]="stamp.name"/></label>
+                </span>
+                <span>
                     Zoom:
                     <input type="range" min="10" max="10000" [(ngModel)]="zoom"/>
                     {{zoom | number:'1.0-0'}}%

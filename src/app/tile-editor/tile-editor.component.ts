@@ -12,7 +12,7 @@ export class TileEditorComponent extends BaseSubscriberComponent implements OnIn
   
   showCodeEditor = false;
   code = '';
-  transparentPixelMode = 'palette';
+  backgroundMode = 'backdrop';
   
   constructor(private applicationState: ApplicationState) {
     super();

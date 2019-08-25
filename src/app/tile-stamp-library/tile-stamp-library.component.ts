@@ -87,4 +87,37 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
   icon_onHover(ev: MouseEvent, i: number){
     this.tooltip = `Stamp: ${i}`;
   }
+
+  code_onClick(ev: MouseEvent){
+    this.code = `;"Stamps" are rectangular groups of tiles.\r\n;1 byte for width, 1 byte for height, 2 bytes for starting index\r\n`;
+    this.code += `;${this.applicationState.stamps.length} stamps(s)\r\Stamps:\r\n`;
+
+    this.applicationState.stamps.forEach((stamp, stampIndex) => {
+      let widthByte = stamp.width.toString(16).toUpperCase();
+      if(widthByte.length === 1)
+        widthByte = '0' + widthByte;
+
+      let heightByte = stamp.width.toString(16).toUpperCase();
+      if(heightByte.length === 1){
+        heightByte = '0' + heightByte;
+      }
+
+      let indexWord = this.applicationState.tiles.indexOf(stamp.tiles[0]).toString(16).toUpperCase();
+      while(indexWord.length < 4){
+        indexWord = '0' + indexWord;
+      }
+
+      let name = stamp.name || `Stamp${stampIndex}`;
+
+      this.code += `${name}:\r\n`
+      this.code += `   dc.b $${widthByte}\r\n`;
+      this.code += `   dc.b $${heightByte}\r\n`;
+      this.code += `   dc.w $${indexWord}\r\n`;
+      this.code += '\r\n';
+    });
+  }
+
+  onCodeChanged(ev: MouseEvent){
+    this.code = null;
+  }
 }
