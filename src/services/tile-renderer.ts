@@ -32,6 +32,15 @@ export class TileRenderer{
             const i = x + y * 8,
                   colorIndex = tile[i],
                   pixelI = i * 4;
+
+            if(colorIndex === 0){
+                //Save transparent pixels as actually transparent
+                data[pixelI] = 0;
+                data[pixelI + 1] = 0;
+                data[pixelI + 2] = 0;
+                data[pixelI + 3] = 0; 
+                continue;
+            }
     
             const color = palette[colorIndex];
             data[pixelI] = color.r;

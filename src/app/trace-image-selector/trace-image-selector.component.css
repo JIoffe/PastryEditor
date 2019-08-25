@@ -1,0 +1,26 @@
+:host{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 7;
+}
+
+.control-group button {
+    height: 30px;
+}
+
+.draw-canvas-container{
+    text-align: center;
+}
+.draw-canvas-container img{
+    width: 70%;
+    height: 60%;
+    margin: 20px;
+    box-shadow: 2px 2px 5px;
+}
+
+h2 {
+    border-radius: 20px;
+    border: double 6px;
+    padding: 40px;
+}

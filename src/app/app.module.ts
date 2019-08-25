@@ -16,10 +16,13 @@ import { TileStampPageComponent } from './tile-stamp-page/tile-stamp-page.compon
 import { TileStampLibraryComponent } from './tile-stamp-library/tile-stamp-library.component';
 import { StampEditorComponent } from './stamp-editor/stamp-editor.component';
 import { DrawColorSelectorComponent } from './draw-color-selector/draw-color-selector.component';
+import { OptionsPageComponent } from './options-page/options-page.component';
+import { TraceImageSelectorComponent } from './trace-image-selector/trace-image-selector.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
   { path: 'edit-tile-stamps', component: TileStampPageComponent },
+  { path: 'options', component: OptionsPageComponent },
   { path: '**', component: TilePageComponent }
 ];
 
@@ -36,7 +39,9 @@ const appRoutes: Routes = [
     TileStampPageComponent,
     TileStampLibraryComponent,
     StampEditorComponent,
-    DrawColorSelectorComponent
+    DrawColorSelectorComponent,
+    OptionsPageComponent,
+    TraceImageSelectorComponent
   ],
   imports: [
     RouterModule.forRoot(

@@ -4,7 +4,7 @@
         <div class="fill-over-status clear">
             <app-draw-color-selector></app-draw-color-selector>
             <div class="draw-canvas-container">
-                <img #drawingSurface draggable="false" ondragstart="return false;" class="drawing-surface no-select" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
+                <img #drawingSurface draggable="false" ondragstart="return false;" class="drawing-surface no-select" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
             </div>
         </div>
         <div class="tool-status"></div>

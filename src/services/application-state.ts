@@ -44,6 +44,8 @@ export class ApplicationState {
     stamps: Stamp[] = [];
     activeStamp: Stamp = null;
 
+    traceImage: string = null;
+
     constructor(private tileRenderer: TileRenderer){
         //This is a singleton so these watchers do not need to be cleared
         this.TileUpdatedObservable.subscribe(tile => {

@@ -12,14 +12,13 @@ import { TileRenderer } from 'src/services/tile-renderer';
 })
 export class StampEditorComponent extends BaseSubscriberComponent implements OnInit {
   @ViewChild('canvasContainer', null) canvasContainer:ElementRef;
-  @ViewChild('grid', null) grid:ElementRef;
   @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
   @Input() stamp: Stamp = null;
 
   code = null;
   zoom = 100.0;
 
-  transparentPixelMode = 'palette';
+  backgroundMode = 'backdrop';
 
   get maxWidth(){
     if(!this.canvasContainer)
@@ -107,10 +106,10 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     }
   }
 
-  get showGrid(){
-    const texelWidth  = this.stamp.width * 8;
-    return (1 / texelWidth)  * (this.stamp.width * 8 * (this.zoom/100)) > 30
-  }
+  // get showGrid(){
+  //   const texelWidth  = this.stamp.width * 8;
+  //   return (1 / texelWidth)  * (this.stamp.width * 8 * (this.zoom/100)) > 30
+  // }
 
   // redrawGrid(){
   //   const grid = this.grid.nativeElement;

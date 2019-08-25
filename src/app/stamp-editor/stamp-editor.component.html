@@ -5,9 +5,11 @@
             <app-draw-color-selector></app-draw-color-selector>
             <div class="button-container">
                 <span>
-                    Transparent Pixels: 
-                    <label>Palette: <input name="transparentPixelMode" type="radio" checked="checked" value="palette" [(ngModel)]="transparentPixelMode" (change)="updateCanvas()"></label>
-                    <label>Pattern: <input name="transparentPixelMode" type="radio" value="pattern" [(ngModel)]="transparentPixelMode" (change)="updateCanvas()"></label>
+                    Background:
+                    <select [(ngModel)]="backgroundMode">
+                        <option value="backdrop">Backdrop</option>
+                        <option value="trace">Trace</option>
+                    </select>
                 </span>
                 <span>
                     Zoom:
@@ -17,10 +19,10 @@
             </div>
             <div class="draw-canvas-container" #canvasContainer [ngStyle]="{'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px'}">
                 <!-- <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div> -->
-                <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></canvas>
+                <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none, 'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></canvas>
             </div>
         </div>
-        <div class="tool-status">Stamp: {{stamp.width}}x{{stamp.height}} tiles.  ({{stamp.width * 8}}x{{stamp.height * 8}} pixels)</div>
+        <div class="tool-status">Stamp: {{stamp.width}}x{{stamp.height}} tiles.  ({{stamp.width * 8}}x{{stamp.height * 8}} pixels)   {{backgroundMode}}</div>
     </div>
 </div>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

@@ -237,6 +237,8 @@ canvas {
 
 .draw-canvas-container .drawing-surface{
     box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;  /* Stretch background to fit the whole canvas */
 }
 
 .grid{
