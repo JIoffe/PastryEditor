@@ -97,7 +97,7 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
       if(widthByte.length === 1)
         widthByte = '0' + widthByte;
 
-      let heightByte = stamp.width.toString(16).toUpperCase();
+      let heightByte = stamp.height.toString(16).toUpperCase();
       if(heightByte.length === 1){
         heightByte = '0' + heightByte;
       }

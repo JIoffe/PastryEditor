@@ -181,6 +181,28 @@ export class Color{
         return nearestColor;
     }
 
+    static getDistinctColorsFromImageData(imageData: any){
+        //There must be a faster approach for this but whatever
+        const data = imageData.data;
+        var colors = [];
+
+
+        for(let x = 0; x < imageData.width; ++x){
+            for(let y = 0; y < imageData.height; ++y){
+                const pixelI = (x + y * imageData.width) * 4;
+                const r = data[pixelI],
+                      g = data[pixelI + 1],
+                      b = data[pixelI + 2];
+                      
+                if(!colors.find(c => c.r === r && c.g === g && c.b === b)){
+                    colors.push(new Color(r,g,b));
+                }
+            }
+        }
+
+        return colors;
+    }
+
     private clampChannelToSegaMD(v){
         for(let i = SEGA_MD_COLORRAMP.length - 1; i > 0; --i){
             const a = SEGA_MD_COLORRAMP[i],

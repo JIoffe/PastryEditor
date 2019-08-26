@@ -18,6 +18,7 @@ import { StampEditorComponent } from './stamp-editor/stamp-editor.component';
 import { DrawColorSelectorComponent } from './draw-color-selector/draw-color-selector.component';
 import { OptionsPageComponent } from './options-page/options-page.component';
 import { TraceImageSelectorComponent } from './trace-image-selector/trace-image-selector.component';
+import { ImageImporterComponent } from './image-importer/image-importer.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -41,7 +42,8 @@ const appRoutes: Routes = [
     StampEditorComponent,
     DrawColorSelectorComponent,
     OptionsPageComponent,
-    TraceImageSelectorComponent
+    TraceImageSelectorComponent,
+    ImageImporterComponent
   ],
   imports: [
     RouterModule.forRoot(

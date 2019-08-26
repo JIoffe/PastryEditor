@@ -1,0 +1,53 @@
+<div class="modal" (paste)="onImagePaste($event)">
+    <div class="modal-content">
+        <div class="caption">Select Image</div>
+        <table>
+            <tr>
+                <th>
+                    Source
+                </th>
+                <th>
+                    Options
+                </th>
+                <th>
+                    Output
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <h2 *ngIf="selectedImage === null">Drag or Paste an Image</h2>
+                    <img #imageImportSource [hidden]="selectedImage === null" src="{{selectedImage}}" crossorigin="anonymous"/>
+                </td>
+                <td>
+                    <label>Palette:<br/>
+                        <select (change)="onPaletteChange($event)" [(ngModel)]="paletteSelection">
+                            <option *ngFor="let palette of applicationState.palettes; index as i" [value]="i">Palette {{i}}</option>
+                            <option value="-1">Replace Active Palette</option>
+                        </select>
+                    </label>
+                    <div>
+                        <ng-template ngFor let-color [ngForOf]="palette" let-j="index">
+                            <div class="palette-swatch" [ngStyle]="{'backgroundColor': color.toCSS()}"></div>
+                        </ng-template>
+                    </div>
+                    <br/><br/>
+                    <label>
+                        Dithering:<br/>
+                        <select [(ngModel)]="ditheringMode" (change)="reprocessImage()">
+                            <option value="none">None</option>
+                            <option value="floyd-steinberg">Floyd-Steinberg</option>
+                        </select>
+                    </label>
+                </td>
+                <td>
+                    <canvas #imageImportCanvas></canvas>
+                </td>
+            </tr>
+        </table>
+        *Image may be stretched to fit pixel dimensions of target<br/>
+        *Output preview may not have correct aspect ratio
+        <hr/>
+        <button (click)="ok_click($event)">OK</button>
+        <button (click)="cancel_click($event)">CANCEL</button>
+    </div>
+</div>
