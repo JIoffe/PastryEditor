@@ -20,12 +20,14 @@ export class ImageImporterComponent implements OnInit {
   palette: Color[];
 
   paletteSelection: string;
+  transparencySelection: string;
   customPalette: Color[] = null;
 
   constructor(private applicationState: ApplicationState, private colorKMeansSolver: ColorKMeansSolver) { }
 
   ngOnInit() {
     this.paletteSelection = "0";
+    this.transparencySelection = "none";
     this.palette = this.applicationState.activePalette;
   }
 
@@ -53,7 +55,13 @@ export class ImageImporterComponent implements OnInit {
       const pixelI = i * 4;
       const r = imageData.data[pixelI],
             g = imageData.data[pixelI + 1],
-            b = imageData.data[pixelI + 2];
+            b = imageData.data[pixelI + 2],
+            a = imageData.data[pixelI + 3];
+
+      if(a === 0){
+        indices[i] = 0;
+        continue;
+      }
 
       for(let j = 15; j >= 0; --j){
         const color = this.palette[j];
@@ -75,6 +83,10 @@ export class ImageImporterComponent implements OnInit {
   }
 
   onPaletteChange(ev: any){
+    this.reprocessImage();
+  }
+
+  onTransparencyChange(ev: any){
     this.reprocessImage();
   }
 
@@ -105,9 +117,18 @@ export class ImageImporterComponent implements OnInit {
       const srcImageData = ctx.getImageData(0, 0, w, h);
       const targetImageData = ctx.createImageData(w, h);
 
+      let transparentColor: Color = null;
+      if(this.transparencySelection === 'upper-left'){
+        transparentColor = new Color(srcImageData.data[0], srcImageData.data[1], srcImageData.data[2]);
+      }
+
       //Determine palette for K Means
       if(this.customPalette === null){
-        const srcColors = Color.getDistinctColorsFromImageData(srcImageData);
+        let srcColors = Color.getDistinctColorsFromImageData(srcImageData);
+        
+        if(transparentColor !== null)
+          srcColors = srcColors.filter(c => !c.equals(transparentColor));
+
         // srcColors.forEach(c => c.clampToSegaMD());
   
         //15 colors - first one is transparent!
@@ -139,6 +160,17 @@ export class ImageImporterComponent implements OnInit {
           let srcR = srcImageData.data[pixelI],
             srcG = srcImageData.data[pixelI + 1],
             srcB = srcImageData.data[pixelI + 2];
+
+          if(transparentColor !== null){
+            if(transparentColor.r === srcR && transparentColor.g === srcG && transparentColor.b === srcB){
+              targetImageData.data[pixelI] = 0;
+              targetImageData.data[pixelI + 1] = 0;
+              targetImageData.data[pixelI + 2] = 0;
+              targetImageData.data[pixelI + 3] = 0;
+  
+              continue;
+            }
+          }
 
           //Dithering is an application of error diffusion.
           //Forward propagate the errors to better simulate gradients

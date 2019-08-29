@@ -14,6 +14,10 @@ export class Color{
         this.g = g || 0;
     }
 
+    equals(c: Color){
+        return this.r === c.r && this.g === c.g && this.b === c.b;
+    }
+
     toCSS(){
         return `rgb(${this.r}, ${this.g}, ${this.b})`;
     }

@@ -19,6 +19,14 @@
                     <img #imageImportSource [hidden]="selectedImage === null" src="{{selectedImage}}" crossorigin="anonymous"/>
                 </td>
                 <td>
+                    <label>Transparency:<br/>
+                        <select (change)="onTransparencyChange($event)" [(ngModel)]="transparencySelection">
+                            <option value="none">None</option>
+                            <option value="upper-left">Use Upper Left Pixel</option>
+                            <option value="fixed">Use Fixed Color</option>
+                        </select>
+                    </label>
+                    <br/><br/>
                     <label>Palette:<br/>
                         <select (change)="onPaletteChange($event)" [(ngModel)]="paletteSelection">
                             <option *ngFor="let palette of applicationState.palettes; index as i" [value]="i">Palette {{i}}</option>
