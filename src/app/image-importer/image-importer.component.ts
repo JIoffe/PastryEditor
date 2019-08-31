@@ -98,6 +98,22 @@ export class ImageImporterComponent implements OnInit {
       this.reprocessImage();
       return;
     }
+
+    let imgItem = Array.from(ev.clipboardData.items).find(i => i.type.indexOf('image') >= 0);
+    if(!!imgItem){
+      //Use the FileReader API to convert this blob to a base64 string
+      let blob = imgItem.getAsFile();
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        this.selectedImage = (<any>ev.target).result;
+        this.customPalette = null;
+        this.reprocessImage();
+      };
+
+      reader.readAsDataURL(blob);
+      return;
+    }
   }
 
   reprocessImage(){
@@ -107,8 +123,24 @@ export class ImageImporterComponent implements OnInit {
     const img = <HTMLImageElement>this.imageImportSource.nativeElement;
 
     var proc = () => {
+      //Style images to keep image's aspect ratio for preview purposes
+      let aspect = h / w;
+
       this.imageImportCanvas.nativeElement.setAttribute('width', w + '');
       this.imageImportCanvas.nativeElement.setAttribute('height', h + '');
+
+      let displayWidth = 400;
+      let displayHeight = aspect * displayWidth;
+
+      let maxDisplay = Math.max(displayWidth, displayHeight);
+      if(maxDisplay > 400){
+        let factor = maxDisplay / 400;
+        displayHeight /= factor;
+        displayWidth /= factor;
+      }
+
+      this.imageImportCanvas.nativeElement.style.width = `${displayWidth}px`;
+      this.imageImportCanvas.nativeElement.style.height = `${displayHeight}px`;
 
       const ctx = this.imageImportCanvas.nativeElement.getContext('2d');
 
