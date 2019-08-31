@@ -1,0 +1,37 @@
+:host {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 16;
+}
+
+.fill-over-status{
+    overflow-y: scroll;
+    max-height: 800px;
+}
+.vdp-registers{
+    width: 100%;
+    border-collapse: collapse;
+    background: #DDD;
+}
+
+.vdp-registers .division{
+    background: #888;
+    font-weight: bold;
+}
+
+.vdp-registers td, .vdp-registers th{
+    border: 1px solid black;
+}
+
+.vdp-registers td{
+    vertical-align: top;
+    padding: 8px;
+}
+
+.vdp-register-group select{
+    width: 100%;
+}
+.vdp-register-group input[type="number"]{
+    width: 6em;
+}

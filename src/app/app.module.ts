@@ -19,11 +19,14 @@ import { DrawColorSelectorComponent } from './draw-color-selector/draw-color-sel
 import { OptionsPageComponent } from './options-page/options-page.component';
 import { TraceImageSelectorComponent } from './trace-image-selector/trace-image-selector.component';
 import { ImageImporterComponent } from './image-importer/image-importer.component';
+import { VdpPageComponent } from './vdp-page/vdp-page.component';
+import { VdpRegistersComponent } from './vdp-registers/vdp-registers.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
   { path: 'edit-tile-stamps', component: TileStampPageComponent },
   { path: 'options', component: OptionsPageComponent },
+  { path: 'vdp', component: VdpPageComponent},
   { path: '**', component: TilePageComponent }
 ];
 
@@ -43,7 +46,9 @@ const appRoutes: Routes = [
     DrawColorSelectorComponent,
     OptionsPageComponent,
     TraceImageSelectorComponent,
-    ImageImporterComponent
+    ImageImporterComponent,
+    VdpPageComponent,
+    VdpRegistersComponent
   ],
   imports: [
     RouterModule.forRoot(
