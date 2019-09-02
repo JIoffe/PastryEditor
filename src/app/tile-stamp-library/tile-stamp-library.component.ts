@@ -117,7 +117,39 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
     });
   }
 
-  onCodeChanged(ev: MouseEvent){
+  onCodeChanged(code: string){
+    if(!!code){
+      let regex = /([a-z]+:)/gmi;
+      let dividers = code.match(regex);
+      
+      let stamps = [];
+      dividers.map((s, i) => {
+        const loc = code.indexOf(s);
+        let end;
+        if(i < dividers.length - 1){
+          end = code.indexOf(dividers[i+1]);
+        }
+   
+        return code.substr(loc, end);
+      }).forEach(section => {
+        let values = section.match(/\$[0-9a-f]{2,4}/gmi);
+        if(!!values && values.length === 3){
+          values = values.map(m => m.substr(1));
+          var stamp = new Stamp();
+          stamp.width = parseInt(values[0], 16);
+          stamp.height = parseInt(values[1], 16);
+          stamp.name = section.substr(0, section.indexOf(':')).trim()
+
+          const n = stamp.width * stamp.height;
+          const i = parseInt(values[2], 16);
+          stamp.tiles = this.applicationState.tiles.slice(i, i + n);
+          stamps.push(stamp);
+        }
+       });
+
+       this.applicationState.stamps = stamps;
+       this.applicationState.StampsetUpdatedObservable.next(stamps);
+    }
     this.code = null;
   }
 }

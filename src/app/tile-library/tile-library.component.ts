@@ -62,11 +62,11 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
 
   onCodeChanged(code: string){
     if(code !== null){
-      const matches = code.match(/\$[0-9A-Ea-e]{8}/g);
+      const matches = code.match(/\$[0-9A-Ea-f]{8}/gmi);
       let tileset: Uint8Array[];
 
       if(matches === null){
-        tileset = [new Uint8Array(64)];
+        tileset = [];
       }else{
         const indices = Array.from(matches.reduce((p,c) => p + c.substr(1),''));
 

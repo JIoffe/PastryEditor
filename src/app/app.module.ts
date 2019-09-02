@@ -21,10 +21,12 @@ import { TraceImageSelectorComponent } from './trace-image-selector/trace-image-
 import { ImageImporterComponent } from './image-importer/image-importer.component';
 import { VdpPageComponent } from './vdp-page/vdp-page.component';
 import { VdpRegistersComponent } from './vdp-registers/vdp-registers.component';
+import { SpritePageComponent } from './sprite-page/sprite-page.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
   { path: 'edit-tile-stamps', component: TileStampPageComponent },
+  { path: 'edit-sprites', component: SpritePageComponent},
   { path: 'options', component: OptionsPageComponent },
   { path: 'vdp', component: VdpPageComponent},
   { path: '**', component: TilePageComponent }
@@ -48,7 +50,8 @@ const appRoutes: Routes = [
     TraceImageSelectorComponent,
     ImageImporterComponent,
     VdpPageComponent,
-    VdpRegistersComponent
+    VdpRegistersComponent,
+    SpritePageComponent
   ],
   imports: [
     RouterModule.forRoot(
