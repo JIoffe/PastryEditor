@@ -1,26 +1,40 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { Color } from 'src/model/color';
+import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges } from '@angular/core';
+import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { ApplicationState } from 'src/services/application-state';
 import { Stamp } from 'src/model/stamp';
-import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { TileRenderer } from 'src/services/tile-renderer';
 
 @Component({
-  selector: 'app-stamp-editor',
-  templateUrl: './stamp-editor.component.html',
-  styleUrls: ['./stamp-editor.component.css']
+  selector: 'app-multi-tile-editor',
+  templateUrl: './multi-tile-editor.component.html',
+  styleUrls: ['./multi-tile-editor.component.css']
 })
-export class StampEditorComponent extends BaseSubscriberComponent implements OnInit {
-  @ViewChild('canvasContainer', null) canvasContainer:ElementRef;
-  @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
+export class MultiTileEditorComponent  extends BaseSubscriberComponent implements OnInit, OnChanges {
+  @Input() title: string = 'Edit Graphic';
   @Input() stamp: Stamp = null;
 
-  code = null;
+  @ViewChild('canvasContainer', null) canvasContainer:ElementRef;
+  @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
+
+  backgroundMode:string = 'backdrop';
+  name:string = '';
+
+  code:string = null;
   zoom = 100.0;
 
-  backgroundMode = 'backdrop';
-
   showImageSelection = false;
+
+  constructor(private applicationState: ApplicationState, private tileRenderer: TileRenderer) {
+    super();
+  }
+
+  get width(){
+    return this.stamp.width;
+  }
+
+  get height(){
+    return this.stamp.height;
+  }
 
   get maxWidth(){
     if(!this.canvasContainer)
@@ -37,21 +51,10 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     var r = this.canvasContainer.nativeElement.getBoundingClientRect();
     return r.bottom - r.top;
   }
-  
-  constructor(private applicationState: ApplicationState, private tileRenderer: TileRenderer) {
-    super();
-  }
 
   ngOnInit() {
-    this.stamp = this.applicationState.activeStamp;
-
     this.subscribe(
       this.applicationState.PaletteObservable.subscribe(palette => {
-        this.redrawCanvas();
-      }),
-  
-      this.applicationState.StampSelectedObservable.subscribe(stamp => {
-        this.stamp = stamp;
         this.redrawCanvas();
       }),
 
@@ -66,6 +69,11 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
       })
     )
 
+    this.redrawCanvas();
+  }
+
+  ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
+    console.log('chchchchchanges');
     this.redrawCanvas();
   }
 
@@ -89,10 +97,9 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     const ctx = this.drawCanvas.nativeElement.getContext('2d');
     const imageData = this.tileRenderer.renderTileImageData(ctx, this.stamp.tiles[tileIndex], this.applicationState.activePalette);
 
-    const x = (tileIndex % this.stamp.width) * 8,
-          y = Math.floor(tileIndex / this.stamp.width) * 8;
+    const pos = this.stamp.getTilePos(tileIndex);
     
-    ctx.putImageData(imageData, x, y);
+    ctx.putImageData(imageData, pos[0], pos[1]);
   }
 
   redrawCanvas(){
@@ -107,16 +114,6 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
       this.redrawCanvasWhereDirty(i);
     }
   }
-
-  code_onClick(ev: MouseEvent){
-
-  }
-  
-  changeZoom(ev: MouseEvent, delta: number){
-    this.zoom = Math.max(0.1, this.zoom + delta);
-  }
-
-  // Image import callbacks
 
   importImageClick(ev: MouseEvent){
     this.showImageSelection = true;
@@ -140,7 +137,12 @@ export class StampEditorComponent extends BaseSubscriberComponent implements OnI
     this.showImageSelection = false;
   }
 
-  // diffuseError(imageData: ImageData, errorMatrix, x, y){
 
-  // }
+  code_onClick(ev: MouseEvent){
+
+  }
+
+  onCodeChanged(code: string){
+
+  }
 }

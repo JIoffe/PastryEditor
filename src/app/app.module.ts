@@ -14,7 +14,6 @@ import { TilePageComponent } from './tile-page/tile-page.component';
 import { RouterModule, Routes } from '@angular/router';
 import { TileStampPageComponent } from './tile-stamp-page/tile-stamp-page.component';
 import { TileStampLibraryComponent } from './tile-stamp-library/tile-stamp-library.component';
-import { StampEditorComponent } from './stamp-editor/stamp-editor.component';
 import { DrawColorSelectorComponent } from './draw-color-selector/draw-color-selector.component';
 import { OptionsPageComponent } from './options-page/options-page.component';
 import { TraceImageSelectorComponent } from './trace-image-selector/trace-image-selector.component';
@@ -22,6 +21,9 @@ import { ImageImporterComponent } from './image-importer/image-importer.componen
 import { VdpPageComponent } from './vdp-page/vdp-page.component';
 import { VdpRegistersComponent } from './vdp-registers/vdp-registers.component';
 import { SpritePageComponent } from './sprite-page/sprite-page.component';
+import { SpriteLibraryComponent } from './sprite-library/sprite-library.component';
+import { BlockElementPreviewComponent } from './block-element-preview/block-element-preview.component';
+import { MultiTileEditorComponent } from './multi-tile-editor/multi-tile-editor.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -44,14 +46,16 @@ const appRoutes: Routes = [
     TilePageComponent,
     TileStampPageComponent,
     TileStampLibraryComponent,
-    StampEditorComponent,
     DrawColorSelectorComponent,
     OptionsPageComponent,
     TraceImageSelectorComponent,
     ImageImporterComponent,
     VdpPageComponent,
     VdpRegistersComponent,
-    SpritePageComponent
+    SpritePageComponent,
+    SpriteLibraryComponent,
+    BlockElementPreviewComponent,
+    MultiTileEditorComponent
   ],
   imports: [
     RouterModule.forRoot(

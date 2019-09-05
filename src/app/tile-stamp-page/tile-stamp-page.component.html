@@ -1,5 +1,5 @@
 <main class="pastry-grid">
     <app-palette-library></app-palette-library>
     <app-tile-stamp-library></app-tile-stamp-library>
-    <app-stamp-editor *ngIf="applicationState.activeStamp !== null"></app-stamp-editor>
+    <app-multi-tile-editor *ngIf="applicationState.activeStamp !== null" [stamp]="applicationState.activeStamp" title="Stamp Editor"></app-multi-tile-editor>
 </main>

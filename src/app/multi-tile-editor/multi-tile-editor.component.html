@@ -1,6 +1,6 @@
 <div class="control-group edit-active-tile">
     <div class="control-content">
-        <div class="caption">Edit Stamp<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="caption">{{title}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="fill-over-status clear">
             <app-draw-color-selector></app-draw-color-selector>
             <div class="button-container">
@@ -12,7 +12,7 @@
                     </select>
                 </span>
                 <span>
-                    <label>Name: <input type="text" [(ngModel)]="stamp.name"/></label>
+                    <label>Name: <input type="text" [(ngModel)]="name"/></label>
                 </span>
                 <span>
                     <button (click)="importImageClick($event)">Import Image</button>
@@ -25,11 +25,11 @@
             </div>
             <div class="draw-canvas-container" #canvasContainer [ngStyle]="{'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px'}">
                 <!-- <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div> -->
-                <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none, 'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></canvas>
+                <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none, 'width': (width * 8 * (zoom/100)) + 'px', 'height': (height * 8 * (zoom/100)) + 'px'}"></canvas>
             </div>
         </div>
-        <div class="tool-status">Stamp: {{stamp.width}}x{{stamp.height}} tiles.  ({{stamp.width * 8}}x{{stamp.height * 8}} pixels)   {{backgroundMode}}</div>
+        <div class="tool-status">Size: {{width}}x{{height}} tiles.  ({{width * 8}}x{{height * 8}} pixels)</div>
     </div>
 </div>
-<app-image-importer *ngIf="showImageSelection" [width]="stamp.width" [height]="stamp.height" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
+<app-image-importer *ngIf="showImageSelection" [width]="width" [height]="height" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

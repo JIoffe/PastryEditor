@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { Color } from 'src/model/color';
 import { Stamp } from 'src/model/stamp';
 import { TileRenderer } from './tile-renderer';
+import { Sprite } from 'src/model/sprite';
 
 @Injectable({
     providedIn: 'root',
@@ -28,6 +29,9 @@ export class ApplicationState {
     /** A stamp was selected */
     StampSelectedObservable: Subject<Stamp> = new Subject();
 
+    SpriteSetUpdatedObservable: Subject<Sprite[]> = new Subject();
+    SpriteSelectedObservable: Subject<Sprite> = new Subject();
+
     palettes = [
         [0x0000, 0x0000, 0x0EEE, 0x0E00, 0x00E0, 0x000E, 0x00EE, 0x0E0E, 0x0EE0, 0x0222, 0x0444, 0x0666, 0x0888, 0x0AAA, 0x0CCC, 0x0EEE].map(Color.fromSegaMDWord),
         [0x0000, 0x0000, 0x0EEE, 0x0E00, 0x00E0, 0x000E, 0x00EE, 0x0E0E, 0x0EE0, 0x0222, 0x0444, 0x0666, 0x0888, 0x0AAA, 0x0CCC, 0x0EEE].map(Color.fromSegaMDWord),
@@ -43,6 +47,9 @@ export class ApplicationState {
 
     stamps: Stamp[] = [];
     activeStamp: Stamp = null;
+
+    sprites: Sprite[] = [];
+    activeSprite: Sprite = null;
 
     traceImage: string = null;
 
@@ -66,6 +73,9 @@ export class ApplicationState {
 
         this.StampSelectedObservable.subscribe(stamp => this.activeStamp = stamp);
         this.StampsetUpdatedObservable.subscribe(stamps => this.stamps = stamps);
+
+        this.SpriteSetUpdatedObservable.subscribe(sprites => this.sprites = sprites);
+        this.SpriteSelectedObservable.subscribe(sprite => this.activeSprite = sprite);
     }
 
     redrawAllTiles(){

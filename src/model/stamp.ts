@@ -39,4 +39,30 @@ export class Stamp{
         const texel = (x % 8) + (y % 8) * 8;
         return tile[texel];
     }
+
+    getTilePos(tileIndex){
+        const x = (tileIndex % this.width) * 8,
+              y = Math.floor(tileIndex / this.width) * 8;
+
+        return [x,y]
+    }
+
+    gridTemplateRows(){
+        let prop = '';
+        for(let i = this.height - 1; i >= 0; --i){
+          prop += ' 1fr';
+        }
+    
+        return prop;
+      }
+    
+    
+    gridTemplateColumns(){
+    let prop = '';
+    for(let i = this.width - 1; i >= 0; --i){
+        prop += ' 1fr';
+    }
+
+    return prop;
+    }
 }

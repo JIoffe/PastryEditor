@@ -14,16 +14,12 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
   tooltip = '';
 
   showNewStampDialog = false;
-  stampDialogHeight = 2;
-  stampDialogWidth = 2;
 
   constructor(private applicationState: ApplicationState, private tileRenderer: TileRenderer) {
     super();
   }
 
   add_onClick(ev: MouseEvent){
-    this.stampDialogHeight = 2;
-    this.stampDialogWidth = 2;
     this.showNewStampDialog = true;
   }
 
@@ -50,32 +46,6 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
     this.applicationState.StampSelectedObservable.next(this.applicationState.activeStamp);
   }
 
-  addStamp(ev: MouseEvent){
-    const n = this.stampDialogHeight * this.stampDialogWidth;
-    const newTiles = new Array(n);
-    for(let i = n - 1; i >= 0; --i)
-      newTiles[i] = new Uint8Array(64);
-
-    this.applicationState.tiles.push(...newTiles);
-    this.applicationState.TilesetObservable.next(this.applicationState.tiles);
-
-    const stamp = new Stamp();
-    stamp.width = this.stampDialogWidth;
-    stamp.height = this.stampDialogHeight;
-    stamp.tiles = newTiles;
-
-    this.applicationState.stamps.push(stamp);
-    this.applicationState.StampsetUpdatedObservable.next(this.applicationState.stamps);
-    this.applicationState.StampSelectedObservable.next(stamp);
-
-    this.showNewStampDialog = false;
-  }
-
-  cancelStampDialog(ev: MouseEvent){
-    this.showNewStampDialog = false;
-  }
-
-
   icon_onClick(ev: MouseEvent, i: number){
     this.applicationState.StampSelectedObservable.next(this.applicationState.stamps[i]);
   }
@@ -86,6 +56,32 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
 
   icon_onHover(ev: MouseEvent, i: number){
     this.tooltip = `Stamp: ${i}`;
+  }
+
+  onSizeSelected(size: number[]){
+    if(!!size){
+      const w = size[0],
+            h = size[1],
+            n = w * h;
+
+      const newTiles = new Array(n);
+      for(let i = n - 1; i >= 0; --i)
+        newTiles[i] = new Uint8Array(64);
+  
+      this.applicationState.tiles.push(...newTiles);
+      this.applicationState.TilesetObservable.next(this.applicationState.tiles);
+  
+      const stamp = new Stamp();
+      stamp.width = w;
+      stamp.height = h;
+      stamp.tiles = newTiles;
+  
+      this.applicationState.stamps.push(stamp);
+      this.applicationState.StampsetUpdatedObservable.next(this.applicationState.stamps);
+      this.applicationState.StampSelectedObservable.next(stamp);
+    }
+
+    this.showNewStampDialog = false;
   }
 
   code_onClick(ev: MouseEvent){

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StampEditorComponent } from './stamp-editor.component';
+import { MultiTileEditorComponent } from './multi-tile-editor.component';
 
-describe('StampEditorComponent', () => {
-  let component: StampEditorComponent;
-  let fixture: ComponentFixture<StampEditorComponent>;
+describe('MultiTileEditorComponent', () => {
+  let component: MultiTileEditorComponent;
+  let fixture: ComponentFixture<MultiTileEditorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StampEditorComponent ]
+      declarations: [ MultiTileEditorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StampEditorComponent);
+    fixture = TestBed.createComponent(MultiTileEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,18 @@
+<div class="modal">
+    <div class="modal-content">
+        <div class="caption">{{title}}</div>
+        <label>Width:&nbsp; <input type="number" min={{min}} max="{{max}}" [(ngModel)]="width"/> Tiles</label><br/>
+        <label>Height: <input type="number" min={{min}} max="{{max}}" [(ngModel)]="height"/> Tiles</label>
+        <div class="screen-preview">
+            <div class="size-preview" [ngStyle]="{'width': width * 8 + 'px', 'height': height * 8 + 'px'}">
+                <span *ngIf="width > 10 && height > 2">({{width*8}}x{{height*8}}px)</span>
+            </div>
+        </div>
+        (Genesis NTSC: 320 x 224px)
+        <hr/>
+        <div class="buttons-container">
+            <button class="btn-ok" (click)="ok($event)">OK</button>
+            <button class="btn-cancel" (click)="cancel($event)">CANCEL</button>
+        </div>
+    </div>
+</div>

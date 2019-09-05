@@ -161,7 +161,7 @@ export class ImageImporterComponent implements OnInit {
         if(transparentColor !== null)
           srcColors = srcColors.filter(c => !c.equals(transparentColor));
 
-        // srcColors.forEach(c => c.clampToSegaMD());
+        srcColors.forEach(c => c.clampToSegaMD());
   
         //15 colors - first one is transparent!
         const reducedPalette = this.colorKMeansSolver.SolveKMeans(srcColors, 15, 500);

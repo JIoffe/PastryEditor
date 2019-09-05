@@ -266,16 +266,22 @@ canvas {
     image-rendering: crisp-edges;
 }
 .icons-container > .icon{
-    float: left;
     margin: 4px;
 }
 .icons-container > .icon:hover, .icons-container > .icon.active {
     cursor: pointer;
     outline: 2px solid #FFF;
 }
-.icon > img{
+.icon{
     float: left;
+    display: grid;
+    grid-auto-flow: row;
 }
+.icon > img{
+    width: 16px;
+    height: 16px;
+}
+
 .screen-preview {
     height: 224px;
     width: 320px;

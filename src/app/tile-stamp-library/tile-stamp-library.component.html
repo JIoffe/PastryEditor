@@ -6,31 +6,13 @@
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
         </div>  
         <div class="fill-over-status icons-container clear" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
-            <div class="icon clear" *ngFor="let stamp of applicationState.stamps; index as i" [ngStyle]="{width: stamp.width * 16 + 'px', height: stamp.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
-                <img *ngFor="let tile of stamp.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}" [ngStyle]="{width: (1 / stamp.width) * 100 + '%', height: (1 / stamp.height) * 100 + '%'}"/>
+            <div class="icon" *ngFor="let stamp of applicationState.stamps; index as i" [ngStyle]="{'grid-template-rows': stamp.gridTemplateRows(), 'grid-template-columns': stamp.gridTemplateColumns(), width: stamp.width * 16 + 'px', height: stamp.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
+                <img *ngFor="let tile of stamp.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}"/>
             </div>   
         </div>
         <div class="tool-status">{{tooltip}}</div>
     </div>
 </div>
 
-<div class="modal" *ngIf="showNewStampDialog">
-    <div class="modal-content">
-        <div class="caption">Create New Stamp</div>
-        <label>Width:&nbsp; <input type="number" [(ngModel)]="stampDialogWidth"/> Tiles</label><br/>
-        <label>Height: <input type="number" [(ngModel)]="stampDialogHeight"/> Tiles</label>
-        <div class="screen-preview">
-            <div class="size-preview" [ngStyle]="{'width': stampDialogWidth * 8 + 'px', 'height': stampDialogHeight * 8 + 'px'}">
-                <span *ngIf="stampDialogWidth > 10 && stampDialogHeight > 2">({{stampDialogWidth*8}}x{{stampDialogHeight*8}}px)</span>
-            </div>
-        </div>
-        (Genesis NTSC: 320 x 224px)
-        <hr/>
-        <div class="buttons-container">
-            <button class="btn-ok" (click)="addStamp($event)">OK</button>
-            <button class="btn-cancel" (click)="cancelStampDialog($event)">CANCEL</button>
-        </div>
-    </div>
-</div>
-
+<app-block-element-preview *ngIf="showNewStampDialog" title="Create New Stamp" [min]="1" [max]="64" (sizeSelected)="onSizeSelected($event)"></app-block-element-preview>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
