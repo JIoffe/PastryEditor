@@ -22,3 +22,10 @@
 .button-container button{
     height: 18px;
 }
+
+.grid-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}

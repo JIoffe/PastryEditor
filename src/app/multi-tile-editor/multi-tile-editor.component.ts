@@ -15,12 +15,15 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
 
   @ViewChild('canvasContainer', null) canvasContainer:ElementRef;
   @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
+  @ViewChild('grid', null) grid:ElementRef;
+  
 
   backgroundMode:string = 'backdrop';
 
   code:string = null;
   zoom = 100.0;
-
+  showGrid = true;
+  
   showImageSelection = false;
 
   constructor(private applicationState: ApplicationState, private tileRenderer: TileRenderer) {
@@ -68,12 +71,17 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
       })
     )
 
+    this.redrawGrid();
     this.redrawCanvas();
   }
 
   ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
-    console.log('chchchchchanges');
     this.redrawCanvas();
+    this.redrawGrid();
+  }
+
+  onZoomChange(){
+    this.redrawGrid();
   }
 
   onDraw(ev: MouseEvent){
@@ -90,6 +98,36 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
 
     const updatedTile = this.stamp.setTexel(x, y, this.applicationState.activeColor);
     this.applicationState.TileUpdatedObservable.next(updatedTile);
+  }
+
+  redrawGrid(){
+    const canvas = this.grid.nativeElement,
+          ctx    = canvas.getContext('2d'),
+          rect   = canvas.getBoundingClientRect(),
+          w      = rect.right  - rect.left,
+          h      = rect.bottom - rect.top;
+
+    canvas.setAttribute('width', '' + w);
+    canvas.setAttribute('height', '' + h);
+
+    const stepX = w / (this.stamp.width * 8);
+    const stepY = h / (this.stamp.height * 8);
+
+    ctx.strokeStyle = '#FFF';
+
+    for(let x = 0; x < w; x += stepX){
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+
+    for(let y = 0; y < h; y += stepY){
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
   }
 
   redrawCanvasWhereDirty(tileIndex: number){
