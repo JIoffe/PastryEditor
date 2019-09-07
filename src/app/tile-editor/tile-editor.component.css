@@ -5,7 +5,7 @@
     grid-row-end: 16;
 }
 
-.drawing-surface {
+.drawing-surface, .grid-overlay {
     width: 400px;
     height: 400px;
     position: absolute;
@@ -21,4 +21,9 @@
 
 .draw-canvas-container{
     position: static;
+}
+
+.grid-overlay {
+    z-index: 1;
+    pointer-events: none;
 }

@@ -9,17 +9,19 @@ import { BaseSubscriberComponent } from '../base-subscriber.component';
 })
 export class TileEditorComponent extends BaseSubscriberComponent implements OnInit {
   @ViewChild('drawingSurface', null) drawingSurface:ElementRef;
+  @ViewChild('grid', null) grid:ElementRef;
   
   showCodeEditor = false;
   code = '';
   backgroundMode = 'backdrop';
+  showGrid = true;
   
   constructor(private applicationState: ApplicationState) {
     super();
   }
 
   ngOnInit() {
-
+    this.redrawGrid();
   }
 
   canvas_onMouse(ev: MouseEvent){
@@ -69,5 +71,35 @@ export class TileEditorComponent extends BaseSubscriberComponent implements OnIn
       this.applicationState.TileUpdatedObservable.next(this.applicationState.activeTile);
     }
     this.showCodeEditor = false;
+  }
+
+  redrawGrid(){
+    const canvas = this.grid.nativeElement,
+    ctx    = canvas.getContext('2d'),
+    rect   = canvas.getBoundingClientRect(),
+    w      = rect.right  - rect.left,
+    h      = rect.bottom - rect.top;
+
+    canvas.setAttribute('width', '' + w);
+    canvas.setAttribute('height', '' + h);
+
+    const stepX = w / 8;
+    const stepY = h / 8;
+
+    ctx.strokeStyle = '#FFF';
+
+    for(let x = 0; x < w; x += stepX){
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+
+    for(let y = 0; y < h; y += stepY){
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
   }
 }

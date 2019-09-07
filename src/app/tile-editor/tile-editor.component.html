@@ -11,8 +11,12 @@
                         <option value="trace">Trace</option>
                     </select>
                 </span>
+                <span>
+                    <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid"/></label>
+                </span>
             </div>
             <div class="draw-canvas-container">
+                <canvas #grid class="grid-overlay" [ngStyle]="{'display': (showGrid ? 'block' : 'none')}"></canvas>
                 <img #drawingSurface draggable="false" ondragstart="return false;" class="drawing-surface no-select" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none}" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
             </div>
         </div>
