@@ -17,7 +17,6 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
   @ViewChild('drawCanvas', null) drawCanvas:ElementRef;
 
   backgroundMode:string = 'backdrop';
-  name:string = '';
 
   code:string = null;
   zoom = 100.0;

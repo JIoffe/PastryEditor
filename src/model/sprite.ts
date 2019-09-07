@@ -20,6 +20,7 @@ export class Sprite extends Stamp{
           const srcI = (dstI % w) * h + Math.floor(dstI/w);
           sortedTiles[dstI] = this.tiles[srcI];
         }
-        return sortedTiles;
+        
+        this.tiles = sortedTiles;
     }
 }
