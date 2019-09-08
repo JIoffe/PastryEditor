@@ -1,0 +1,2 @@
+<button title="Pencil" [ngClass]="{'active': applicationState.drawMode === 'p'}" (click)="onToolClick($event, 'p')"><img src="/assets/images/pencil.png"/></button>
+<button title="Bucket" [ngClass]="{'active': applicationState.drawMode === 'b'}" (click)="onToolClick($event, 'b')"><img src="/assets/images/bucket.png"/></button>

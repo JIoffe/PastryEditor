@@ -53,6 +53,8 @@ export class ApplicationState {
 
     traceImage: string = null;
 
+    drawMode: string = 'p';
+
     constructor(private tileRenderer: TileRenderer){
         //This is a singleton so these watchers do not need to be cleared
         this.TileUpdatedObservable.subscribe(tile => {

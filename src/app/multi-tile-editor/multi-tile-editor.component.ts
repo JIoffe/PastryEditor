@@ -96,8 +96,39 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
     const x = Math.floor(((ev.pageX - rect.left) / w) * this.stamp.width  * 8),
           y = Math.floor(((ev.pageY - rect.top)  / h) * this.stamp.height * 8);
 
-    const updatedTile = this.stamp.setTexel(x, y, this.applicationState.activeColor);
-    this.applicationState.TileUpdatedObservable.next(updatedTile);
+          
+    switch(this.applicationState.drawMode){
+      case 'b':
+        {
+          const indexToChange = this.stamp.getTexel(x, y);
+          if(indexToChange !== this.applicationState.activeColor){
+            const stack = [[x,y]];
+            const dirtyTilesSet = new Set<Uint8Array>();
+            while(!!stack.length){
+              const coords = stack.pop();
+              const indexAtCoords = this.stamp.getTexel(coords[0], coords[1]);
+              if(indexAtCoords === indexToChange){
+                dirtyTilesSet.add(this.stamp.setTexel(coords[0], coords[1], this.applicationState.activeColor));
+  
+                stack.push(
+                  [coords[0], coords[1]+1],
+                  [coords[0], coords[1]-1],
+                  [coords[0]+1, coords[1]],
+                  [coords[0]-1, coords[1]]);
+              }
+            }
+            Array.from(dirtyTilesSet).forEach(t => this.applicationState.TileUpdatedObservable.next(t));
+          }
+        }
+        break;
+      case 'p':
+      default:
+        {
+          const updatedTile = this.stamp.setTexel(x, y, this.applicationState.activeColor);
+          this.applicationState.TileUpdatedObservable.next(updatedTile);
+        }
+        break;
+    }
   }
 
   redrawGrid(){

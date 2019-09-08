@@ -13,6 +13,7 @@ body,html{
     display: grid;
     grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
     grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-auto-rows: 1fr;
     min-height: 800px;
 }
 h1,h2,h3,h4,h5,h6{
@@ -200,28 +201,7 @@ canvas {
     }
 
 /* Common editing controls */
-.color-selection {
-    height: 100%;
-    padding: 6px 4px 4px 4px;
-    width: 40px;
-    float: left;
-    border-right: ridge;
-    background: black;
-}
 
-.color-selection > .palette-swatch {
-    float: none;
-    height: calc(6.25% - 4px);
-    max-height: 34px;
-    margin-right: 0;
-    width: 100%;
-    cursor: pointer;
-}    
-
-.color-selection .palette-swatch.active, .color-selection .palette-swatch:hover {
-    border: 4px solid #FFF;
-    box-shadow: inset 0 0 5px 2px #000;
-}
 .button-container {
     background: #aaa;
 }

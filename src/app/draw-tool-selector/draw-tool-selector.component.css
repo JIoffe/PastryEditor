@@ -24,3 +24,20 @@
     border: 4px solid #FFF;
     box-shadow: inset 0 0 5px 2px #000;
 }
+
+button{
+    display: block;
+    height: 30px;
+    width: 30px;
+    padding: 2px;
+    margin-bottom: 8px;
+}
+
+button > img{
+    width: 100%;
+}
+
+button.active, button:hover{
+    border: 2px solid white;
+    background: #A44;
+}

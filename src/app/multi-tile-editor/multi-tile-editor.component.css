@@ -12,7 +12,8 @@
 .draw-canvas-container{
     overflow: scroll;
     height: calc(100% - 20px);
-    width: calc(100% - 40px);
+    width: calc(100% - 80px);
+    cursor: crosshair;
 }
 
 .button-container span:not(:last-child){

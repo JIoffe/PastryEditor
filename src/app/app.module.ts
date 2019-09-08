@@ -24,6 +24,7 @@ import { SpritePageComponent } from './sprite-page/sprite-page.component';
 import { SpriteLibraryComponent } from './sprite-library/sprite-library.component';
 import { BlockElementPreviewComponent } from './block-element-preview/block-element-preview.component';
 import { MultiTileEditorComponent } from './multi-tile-editor/multi-tile-editor.component';
+import { DrawToolSelectorComponent } from './draw-tool-selector/draw-tool-selector.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -55,7 +56,8 @@ const appRoutes: Routes = [
     SpritePageComponent,
     SpriteLibraryComponent,
     BlockElementPreviewComponent,
-    MultiTileEditorComponent
+    MultiTileEditorComponent,
+    DrawToolSelectorComponent
   ],
   imports: [
     RouterModule.forRoot(
