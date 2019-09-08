@@ -2,7 +2,7 @@
     grid-column-start: 2;
     grid-column-end: 4;
     grid-row-start: 1;
-    grid-row-end: 16;
+    grid-row-end: 21;
 }
 
 .drawing-surface, .grid-overlay {

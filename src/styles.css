@@ -11,7 +11,7 @@ body,html{
 }
 .pastry-grid {
     display: grid;
-    grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
+    grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
     grid-template-columns: 20% 20% 20% 20% 20%;
     grid-auto-rows: 1fr;
     min-height: 800px;
@@ -87,7 +87,7 @@ canvas {
         top: 0;
     }
     .control-content > .fill-over-status{
-        height: calc(100% - 16px);
+        height: calc(100% - 18px);
         position: relative;
     }
     .control-group .caption .btn-code {
@@ -237,7 +237,7 @@ canvas {
 }
 .icons-container.fill-over-status {
     height: calc(100% - 36px);
-    max-height: 450px;
+    max-height: 689px;
 }
 .icons-container img, .draw-canvas-container img {
     image-rendering: -moz-crisp-edges;

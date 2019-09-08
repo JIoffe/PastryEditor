@@ -31,7 +31,7 @@ export class Stamp{
      * @param y texel Y coordinate, across entire height of stamp
      */
     getTexel(x: number, y: number){
-        if(x < 0 || x >= this.width * 8 || x < 0 || y >= this.height * 8)
+        if(x < 0 || x >= this.width * 8 || y < 0 || y >= this.height * 8)
             return -1;
 
         const tileX = Math.floor(x / 8),
