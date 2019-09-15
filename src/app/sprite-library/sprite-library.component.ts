@@ -49,24 +49,7 @@ export class SpriteLibraryComponent extends BaseSubscriberComponent implements O
     if(!this.applicationState.activeSprite)
       return;
     
-    const sprite = this.applicationState.activeSprite,
-          n = sprite.width * sprite.height;
-
-    let i = this.applicationState.tiles.indexOf(sprite.tiles[0]);
-    this.applicationState.tiles.splice(i, n);
-
-    i = this.applicationState.sprites.indexOf(sprite);
-    this.applicationState.sprites.splice(i, 1);
-
-    this.applicationState.TilesetObservable.next(this.applicationState.tiles);
-    this.applicationState.SpriteSetUpdatedObservable.next(this.applicationState.sprites);
-
-    if(this.applicationState.sprites.length > 0)
-      this.applicationState.activeSprite = this.applicationState.sprites[Math.max(0, i - 1)];
-    else
-      this.applicationState.activeSprite = null;
-
-    this.applicationState.SpriteSelectedObservable.next(this.applicationState.activeSprite);
+      this.applicationState.removeSprite(this.applicationState.activeSprite);
   }
 
   icon_onClick(ev: MouseEvent, i: number){
@@ -115,27 +98,8 @@ export class SpriteLibraryComponent extends BaseSubscriberComponent implements O
 
   onSizeSelected(size: number[]){
     if(!!size){
-      const w = size[0],
-            h = size[1],
-            n = w * h;
-
-      //So really this just imitates the stamp library for now....
-      const newTiles = new Array(n);
-      for(let i = n - 1; i >= 0; --i)
-        newTiles[i] = new Uint8Array(64);
-
-      this.applicationState.tiles.push(...newTiles);
-      this.applicationState.TilesetObservable.next(this.applicationState.tiles);
-
-      const sprite = new Sprite();
-      sprite.width = w;
-      sprite.height = h;
-      sprite.tiles = newTiles;
-
-      sprite.resortTiles();
-
-      this.applicationState.sprites.push(sprite);
-      this.applicationState.SpriteSetUpdatedObservable.next(this.applicationState.sprites);
+      const sprite = new Sprite(size[0], size[1]);
+      this.applicationState.addSprite(sprite);
       this.applicationState.SpriteSelectedObservable.next(sprite);
     }
 

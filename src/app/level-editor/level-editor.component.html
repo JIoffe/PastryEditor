@@ -1,0 +1,31 @@
+<div class="control-group edit-level">
+    <div class="control-content">
+        <div class="caption">Level Editor - {{this.applicationState.activeLevel.name}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="fill-over-status clear">
+            <div class="button-container">
+                <span>
+                    Background:
+                    <select [(ngModel)]="backgroundMode">
+                        <option value="backdrop">Backdrop</option>
+                        <option value="trace">Trace</option>
+                    </select>
+                </span>
+                <span>
+                    <label>Show Grid: <input type="checkbox"/></label>
+                </span>
+                <span>
+                    <label>Name: <input type="text"/></label>
+                </span>
+                <span>
+                    Zoom:
+                    <input type="range" min="5" max="1000" [(ngModel)]="zoom" (change)="onZoomChange($event)"/>
+                    {{zoom | number:'1.0-0'}}%
+                </span>
+            </div>
+            <div #editViewport class="level-edit-viewport">
+                <canvas class="level-edit-canvas"></canvas>
+            </div>
+        </div>
+        <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}</div>
+    </div>
+</div>

@@ -6,14 +6,10 @@
     cursor: crosshair;
 }
 
-    :host .control-content > .fill-over-status {
-        height: calc(100% - 36px);
-    }
-    .tiles-container {
-        overflow-y: scroll;
-    }
-
-    .icon{
-        width: 32px;
-        height: 32px;
-    }
+:host .control-content > .fill-over-status {
+    height: calc(100% - 36px);
+}
+.icon{
+    width: 32px;
+    height: 32px;
+}

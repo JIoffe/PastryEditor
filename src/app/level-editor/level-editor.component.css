@@ -1,0 +1,21 @@
+:host {
+    grid-column-start: 2;
+    grid-column-end: 6;
+    grid-row-start: 1;
+    grid-row-end: 21;
+}
+
+:host .button-container label:not(:last-child){
+    margin-right: 26px;
+}
+
+.button-container span:not(:last-child){
+    margin-right: 40px;
+}
+
+.button-container button{
+    height: 18px;
+}
+.button-container {
+    height: 24px;
+}

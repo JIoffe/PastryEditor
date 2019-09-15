@@ -1,0 +1,22 @@
+<div class="control-group sprite-library">
+    <div class="control-content">
+        <div class="caption">Grouped Sprite Library&nbsp;({{applicationState.spriteGroups.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="button-container">
+            <button class="btn-add" (click)="add_onClick($event)">Add</button>
+            <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
+        </div>  
+        <div class="fill-over-status icons-container clear" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
+            <div class="sprite-group clear" *ngFor="let s of applicationState.spriteGroups; index as i" [ngStyle]="{width: s.width * 16 + 'px', height: s.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': s === applicationState.activeSpriteGroup}">
+                <div class="icon" *ngFor="let sprite of s.sprites; index as j" [ngStyle]="{'grid-template-rows': sprite.gridTemplateRows(), 'grid-template-columns': sprite.gridTemplateColumns(), width: sprite.width * 16 + 'px', height: sprite.height * 16 + 'px'}">
+                    <img *ngFor="let tile of sprite.tiles; index as k" src="{{applicationState.tileImageData.get(tile)}}"/>
+                </div>
+            </div>
+            <!-- <div class="icon" *ngFor="let s of applicationState.sprites; index as i" [ngStyle]="{'grid-template-rows': s.gridTemplateRows(), 'grid-template-columns': s.gridTemplateColumns(), width: s.width * 16 + 'px', height: s.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': s === applicationState.activeSprite}"> 
+                <img *ngFor="let tile of s.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}"/>
+            </div>    -->
+        </div>
+        <div class="tool-status">{{tooltip}}</div>
+    </div>
+</div>
+<app-block-element-preview *ngIf="showNewSpriteDialog" title="Create New Sprite Group" [min]="1" [max]="64" (sizeSelected)="onSizeSelected($event)"></app-block-element-preview>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

@@ -2,17 +2,18 @@
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 1;
-    grid-row-end: 16;
+    grid-row-end: 21;
 }
 
 .fill-over-status{
     overflow-y: scroll;
-    max-height: 800px;
+    max-height: 900px;
 }
 .vdp-registers{
     width: 100%;
     border-collapse: collapse;
     background: #DDD;
+    position: absolute;
 }
 
 .vdp-registers .division{

@@ -1,0 +1,12 @@
+:host {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 5;
+    grid-row-end: 7;
+    cursor: crosshair;
+}
+
+.level-select{
+    width: 100%;
+    height: calc(100% - 2px);
+}

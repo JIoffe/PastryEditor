@@ -1,0 +1,13 @@
+<div class="control-group level-library">
+    <div class="control-content">
+        <div class="caption">Level Tools</div>
+        <div class="button-container">
+            <label>Tiles: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="tiles"/></label> &nbsp;
+            <label>Stamps: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="stamps"/></label>
+        </div>    
+        <div class="fill-over-status icons-container clear" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">      
+            <img class="icon" *ngFor="let tile of applicationState.tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>     
+        </div>
+        <div class="tool-status">{{tooltip}}</div>
+    </div>
+</div>

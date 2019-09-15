@@ -1,0 +1,25 @@
+:host {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 5;
+    grid-row-end: 21;
+    cursor: crosshair;
+}
+
+:host .icons-container > .icon {
+    width: 64px;
+    height: 64px;
+}
+
+input[type='number'] {
+    width: 4em;
+}
+
+.sprite-group{
+    margin: 4px;
+}
+
+.icons-container .sprite-group:hover, .icons-container > .sprite-group {
+    cursor: pointer;
+    outline: 2px solid #FFF;
+}

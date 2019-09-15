@@ -1,0 +1,29 @@
+<div class="control-group level-library">
+    <div class="control-content">
+        <div class="caption">Levels&nbsp;({{applicationState.levels.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+        <div class="button-container">
+            <button class="btn-add" (click)="add_onClick($event)">Add</button>
+            <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
+        </div>  
+        <div class="fill-over-status">    
+            <select class="level-select">
+                <option *ngFor="let level of applicationState.levels; index as i" value="i">{{level.name}} - {{level.width}} x {{level.height}}</option>
+                <option *ngIf="!applicationState.levels.length" value="null">(No Levels Defined)</option>
+            </select>  
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showNewLevelModal" class="modal">
+    <div class="modal-content">
+        <div class="caption">Add New Level</div>
+        <label>Name:&nbsp; <input type="text" [(ngModel)]="newLevelName"/></label><br/>
+        <label>Width:&nbsp; <input type="number" min="1" max="512" [(ngModel)]="newLevelWidth"/> Tiles</label>&nbsp;&nbsp;({{newLevelWidth*8}}px)<br/>
+        <label>Height: <input type="number" min="1" max="512" [(ngModel)]="newLevelHeight"/> Tiles</label>&nbsp;&nbsp;({{newLevelHeight*8}}px)
+        <hr/>
+        <div class="buttons-container">
+            <button class="btn-ok" (click)="newLevelOk($event)">OK</button>
+            <button class="btn-cancel" (click)="newLevelCancel($event)">CANCEL</button>
+        </div>
+    </div>
+</div>

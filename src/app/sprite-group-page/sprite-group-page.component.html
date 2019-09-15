@@ -1,0 +1,5 @@
+<main class="pastry-grid">
+    <app-palette-library></app-palette-library>
+    <app-sprite-group-library></app-sprite-group-library>
+    <app-multi-tile-editor *ngIf="!!applicationState.activeSpriteGroup" [stamp]="applicationState.activeSpriteGroup" title="Large Sprite Editor"></app-multi-tile-editor>
+</main>

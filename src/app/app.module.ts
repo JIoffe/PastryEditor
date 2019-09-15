@@ -25,11 +25,19 @@ import { SpriteLibraryComponent } from './sprite-library/sprite-library.componen
 import { BlockElementPreviewComponent } from './block-element-preview/block-element-preview.component';
 import { MultiTileEditorComponent } from './multi-tile-editor/multi-tile-editor.component';
 import { DrawToolSelectorComponent } from './draw-tool-selector/draw-tool-selector.component';
+import { LevelPageComponent } from './level-page/level-page.component';
+import { LevelEditorComponent } from './level-editor/level-editor.component';
+import { LevelLibraryComponent } from './level-library/level-library.component';
+import { LevelEditModeComponent } from './level-edit-mode/level-edit-mode.component';
+import { SpriteGroupPageComponent } from './sprite-group-page/sprite-group-page.component';
+import { SpriteGroupLibraryComponent } from './sprite-group-library/sprite-group-library.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
   { path: 'edit-tile-stamps', component: TileStampPageComponent },
   { path: 'edit-sprites', component: SpritePageComponent},
+  { path: 'edit-sprite-groups', component: SpriteGroupPageComponent},
+  { path: 'edit-level', component: LevelPageComponent },
   { path: 'options', component: OptionsPageComponent },
   { path: 'vdp', component: VdpPageComponent},
   { path: '**', component: TilePageComponent }
@@ -57,7 +65,13 @@ const appRoutes: Routes = [
     SpriteLibraryComponent,
     BlockElementPreviewComponent,
     MultiTileEditorComponent,
-    DrawToolSelectorComponent
+    DrawToolSelectorComponent,
+    LevelPageComponent,
+    LevelEditorComponent,
+    LevelLibraryComponent,
+    LevelEditModeComponent,
+    SpriteGroupPageComponent,
+    SpriteGroupLibraryComponent
   ],
   imports: [
     RouterModule.forRoot(
