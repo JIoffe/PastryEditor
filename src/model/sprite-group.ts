@@ -101,4 +101,17 @@ export class SpriteGroup extends Stamp{
 
         return pos;
     }
+
+    getSpriteOffset(sprite: Sprite){
+        for(let x = 0; x < this.width; ++x){
+            for(let y = 0; y < this.width; ++y){
+                const i = x + y * this.width;
+                if(this.grid[i] === sprite){
+                    return [x * 8, y * 8];
+                }
+            }
+        }
+
+        return null;
+    }
 }
