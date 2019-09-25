@@ -25,14 +25,23 @@ export class LevelLibraryComponent implements OnInit {
   }
 
   remove_onClick(ev: MouseEvent){
+    if(!this.applicationState.activeLevel)
+      return;
 
+    var index = this.applicationState.levels.indexOf(this.applicationState.activeLevel);
+    this.applicationState.levels.splice(index, 1);
+    this.applicationState.LevelsUpdatedObservable.next(this.applicationState.levels);
+
+    if(this.applicationState.levels.length >= 0){
+      const nextLevel = this.applicationState.levels[index] || this.applicationState.levels[index - 1];
+      this.applicationState.LevelSelectedObservable.next(nextLevel);
+    }else{
+      this.applicationState.LevelSelectedObservable.next(null);
+    }
   }
 
   newLevelOk(ev: MouseEvent){
-    const level = new Level();
-    level.name = this.newLevelName;
-    level.height = this.newLevelHeight;
-    level.width = this.newLevelWidth;
+    const level = new Level(this.newLevelName, this.newLevelWidth, this.newLevelHeight);
 
     this.applicationState.levels.push(level);
     this.applicationState.LevelsUpdatedObservable.next(this.applicationState.levels);

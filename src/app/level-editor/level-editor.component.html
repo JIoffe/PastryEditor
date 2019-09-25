@@ -4,26 +4,28 @@
         <div class="fill-over-status clear">
             <div class="button-container">
                 <span>
-                    Background:
-                    <select [(ngModel)]="backgroundMode">
-                        <option value="backdrop">Backdrop</option>
-                        <option value="trace">Trace</option>
-                    </select>
+                    <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid" (change)="render()"/></label>
                 </span>
                 <span>
-                    <label>Show Grid: <input type="checkbox"/></label>
-                </span>
-                <span>
-                    <label>Name: <input type="text"/></label>
+                    <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
                 </span>
                 <span>
                     Zoom:
-                    <input type="range" min="5" max="1000" [(ngModel)]="zoom" (change)="onZoomChange($event)"/>
+                    <input type="range" min="100" max="2000" [(ngModel)]="zoom" (change)="onZoomChange($event)" (mousemove)="render()"/>
                     {{zoom | number:'1.0-0'}}%
                 </span>
             </div>
-            <div #editViewport class="level-edit-viewport">
-                <canvas class="level-edit-canvas"></canvas>
+            <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': cursorDisplayX + 'px'}">
+                <div *ngIf="applicationState.levelEditMode === 'tiles' && !!applicationState.activeTile">
+                    <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
+                </div>
+                <div *ngIf="applicationState.levelEditMode === 'stamps' && !!applicationState.activeStamp" class="icon" [ngStyle]="{'grid-template-rows': applicationState.activeStamp.gridTemplateRows(), 'grid-template-columns': applicationState.activeStamp.gridTemplateColumns(), 'width': (zoom*0.08*applicationState.activeStamp.width) + 'px', 'height': (zoom*0.08*applicationState.activeStamp.height) + 'px'}"> 
+                    <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" *ngFor="let tile of applicationState.activeStamp.tiles" src="{{applicationState.tileImageData.get(tile)}}"/>
+                </div>   
+            </div>
+            <canvas #canvas class="level-edit-canvas" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)"></canvas>
+            <div #editViewport class="level-edit-viewport" (scroll)="render()">
+                <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
             </div>
         </div>
         <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}</div>

@@ -6,9 +6,9 @@
             <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
         </div>  
         <div class="fill-over-status">    
-            <select class="level-select">
-                <option *ngFor="let level of applicationState.levels; index as i" value="i">{{level.name}} - {{level.width}} x {{level.height}}</option>
-                <option *ngIf="!applicationState.levels.length" value="null">(No Levels Defined)</option>
+            <select class="level-select" [(ngModel)]="applicationState.activeLevel">
+                <option *ngFor="let level of applicationState.levels; index as i" [ngValue]="level">{{level.name}} - {{level.width}} x {{level.height}}</option>
+                <option *ngIf="!applicationState.levels.length" [ngValue]="null">(No Levels Defined)</option>
             </select>  
         </div>
     </div>
