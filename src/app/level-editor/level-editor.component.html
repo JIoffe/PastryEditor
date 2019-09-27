@@ -10,6 +10,9 @@
                     <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
                 </span>
                 <span>
+                    <button (click)="importImageClick($event)">Import Image</button>
+                </span>
+                <span>
                     Zoom:
                     <input type="range" min="100" max="2000" [(ngModel)]="zoom" (change)="onZoomChange($event)" (mousemove)="render()"/>
                     {{zoom | number:'1.0-0'}}%
@@ -23,7 +26,7 @@
                     <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" *ngFor="let tile of applicationState.activeStamp.tiles" src="{{applicationState.tileImageData.get(tile)}}"/>
                 </div>   
             </div>
-            <canvas #canvas class="level-edit-canvas" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)"></canvas>
+            <canvas #canvas class="level-edit-canvas" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)"></canvas>
             <div #editViewport class="level-edit-viewport" (scroll)="render()">
                 <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
             </div>
@@ -31,3 +34,6 @@
         <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}</div>
     </div>
 </div>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
+<!-- <app-loading-spinner></app-loading-spinner> -->
+<app-image-importer *ngIf="showImageSelection" [width]="applicationState.activeLevel.width*8" [height]="applicationState.activeLevel.height*8" (imageProcessed)="onImageProcessed($event)"></app-image-importer>

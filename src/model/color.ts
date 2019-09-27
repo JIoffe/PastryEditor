@@ -52,6 +52,14 @@ export class Color{
         return dR*dR + dG*dG + dB*dB;
     }
 
+    static squaredDistance(r0, g0, b0, r1, g1, b1){
+        const dR = r0 - r1,
+            dG = g0 - g1,
+            dB = b0 - b1;
+  
+        return dR*dR + dG*dG + dB*dB;
+    }
+
     /* FACTORIES */
     static fromHexRGB(rgb: number){
         const r = (rgb & 0xFF0000) >> 16;
@@ -172,10 +180,14 @@ export class Color{
 
     static getNearestColor(colors: Color[], r, g, b){
         let nearestColor = colors[colors.length - 1];
-        let d = nearestColor.squaredDistance(r,g,b);
+        let d = !!nearestColor.squaredDistance ? nearestColor.squaredDistance(r,g,b)
+            : Color.squaredDistance(nearestColor.r, nearestColor.g, nearestColor.g, r,g,b);
 
         for(let i = colors.length - 2; i >= 0; --i){
-            let di = colors[i].squaredDistance(r,g,b);
+            let color = colors[i];
+            let di = !!color.squaredDistance ? color.squaredDistance(r,g,b)
+                : Color.squaredDistance(color.r, color.g, color.g, r,g,b);
+
             if(di < d){
                 d = di;
                 nearestColor = colors[i];

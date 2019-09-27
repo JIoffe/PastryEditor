@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter }
 import { ApplicationState } from 'src/services/application-state';
 import { Color } from 'src/model/color';
 import { ColorKMeansSolver } from 'src/services/color-k-means-solver';
+import { ImageQuantizer } from 'src/services/image-quantizer';
 
 @Component({
   selector: 'app-image-importer',
@@ -23,7 +24,7 @@ export class ImageImporterComponent implements OnInit {
   transparencySelection: string;
   customPalette: Color[] = null;
 
-  constructor(private applicationState: ApplicationState, private colorKMeansSolver: ColorKMeansSolver) { }
+  constructor(private applicationState: ApplicationState, private colorKMeansSolver: ColorKMeansSolver, private imageQuantizer: ImageQuantizer) { }
 
   ngOnInit() {
     this.paletteSelection = "0";
@@ -147,14 +148,13 @@ export class ImageImporterComponent implements OnInit {
       ctx.drawImage(img, 0, 0, w, h);
 
       const srcImageData = ctx.getImageData(0, 0, w, h);
-      const targetImageData = ctx.createImageData(w, h);
 
+      //Determine palette for K Means
       let transparentColor: Color = null;
       if(this.transparencySelection === 'upper-left'){
         transparentColor = new Color(srcImageData.data[0], srcImageData.data[1], srcImageData.data[2]);
       }
 
-      //Determine palette for K Means
       if(this.customPalette === null){
         let srcColors = Color.getDistinctColorsFromImageData(srcImageData);
         
@@ -180,111 +180,15 @@ export class ImageImporterComponent implements OnInit {
         this.palette = this.customPalette;
       }
 
-
-      //Use anything but the backdrop
-      const palette = this.palette.slice(1);
-
-      for(let y = 0; y < h; ++y){
-        for(let x = 0; x < w; ++x){
-          const i = x + y * w,
-            pixelI = i*4;
-
-          let srcR = srcImageData.data[pixelI],
-            srcG = srcImageData.data[pixelI + 1],
-            srcB = srcImageData.data[pixelI + 2];
-
-          if(transparentColor !== null){
-            if(transparentColor.r === srcR && transparentColor.g === srcG && transparentColor.b === srcB){
-              targetImageData.data[pixelI] = 0;
-              targetImageData.data[pixelI + 1] = 0;
-              targetImageData.data[pixelI + 2] = 0;
-              targetImageData.data[pixelI + 3] = 0;
-  
-              continue;
-            }
-          }
-
-          //Dithering is an application of error diffusion.
-          //Forward propagate the errors to better simulate gradients
-          switch(this.ditheringMode){
-            case 'floyd-steinberg':
-              {
-                  /*
-                        x   7
-                    3   5   1
-                    
-                      (1/16)
-                  */
-
-                  /*
-                         0 0 0 0 0 0 0 0
-                         0 0 0 0 0 0 0 0
-                         0 0 0 0 0 0 0 0
-                         0 0 0 0 0 0 0 0
-                         0 0 0 0 0 0 0 0
-                         0 0 0 0 0 0 0 0
-                  */
-                let r = targetImageData.data[pixelI] + srcImageData.data[pixelI],
-                    g = targetImageData.data[pixelI + 1] + srcImageData.data[pixelI + 1],
-                    b = targetImageData.data[pixelI + 2] + srcImageData.data[pixelI + 2];
-
-                let colorMatch = Color.getNearestColor(palette, r, g, b);
-
-                let errorR = (r - colorMatch.r) >> 4,
-                    errorG = (g - colorMatch.g) >> 4,
-                    errorB = (b - colorMatch.b) >> 4;
-
-                targetImageData.data[pixelI] = colorMatch.r;
-                targetImageData.data[pixelI + 1] = colorMatch.g;
-                targetImageData.data[pixelI + 2] = colorMatch.b;
-                targetImageData.data[pixelI + 3] = 255;
-
-                // //Apply error to neighboring pixels
-                let neighbor;
-                if(x > 0 && y < h - 1){
-                  neighbor = (pixelI + w * 4) - 4;
-                  targetImageData.data[neighbor] += errorR * 3;
-                  targetImageData.data[neighbor + 1] += errorG * 3;
-                  targetImageData.data[neighbor + 2] += errorB * 3;
-                }
-
-                if(x < w - 1){
-                  neighbor = pixelI + 4;
-                  targetImageData.data[neighbor] += errorR * 7;
-                  targetImageData.data[neighbor + 1] += errorG * 7;
-                  targetImageData.data[neighbor + 2] += errorB * 7;
-                }
-
-                if( y < h - 1){
-                  neighbor = pixelI + w * 4;
-                  targetImageData.data[neighbor] += errorR * 5;
-                  targetImageData.data[neighbor + 1] += errorG * 5;
-                  targetImageData.data[neighbor + 2] += errorB * 5;
-                }
-
-                if(y < h - 1 && x < w - 1){
-                  neighbor = pixelI + 4 + w * 4;
-                  targetImageData.data[neighbor] += errorR;
-                  targetImageData.data[neighbor + 1] += errorG;
-                  targetImageData.data[neighbor + 2] += errorB;
-                }
-              }
-              break;
-            default:
-              {
-                let colorMatch = Color.getNearestColor(palette, srcR, srcG, srcB);
-
-                targetImageData.data[pixelI] = colorMatch.r;
-                targetImageData.data[pixelI + 1] = colorMatch.g;
-                targetImageData.data[pixelI + 2] = colorMatch.b;
-                targetImageData.data[pixelI + 3] = 255;
-              }
-              break;
-          }
+      this.imageQuantizer.quantizeImage(srcImageData.data, this.palette, w, h, this.ditheringMode).then(r => {
+        const targetImageData = ctx.createImageData(w, h);
+        const n = w * h * 4;
+        for(let i = n - 1; i >= 0; --i){
+          targetImageData.data[i] = r[i];
         }
-      }
-
-      ctx.putImageData(targetImageData, 0, 0);
+        
+        ctx.putImageData(targetImageData, 0, 0);
+      });
     };
 
     img.onload = proc;

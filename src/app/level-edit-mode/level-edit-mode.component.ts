@@ -20,10 +20,26 @@ export class LevelEditModeComponent implements OnInit {
   }
 
   icon_onHover(ev: MouseEvent, i: number){
-    this.tooltip = `Tile: ${i}`;
+    switch(this.applicationState.levelEditMode){
+      case 'stamps':
+          this.tooltip = `Stamp: ${i}`;
+        break;
+      case 'tiles':
+      default:
+          this.tooltip = `Tile: ${i}`;
+        break;
+    } 
   }
 
   icon_onClick(ev: MouseEvent, i: number){
-    this.applicationState.TileSelectedObservable.next(this.applicationState.tiles[i]);
+    switch(this.applicationState.levelEditMode){
+      case 'stamps':
+        this.applicationState.StampSelectedObservable.next(this.applicationState.stamps[i]);
+        break;
+      case 'tiles':
+      default:
+        this.applicationState.TileSelectedObservable.next(this.applicationState.tiles[i]);
+        break;
+    }
   }
 }

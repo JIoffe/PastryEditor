@@ -115,7 +115,7 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
 
   onCodeChanged(code: string){
     if(!!code){
-      let regex = /([a-z]+:)/gmi;
+      let regex = /([0-9a-z]+:)/gmi;
       let dividers = code.match(regex);
       
       let stamps = [];
@@ -123,12 +123,15 @@ export class TileStampLibraryComponent extends BaseSubscriberComponent {
         const loc = code.indexOf(s);
         let end;
         if(i < dividers.length - 1){
+          console.log(s, dividers[i+1]);
           end = code.indexOf(dividers[i+1]);
         }
    
-        return code.substr(loc, end);
+        return code.substring(loc, end);
       }).forEach(section => {
+        console.log(section);
         let values = section.match(/\$[0-9a-f]{2,4}/gmi);
+        console.log(values);
         if(!!values && values.length === 3){
           values = values.map(m => m.substr(1));
           var stamp = new Stamp();

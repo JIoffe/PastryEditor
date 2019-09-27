@@ -1,0 +1,9 @@
+<div class="modal" (paste)="onImagePaste($event)">
+    <div class="modal-content">
+        <div class="caption">{{caption}}</div>
+        <div class="loading-percent">{{progress}}%</div>
+        <div class="loading-indicator">
+            <div class="loading-progress" [ngStyle]="{'width': progress + '%'}"></div>
+        </div>
+    </div>
+</div>

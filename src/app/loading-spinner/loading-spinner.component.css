@@ -1,0 +1,41 @@
+.loading-indicator {
+    width: 360px;
+    height: 32px;
+    position: relative;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    background: #EEE;
+}
+
+.loading-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #AAF;
+    background: linear-gradient(270deg, #9ba3ff, #3d4cff, #d92ce4, #d47bf7);
+    background-size: 3000% 3000%;
+    
+    -webkit-animation: LoadingGradient 10s ease infinite;
+    -moz-animation: LoadingGradient 10s ease infinite;
+    animation: LoadingGradient 10s ease infinite;
+
+    padding-top: 6px;
+}
+
+.loading-percent {
+    text-align: center;
+    font-size: 18pt;
+}
+
+@-webkit-keyframes LoadingGradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+}
+@-moz-keyframes LoadingGradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+}
+@keyframes LoadingGradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+}

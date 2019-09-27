@@ -31,6 +31,7 @@ import { LevelLibraryComponent } from './level-library/level-library.component';
 import { LevelEditModeComponent } from './level-edit-mode/level-edit-mode.component';
 import { SpriteGroupPageComponent } from './sprite-group-page/sprite-group-page.component';
 import { SpriteGroupLibraryComponent } from './sprite-group-library/sprite-group-library.component';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -71,7 +72,8 @@ const appRoutes: Routes = [
     LevelLibraryComponent,
     LevelEditModeComponent,
     SpriteGroupPageComponent,
-    SpriteGroupLibraryComponent
+    SpriteGroupLibraryComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     RouterModule.forRoot(

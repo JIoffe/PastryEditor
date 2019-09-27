@@ -22,6 +22,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
   cursorDisplayX = 0;
   cursorDisplayY = 0;
+
+  code: string = null;
+  showImageSelection = false;
   
   constructor(private applicationState: ApplicationState) { 
     super();
@@ -108,6 +111,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
             }
           }
         }
+        break;
+      case 'eraser':
+        level.tiles[i] = -1;
         break;
       case 'tiles':
       default:
@@ -211,5 +217,29 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
         ctx.stroke();
       }
     }
+  }
+
+  code_onClick(ev: MouseEvent){
+    if(!this.applicationState.activeLevel)
+      return;
+
+    this.code = this.applicationState.activeLevel.toCode();
+  }
+
+  onCodeChanged(code: string){
+    this.code = null;
+  }
+
+  //Img proessing
+
+  importImageClick(ev: MouseEvent){
+    this.showImageSelection = true;
+    console.log('wahooga');
+  }
+
+  onImageProcessed(imageIndices: Uint8Array){
+    if(!!imageIndices){
+    }
+    this.showImageSelection = false;
   }
 }
