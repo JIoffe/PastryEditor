@@ -14,6 +14,7 @@ export class ImageQuantizer{
             const worker = new Worker('../app/imageproc.worker', { type: 'module' });
 
             worker.onmessage = ({ data }) => {
+                worker.terminate();
                 res(data);
             };
 
