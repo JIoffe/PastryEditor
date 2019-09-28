@@ -18,13 +18,7 @@ export class ImageQuantizer{
                 res(data);
             };
 
-            worker.postMessage({
-                pixels: pixels,
-                palette: palette,
-                width: width,
-                height: height,
-                dithering: dithering
-            });           
+            worker.postMessage({pixels, palette, width, height, dithering});           
         });
     }
 }

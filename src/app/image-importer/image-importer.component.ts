@@ -123,7 +123,7 @@ export class ImageImporterComponent implements OnInit {
 
     const img = <HTMLImageElement>this.imageImportSource.nativeElement;
 
-    var proc = () => {
+    var proc = async () => {
       //Style images to keep image's aspect ratio for preview purposes
       let aspect = h / w;
 
@@ -180,15 +180,15 @@ export class ImageImporterComponent implements OnInit {
         this.palette = this.customPalette;
       }
 
-      this.imageQuantizer.quantizeImage(srcImageData.data, this.palette, w, h, this.ditheringMode).then(r => {
-        const targetImageData = ctx.createImageData(w, h);
-        const n = w * h * 4;
-        for(let i = n - 1; i >= 0; --i){
-          targetImageData.data[i] = r[i];
-        }
-        
-        ctx.putImageData(targetImageData, 0, 0);
-      });
+      const q = await this.imageQuantizer.quantizeImage(srcImageData.data, this.palette, w, h, this.ditheringMode);
+      const targetImageData = ctx.createImageData(w, h);
+      const n = w * h * 4;
+      for(let i = n - 1; i >= 0; --i){
+        targetImageData.data[i] = q[i];
+      }
+
+      ctx.putImageData(targetImageData, 0, 0);
+
     };
 
     img.onload = proc;

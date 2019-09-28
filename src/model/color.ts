@@ -197,6 +197,20 @@ export class Color{
         return nearestColor;
     }
 
+    //Async
+    static getDistinctColors(pixels: Uint8ClampedArray){
+        return new Promise((resolve, reject) => {
+            resolve('poop');
+            // const worker = new Worker('../app/palette-extractor.worker', { type: 'module' });
+            // worker.onmessage = ({ data }) => {
+            //     worker.terminate();
+            //     resolve(data.map(c => new Color(c.r, c.g, c.b)));
+            // };
+
+            // worker.postMessage(pixels); 
+        });
+    }
+
     static getDistinctColorsFromImageData(imageData: any){
         //There must be a faster approach for this but whatever
         const data = imageData.data;

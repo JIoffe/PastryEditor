@@ -47,7 +47,7 @@ addEventListener('message', ({ data }) => {
             // //Apply error to neighboring pixels
             let neighbor;
             if(x > 0 && y < data.height - 1){
-              neighbor = (i + data.width * 4) - 4;
+              neighbor = (pixelI + data.width * 4) - 4;
               targetPixels[neighbor] += errorR * 3;
               targetPixels[neighbor + 1] += errorG * 3;
               targetPixels[neighbor + 2] += errorB * 3;
