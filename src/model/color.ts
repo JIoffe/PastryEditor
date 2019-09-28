@@ -198,16 +198,15 @@ export class Color{
     }
 
     //Async
-    static getDistinctColors(pixels: Uint8ClampedArray){
+    static getDistinctColors(pixels: Uint8ClampedArray): Promise<Color[]>{
         return new Promise((resolve, reject) => {
-            resolve('poop');
-            // const worker = new Worker('../app/palette-extractor.worker', { type: 'module' });
-            // worker.onmessage = ({ data }) => {
-            //     worker.terminate();
-            //     resolve(data.map(c => new Color(c.r, c.g, c.b)));
-            // };
+            const worker = new Worker('../app/palette-extractor.worker', { type: 'module' });
+            worker.onmessage = ({ data }) => {
+                worker.terminate();
+                resolve(Array.from(data).map((o:any) => new Color(o.r, o.g, o.b)));
+            };
 
-            // worker.postMessage(pixels); 
+            worker.postMessage(pixels); 
         });
     }
 

@@ -156,8 +156,8 @@ export class ImageImporterComponent implements OnInit {
       }
 
       if(this.customPalette === null){
-        let srcColors = Color.getDistinctColorsFromImageData(srcImageData);
-        
+        let srcColors = await Color.getDistinctColors(srcImageData.data);
+      
         if(transparentColor !== null)
           srcColors = srcColors.filter(c => !c.equals(transparentColor));
 
