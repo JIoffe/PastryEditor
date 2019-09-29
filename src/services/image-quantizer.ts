@@ -11,7 +11,7 @@ export class ImageQuantizer{
 
     quantizeImage(pixels: Uint8ClampedArray, palette: Color[], width: number, height: number, dithering: string): Promise<ImageData>{
         return new Promise<ImageData>((res, reject) => {
-            const worker = new Worker('../app/imageproc.worker', { type: 'module' });
+            const worker = new Worker('../app/imageproc.worker', { name: 'imageproc', type: 'module' });
 
             worker.onmessage = ({ data }) => {
                 worker.terminate();

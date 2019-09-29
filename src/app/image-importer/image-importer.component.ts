@@ -133,6 +133,8 @@ export class ImageImporterComponent implements OnInit {
       let displayWidth = 400;
       let displayHeight = aspect * displayWidth;
 
+      //Style the canvas to fit within a 400px sized bound
+      //There should probably be a pure Angular or CSS way to do this
       let maxDisplay = Math.max(displayWidth, displayHeight);
       if(maxDisplay > 400){
         let factor = maxDisplay / 400;
@@ -146,34 +148,16 @@ export class ImageImporterComponent implements OnInit {
       const ctx = this.imageImportCanvas.nativeElement.getContext('2d');
 
       ctx.drawImage(img, 0, 0, w, h);
-
       const srcImageData = ctx.getImageData(0, 0, w, h);
 
-      //Determine palette for K Means
       let transparentColor: Color = null;
       if(this.transparencySelection === 'upper-left'){
         transparentColor = new Color(srcImageData.data[0], srcImageData.data[1], srcImageData.data[2]);
       }
 
-      if(this.customPalette === null){
-        let srcColors = await Color.getDistinctColors(srcImageData.data);
+      this.customPalette = await this.getCustomPalette(srcImageData, transparentColor);
+
       
-        if(transparentColor !== null)
-          srcColors = srcColors.filter(c => !c.equals(transparentColor));
-
-        srcColors.forEach(c => c.clampToSegaMD());
-  
-        //15 colors - first one is transparent!
-        const reducedPalette = this.colorKMeansSolver.SolveKMeans(srcColors, 15, 500);
-        reducedPalette.forEach(c => c.clampToSegaMD());
-
-        //Sometimes this is out of date
-        if(!!reducedPalette.find(c => c.r + c.g + c.b > 0)){
-          this.customPalette = [new Color(0,0,0)];
-          this.customPalette.push(...reducedPalette);
-        }
-      }
-
       if(+this.paletteSelection >= 0){
         this.palette = this.applicationState.palettes[this.paletteSelection];
       }else{
@@ -188,11 +172,35 @@ export class ImageImporterComponent implements OnInit {
       }
 
       ctx.putImageData(targetImageData, 0, 0);
-
     };
 
     img.onload = proc;
-    if(!!img.complete)
+    if(!!img.complete && img.naturalWidth > 0)
       proc();
+  }
+
+  async getCustomPalette(srcImageData: ImageData, transparentColor: Color) : Promise<Color[]>{
+    //Determine palette for K Means
+    if(!!this.customPalette)
+      return this.customPalette;
+
+    let srcColors = await Color.getDistinctColors(srcImageData.data);
+    
+    if(transparentColor !== null)
+      srcColors = srcColors.filter(c => !c.equals(transparentColor));
+
+    srcColors.forEach(c => c.clampToSegaMD());
+
+    //15 colors - first one is transparent!
+    const reducedPalette = await this.colorKMeansSolver.SolveKMeans(srcColors, 15, 500);
+    reducedPalette.forEach(c => c.clampToSegaMD());
+
+    //Sometimes this is out of date
+    if(!!reducedPalette.find(c => c.r + c.g + c.b > 0)){
+      this.customPalette = [new Color(0,0,0)];
+      this.customPalette.push(...reducedPalette);
+    }
+
+    return this.customPalette;
   }
 }

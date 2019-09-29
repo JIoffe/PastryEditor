@@ -200,7 +200,7 @@ export class Color{
     //Async
     static getDistinctColors(pixels: Uint8ClampedArray): Promise<Color[]>{
         return new Promise((resolve, reject) => {
-            const worker = new Worker('../app/palette-extractor.worker', { type: 'module' });
+            const worker = new Worker('../app/palette-extractor.worker', { name: 'palette-extract', type: 'module'});
             worker.onmessage = ({ data }) => {
                 worker.terminate();
                 resolve(Array.from(data).map((o:any) => new Color(o.r, o.g, o.b)));
