@@ -10,6 +10,12 @@
                     <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
                 </span>
                 <span>
+                    <label>Flip H: <input type="checkbox" [(ngModel)]="this.cursorFlipX"/></label>
+                </span>
+                <span>
+                    <label>Flip V: <input type="checkbox" [(ngModel)]="this.cursorFlipY"/></label>
+                </span>
+                <span>
                     <button (click)="importImageClick($event)">Import Image</button>
                 </span>
                 <span>
@@ -18,7 +24,7 @@
                     {{zoom | number:'1.0-0'}}%
                 </span>
             </div>
-            <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': cursorDisplayX + 'px'}">
+            <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': cursorDisplayX + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
                 <div *ngIf="applicationState.levelEditMode === 'tiles' && !!applicationState.activeTile">
                     <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
                 </div>

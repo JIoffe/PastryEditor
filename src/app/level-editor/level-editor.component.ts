@@ -1,7 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ApplicationState } from 'src/services/application-state';
-import { ChildrenOutletContexts } from '@angular/router';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
+
+//Constants for bit flags on tiles
+const paletteFlags = [
+  0x0000,
+  0x2000,
+  0x4000,
+  0x6000
+];
+
+const hflipFlag = 0x0800;
+const vflipFlag = 0x1000;
 
 @Component({
   selector: 'app-level-editor',
@@ -19,9 +29,10 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
   cursorX = 0;
   cursorY = 0;
-
   cursorDisplayX = 0;
   cursorDisplayY = 0;
+  cursorFlipX = false;
+  cursorFlipY = false;
 
   code: string = null;
   showImageSelection = false;
@@ -87,6 +98,22 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     if(ev.buttons === 0)
       return;
 
+    let paletteMask: number = 0;
+    switch(this.applicationState.palettes.indexOf(this.applicationState.activePalette)){
+        case 0:
+          paletteMask = 0;
+          break;
+        case 1:
+          paletteMask = 0x2000;
+          break;
+        case 2:
+          paletteMask = 0x4000;
+          break;
+        case 3:
+          paletteMask = 0x6000;
+          break;
+    }
+
     const i = this.cursorX + this.cursorY * level.width;
     switch(this.applicationState.levelEditMode){
       case 'stamps':{
@@ -105,8 +132,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
                 const tile = stamp.tiles[x1 + y1 * stamp.width];
                 const tileIndex = this.applicationState.tiles.indexOf(tile);
 
-                level.palettes[paintI] = this.applicationState.palettes.indexOf(this.applicationState.activePalette);
-                level.tiles[paintI] = tileIndex;
+                level.tiles[paintI] = tileIndex|paletteMask;
               }
             }
           }
@@ -118,8 +144,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
       case 'tiles':
       default:
         if(!!this.applicationState.activeTile){
-          level.palettes[i] = this.applicationState.palettes.indexOf(this.applicationState.activePalette);
-          level.tiles[i] = this.applicationState.tiles.indexOf(this.applicationState.activeTile);
+          level.tiles[i] = this.applicationState.tiles.indexOf(this.applicationState.activeTile) | paletteMask;
         }
         break;
     }
@@ -179,9 +204,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
           continue;
         }
 
-        let palette = this.applicationState.palettes[level.palettes[levelTileI]];
+        let palette = this.applicationState.palettes[(tileIndex & 0x6000) / 0x2000];
 
-        const tile = this.applicationState.tiles[tileIndex];
+        const tile = this.applicationState.tiles[0x00FF & tileIndex];
         const indexX = Math.floor((factorX - tileX) * 8),
               indexY = Math.floor((factorY - tileY) * 8),
               index = tile[indexX + indexY * 8],

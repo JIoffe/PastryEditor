@@ -60,3 +60,14 @@
 .fill-over-status{
     overflow: hidden;
 }
+
+.flipY{
+    transform: rotateX(180deg);
+}
+.flipX{
+    transform: rotateY(180deg);
+}
+
+.flipX.flipY{
+    transform: rotateX(180deg) rotateY(180deg);
+}
