@@ -34,6 +34,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   cursorFlipX = false;
   cursorFlipY = false;
 
+  lastCursorDrawX = -1;
+  lastCursorDrawY = -1;
+
   code: string = null;
   showImageSelection = false;
   
@@ -97,6 +100,12 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
     if(ev.buttons === 0)
       return;
+
+    if(this.cursorX === this.lastCursorDrawX && this.cursorY === this.lastCursorDrawY)
+      return;
+
+    this.lastCursorDrawX = this.cursorX;
+    this.lastCursorDrawY = this.cursorY;
 
     let paletteMask: number = 0;
     switch(this.applicationState.palettes.indexOf(this.applicationState.activePalette)){
