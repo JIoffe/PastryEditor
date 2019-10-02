@@ -123,6 +123,12 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
           break;
     }
 
+    let flipMask = 0;
+    if(!!this.cursorFlipX)
+      flipMask |= hflipFlag;
+    if(!!this.cursorFlipY)
+      flipMask |= vflipFlag;
+
     const i = this.cursorX + this.cursorY * level.width;
     switch(this.applicationState.levelEditMode){
       case 'stamps':{
@@ -141,7 +147,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
                 const tile = stamp.tiles[x1 + y1 * stamp.width];
                 const tileIndex = this.applicationState.tiles.indexOf(tile);
 
-                level.tiles[paintI] = tileIndex|paletteMask;
+                level.tiles[paintI] = tileIndex|paletteMask|flipMask;
               }
             }
           }
@@ -153,7 +159,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
       case 'tiles':
       default:
         if(!!this.applicationState.activeTile){
-          level.tiles[i] = this.applicationState.tiles.indexOf(this.applicationState.activeTile) | paletteMask;
+          level.tiles[i] = this.applicationState.tiles.indexOf(this.applicationState.activeTile) | paletteMask | flipMask;
         }
         break;
     }
@@ -216,9 +222,16 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
         let palette = this.applicationState.palettes[(tileIndex & 0x6000) / 0x2000];
 
         const tile = this.applicationState.tiles[0x00FF & tileIndex];
-        const indexX = Math.floor((factorX - tileX) * 8),
-              indexY = Math.floor((factorY - tileY) * 8),
-              index = tile[indexX + indexY * 8],
+        let   indexX = Math.floor((factorX - tileX) * 8),
+              indexY = Math.floor((factorY - tileY) * 8);
+
+        if(!!(tileIndex & hflipFlag))
+          indexX = 7 - indexX;
+
+        if(!!(tileIndex & vflipFlag))
+          indexY = 7 - indexY;
+
+        const index = tile[indexX + indexY * 8],
               color = palette[index];
 
         data[i] = color.r;
