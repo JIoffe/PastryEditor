@@ -143,8 +143,11 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
                   continue;
                 }
 
+                const xLookup = this.cursorFlipX ? stamp.width - 1 - x1 : x1;
+                const yLookup = this.cursorFlipY ? stamp.height - 1 - y1 : y1;
+
                 const paintI = paintX + paintY * level.width;
-                const tile = stamp.tiles[x1 + y1 * stamp.width];
+                const tile = stamp.tiles[xLookup + yLookup * stamp.width];
                 const tileIndex = this.applicationState.tiles.indexOf(tile);
 
                 level.tiles[paintI] = tileIndex|paletteMask|flipMask;
