@@ -2,6 +2,7 @@
     <div class="control-content">
         <div class="caption">Level Editor - {{this.applicationState.activeLevel.name}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
         <div class="fill-over-status clear">
+            <app-draw-tool-selector></app-draw-tool-selector>
             <div class="button-container">
                 <span>
                     <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid" (change)="render()"/></label>
@@ -24,7 +25,7 @@
                     {{zoom | number:'1.0-0'}}%
                 </span>
             </div>
-            <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': cursorDisplayX + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
+            <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': (40 + cursorDisplayX) + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
                 <div *ngIf="applicationState.levelEditMode === 'tiles' && !!applicationState.activeTile">
                     <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
                 </div>

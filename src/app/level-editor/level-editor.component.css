@@ -22,7 +22,7 @@
 
 .level-edit-viewport {
     top: 24px;
-    left: 0;
+    left: 40px;
     right: 0;
     bottom: 0;
     position: absolute;
@@ -39,7 +39,7 @@
 .level-edit-canvas{
     position: absolute;
     z-index: 1;
-    left: 0;
+    left: 40px;
     top: 24px;
     width: calc(100% - 17px);
     height: calc(100% - 40px);

@@ -162,7 +162,36 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
       case 'tiles':
       default:
         if(!!this.applicationState.activeTile){
-          level.tiles[i] = this.applicationState.tiles.indexOf(this.applicationState.activeTile) | paletteMask | flipMask;
+          let newTile = this.applicationState.tiles.indexOf(this.applicationState.activeTile)|paletteMask|flipMask;
+
+          switch(this.applicationState.drawMode){
+            case 'b':
+              const tileToChange = level.tiles[i];
+              if(newTile !== tileToChange){
+                const stack = [[this.cursorX, this.cursorY]];
+                while(!!stack.length){
+                  const coord = stack.pop();
+                  if(coord[0] < 0 || coord[0] >= level.width || coord[1] < 0 || coord[1] >= level.height){
+                    continue;
+                  }
+
+                  const i1 = coord[0] + coord[1] * level.width;
+                  if(level.tiles[i1] !== tileToChange)
+                    continue;
+
+                  level.tiles[i1] = newTile;
+                  stack.push(
+                    [coord[0], coord[1]+1],
+                    [coord[0], coord[1]-1],
+                    [coord[0]+1, coord[1]],
+                    [coord[0]-1, coord[1]]);
+                }
+              }
+              break;
+            default:
+                level.tiles[i] = newTile;
+              break;
+          }         
         }
         break;
     }
