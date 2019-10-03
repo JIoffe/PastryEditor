@@ -284,11 +284,64 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
   importImageClick(ev: MouseEvent){
     this.showImageSelection = true;
-    console.log('wahooga');
   }
 
   onImageProcessed(imageIndices: Uint8Array){
     if(!!imageIndices){
+      const level = this.applicationState.activeLevel;
+      const texelWidth = level.width * 8,
+            texelHeight = level.height * 8;
+
+      //May be slow but it is correct... I hope
+      for(let x = 0; x < texelWidth; x += 8){
+        for(let y = 0; y < texelHeight; y += 8){
+          //Compare every 8 by 8 chunk against every tile in memory...
+          //.................... :)
+          let currentTile;
+          var foundTile = false;
+
+          for(let i = this.applicationState.tiles.length - 1; i >= 0; --i){
+            let tile = this.applicationState.tiles[i];
+            let isMatch = true;
+
+            tileCmp:
+            for(let x1 = 0; x1 < 8; ++x1){
+              for(let y1 = 0; y1 < 8; ++y1){
+                if(tile[x1 + y1 * 8] !== imageIndices[(x + x1) + (y + y1) * texelWidth]){
+                  isMatch = false;
+                  break tileCmp;
+                }
+              }
+            }
+
+            if(isMatch){
+              foundTile = true;
+              currentTile = tile;
+              break;
+            }
+          }
+
+          if(!foundTile){
+            currentTile = new Uint8Array(64);
+            for(let x1 = 0; x1 < 8; ++x1){
+              for(let y1 = 0; y1 < 8; ++y1){
+                currentTile[x1 + y1 * 8] = imageIndices[(x + x1) + (y + y1) * texelWidth];
+              }
+            }
+
+            this.applicationState.tiles.push(currentTile);
+          }
+
+          //Set level tile
+          const levelX = x / 8,
+                levelY = y / 8;
+          let tileValue = this.applicationState.tiles.indexOf(currentTile);
+          this.applicationState.activeLevel.tiles[levelX + levelY * this.applicationState.activeLevel.width] = tileValue;
+        }
+      }
+
+      this.applicationState.TilesetObservable.next(this.applicationState.tiles);
+      this.render();
     }
     this.showImageSelection = false;
   }

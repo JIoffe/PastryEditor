@@ -42,4 +42,4 @@
 </div>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
 <!-- <app-loading-spinner></app-loading-spinner> -->
-<app-image-importer *ngIf="showImageSelection" [width]="applicationState.activeLevel.width*8" [height]="applicationState.activeLevel.height*8" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
+<app-image-importer *ngIf="showImageSelection" [width]="applicationState.activeLevel.width" [height]="applicationState.activeLevel.height" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
