@@ -6,6 +6,7 @@ import { TileRenderer } from './tile-renderer';
 import { Sprite } from 'src/model/sprite';
 import { Level } from 'src/model/level';
 import { SpriteGroup } from 'src/model/sprite-group';
+import { MemoryMapEntry } from 'src/model/memory-map-entry';
 
 @Injectable({
     providedIn: 'root',
@@ -65,6 +66,8 @@ export class ApplicationState {
     traceImage: string = null;
 
     drawMode: string = 'p';
+
+    memoryMap: MemoryMapEntry[] = [];
 
     levels: Level[] = [];
     activeLevel: Level = null;

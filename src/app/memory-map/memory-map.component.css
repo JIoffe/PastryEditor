@@ -1,0 +1,26 @@
+.control-group{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 21;
+}
+
+.fill-over-status{
+    overflow-y: scroll;
+    max-height: 900px;
+}
+
+.button-container input{
+    height: 18px;
+}
+
+table{
+    width: 100%;
+    background: #DDD;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table input[type="text"], table select {
+    width: 100%;
+}

@@ -1,0 +1,46 @@
+<main class="pastry-grid">
+    <div class="control-group">
+        <div class="control-content">
+            <div class="caption">Memory Map<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+            <div class="button-container">
+                <span>
+                    <label>
+                    Memory Start:
+                    <input type="text" [ngModel]="memoryStart|toHex" (ngModelChange)="memoryStartChanged($event)">
+                    </label>
+                </span>
+            </div>  
+            <div class="fill-over-status">
+                <table>
+                    <tr>
+                        <th>Label(s)</th><th>Size</th><th>Description</th><th>Address</th><th></th>
+                    </tr>
+                    <tr *ngFor="let mapEntry of applicationState.memoryMap; index as i">
+                        <td><input type="text" [(ngModel)]="mapEntry.label"/></td>
+                        <td>
+                            <select [(ngModel)]="mapEntry.size" (change)="onSizeChanged($event, i, mapEntry.size)">
+                                <option [ngValue]="1">BYTE</option>
+                                <option [ngValue]="2">WORD</option>
+                                <option [ngValue]="4">LONG</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" [(ngModel)]="mapEntry.description"/>
+                        </td>
+                        <td>
+                            <input type="text" readonly [ngModel]="mapEntry.address|toHex"/>
+                        </td>
+                        <td><button (click)="memoryMapRemove($event, i)">Remove</button></td>
+                    </tr>
+                    <tr>
+
+                    </tr>
+                    <tr>
+                        <td colspan="5"><button (click)=memoryMapAdd($event)>+ Add</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
