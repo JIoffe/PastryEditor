@@ -21,7 +21,7 @@
                 </span>
                 <span>
                     Zoom:
-                    <input type="range" min="100" max="2000" [(ngModel)]="zoom" (change)="onZoomChange($event)" (mousemove)="render()"/>
+                    <input type="range" min="100" max="2000" [ngModel]="zoom" (change)="onZoomChange($event)"/>
                     {{zoom | number:'1.0-0'}}%
                 </span>
             </div>
@@ -33,7 +33,7 @@
                     <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" *ngFor="let tile of applicationState.activeStamp.tiles" src="{{applicationState.tileImageData.get(tile)}}"/>
                 </div>   
             </div>
-            <canvas #canvas class="level-edit-canvas" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)"></canvas>
+            <canvas #canvas class="level-edit-canvas" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
             <div #editViewport class="level-edit-viewport" (scroll)="render()">
                 <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
             </div>

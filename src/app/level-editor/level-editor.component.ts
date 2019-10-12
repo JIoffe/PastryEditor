@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ApplicationState } from 'src/services/application-state';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
+import { TileUtils } from 'src/utils/tile-utils';
+import { Level } from 'src/model/level';
 
 //Constants for bit flags on tiles
 const paletteFlags = [
@@ -24,8 +26,6 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   
   zoom = 100.0;
   showGrid = true;
-
-  buffer: ImageData;
 
   cursorX = 0;
   cursorY = 0;
@@ -55,8 +55,6 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
     const ctx = canvas.getContext('2d');
 
-    this.buffer = ctx.createImageData(w, h);
-
     this.render();
 
     this.subscribe(
@@ -66,7 +64,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     );
   }
 
-  onZoomChange(){
+  onZoomChange(ev: InputEvent){
+    // @ts-ignore
+    this.zoom = ev.target.value;
     this.render();
   }
 
@@ -214,17 +214,18 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
     const canvas  = this.canvas.nativeElement,
           rect    = canvas.getBoundingClientRect(),
-          w       = rect.right - rect.left,
-          h       = rect.bottom - rect.top;
+          w       = Math.floor(rect.right - rect.left),
+          h       = Math.floor(rect.bottom - rect.top);
 
     canvas.setAttribute('width', w + '');
     canvas.setAttribute('height', h + '');
 
     const ctx = canvas.getContext('2d');
-    const data = this.buffer.data;
+    const buffer = ctx.createImageData(w, h);
+    const data = buffer.data;
 
-    for(let x = w; x >= 0; --x){
-      for(let y = h; y >= 0; --y){
+    for(let x = w - 1; x >= 0; --x){
+      for(let y = h - 1; y >= 0; --y){
         const i = (x + y * w) * 4;
 
         const factorX = (x + scrollLeft) / cellSize,
@@ -273,7 +274,8 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
       }
     }
 
-    ctx.putImageData(this.buffer, 0, 0);
+    ctx.putImageData(buffer, 0, 0);
+
     if(this.showGrid){
       ctx.strokeStyle = '#FFF';
       let gridStart = cellSize - scrollLeft % cellSize,
@@ -296,6 +298,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
         ctx.stroke();
       }
     }
+
   }
 
   code_onClick(ev: MouseEvent){
@@ -306,6 +309,15 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   }
 
   onCodeChanged(code: string){
+    if(!!this.code){
+      const level = Level.fromCode(code);
+      console.log(level);
+      if(!!level){
+        this.applicationState.activeLevel.copy(level);
+        this.render();
+      }
+    }
+
     this.code = null;
   }
 
@@ -318,53 +330,34 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   onImageProcessed(imageIndices: Uint8Array){
     if(!!imageIndices){
       const level = this.applicationState.activeLevel;
+      const paletteMask = this.applicationState.palettes.indexOf(this.applicationState.activePalette) * 0x2000;
+
       const texelWidth = level.width * 8,
             texelHeight = level.height * 8;
 
-      //May be slow but it is correct... I hope
       for(let x = 0; x < texelWidth; x += 8){
         for(let y = 0; y < texelHeight; y += 8){
-          //Compare every 8 by 8 chunk against every tile in memory...
-          //.................... :)
-          let currentTile;
-          var foundTile = false;
 
-          for(let i = this.applicationState.tiles.length - 1; i >= 0; --i){
-            let tile = this.applicationState.tiles[i];
-            let isMatch = true;
-
-            tileCmp:
-            for(let x1 = 0; x1 < 8; ++x1){
-              for(let y1 = 0; y1 < 8; ++y1){
-                if(tile[x1 + y1 * 8] !== imageIndices[(x + x1) + (y + y1) * texelWidth]){
-                  isMatch = false;
-                  break tileCmp;
-                }
-              }
-            }
-
-            if(isMatch){
-              foundTile = true;
-              currentTile = tile;
-              break;
+          //Get indices at current tile
+          const tileCursor = new Uint8Array(64);
+          for(let x1 = 0; x1 < 8; ++x1){
+            for(let y1 = 0; y1 < 8; ++y1){
+              let index = (x + x1) + (y + y1) * texelWidth;
+              tileCursor[x1 + y1 * 8] = imageIndices[index];
             }
           }
 
-          if(!foundTile){
-            currentTile = new Uint8Array(64);
-            for(let x1 = 0; x1 < 8; ++x1){
-              for(let y1 = 0; y1 < 8; ++y1){
-                currentTile[x1 + y1 * 8] = imageIndices[(x + x1) + (y + y1) * texelWidth];
-              }
-            }
-
-            this.applicationState.tiles.push(currentTile);
+          //Compare to existing tiles
+          let tileIndex = this.applicationState.tiles.findIndex(t => TileUtils.tileCmp(tileCursor, t));
+          if(tileIndex < 0){
+            tileIndex = this.applicationState.tiles.length;
+            this.applicationState.tiles.push(tileCursor);
           }
 
-          //Set level tile
           const levelX = x / 8,
                 levelY = y / 8;
-          let tileValue = this.applicationState.tiles.indexOf(currentTile);
+
+          let tileValue = tileIndex | paletteMask;
           this.applicationState.activeLevel.tiles[levelX + levelY * this.applicationState.activeLevel.width] = tileValue;
         }
       }

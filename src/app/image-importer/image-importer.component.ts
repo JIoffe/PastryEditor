@@ -186,8 +186,13 @@ export class ImageImporterComponent implements OnInit {
 
     let srcColors = await Color.getDistinctColors(srcImageData.data);
     
-    if(transparentColor !== null)
-      srcColors = srcColors.filter(c => !c.equals(transparentColor));
+    if(transparentColor !== null){
+      let index = srcColors.findIndex(c => c.equals(transparentColor));
+      let temp = srcColors[0];
+      srcColors[0] = transparentColor;
+      srcColors[index] = temp;
+      //srcColors = srcColors.filter(c => !c.equals(transparentColor));
+    }
 
     srcColors.forEach(c => c.clampToSegaMD());
 

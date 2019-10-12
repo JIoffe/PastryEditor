@@ -18,7 +18,7 @@
                     <tr *ngFor="let mapEntry of applicationState.memoryMap; index as i">
                         <td><input type="text" [(ngModel)]="mapEntry.label"/></td>
                         <td>
-                            <select [(ngModel)]="mapEntry.size" (change)="onSizeChanged($event, i, mapEntry.size)">
+                            <select [(ngModel)]="mapEntry.size" (change)="onSizeChanged(i, mapEntry.size)">
                                 <option [ngValue]="1">BYTE</option>
                                 <option [ngValue]="2">WORD</option>
                                 <option [ngValue]="4">LONG</option>

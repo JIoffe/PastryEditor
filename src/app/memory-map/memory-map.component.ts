@@ -93,7 +93,7 @@ export class MemoryMapComponent {
     this.code = null;
   }
 
-  onSizeChanged(ev: InputEvent, i: number, size: number){
+  onSizeChanged(i: number, size: number){
     let offset = this.applicationState.memoryMap[i++].address + size;
     while(i < this.applicationState.memoryMap.length){
       let entry = this.applicationState.memoryMap[i++];
