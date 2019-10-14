@@ -1,45 +1,43 @@
 <div class="control-group edit-level">
-    <div class="control-content">
-        <div class="caption">Level Editor - {{this.applicationState.activeLevel.name}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
-        <div class="fill-over-status clear">
-            <app-draw-tool-selector></app-draw-tool-selector>
-            <div class="button-container">
-                <span>
-                    <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid" (change)="render()"/></label>
-                </span>
-                <span>
-                    <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
-                </span>
-                <span>
-                    <label>Flip H: <input type="checkbox" [(ngModel)]="this.cursorFlipX"/></label>
-                </span>
-                <span>
-                    <label>Flip V: <input type="checkbox" [(ngModel)]="this.cursorFlipY"/></label>
-                </span>
-                <span>
-                    <button (click)="importImageClick($event)">Import Image</button>
-                </span>
-                <span>
-                    Zoom:
-                    <input type="range" min="100" max="2000" [ngModel]="zoom" (change)="onZoomChange($event)"/>
-                    {{zoom | number:'1.0-0'}}%
-                </span>
-            </div>
-            <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': (40 + cursorDisplayX) + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
-                <div *ngIf="applicationState.levelEditMode === 'tiles' && !!applicationState.activeTile">
-                    <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
-                </div>
-                <div *ngIf="applicationState.levelEditMode === 'stamps' && !!applicationState.activeStamp" class="icon" [ngStyle]="{'grid-template-rows': applicationState.activeStamp.gridTemplateRows(), 'grid-template-columns': applicationState.activeStamp.gridTemplateColumns(), 'width': (zoom*0.08*applicationState.activeStamp.width) + 'px', 'height': (zoom*0.08*applicationState.activeStamp.height) + 'px'}"> 
-                    <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" *ngFor="let tile of applicationState.activeStamp.tiles" src="{{applicationState.tileImageData.get(tile)}}"/>
-                </div>   
-            </div>
-            <canvas #canvas class="level-edit-canvas" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
-            <div #editViewport class="level-edit-viewport" (scroll)="render()">
-                <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
-            </div>
-        </div>
-        <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}</div>
+    <div class="caption">Level Editor - {{this.applicationState.activeLevel.name}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="button-container">
+        <span>
+            <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid" (change)="render()"/></label>
+        </span>
+        <span>
+            <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
+        </span>
+        <span>
+            <label>Flip H: <input type="checkbox" [(ngModel)]="this.cursorFlipX"/></label>
+        </span>
+        <span>
+            <label>Flip V: <input type="checkbox" [(ngModel)]="this.cursorFlipY"/></label>
+        </span>
+        <span>
+            <button (click)="importImageClick($event)">Import Image</button>
+        </span>
+        <span>
+            Zoom:
+            <input type="range" min="100" max="2000" [ngModel]="zoom" (change)="onZoomChange($event)"/>
+            {{zoom | number:'1.0-0'}}%
+        </span>
     </div>
+    <div class="content clear">
+        <app-draw-tool-selector></app-draw-tool-selector>
+        <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': (40 + cursorDisplayX) + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
+            <div *ngIf="applicationState.levelEditMode === 'tiles' && !!applicationState.activeTile">
+                <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
+            </div>
+            <div *ngIf="applicationState.levelEditMode === 'stamps' && !!applicationState.activeStamp" class="icon" [ngStyle]="{'grid-template-rows': applicationState.activeStamp.gridTemplateRows(), 'grid-template-columns': applicationState.activeStamp.gridTemplateColumns(), 'width': (zoom*0.08*applicationState.activeStamp.width) + 'px', 'height': (zoom*0.08*applicationState.activeStamp.height) + 'px'}"> 
+                <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" *ngFor="let tile of applicationState.activeStamp.tiles" src="{{applicationState.tileImageData.get(tile)}}"/>
+            </div>   
+        </div>
+        <canvas #canvas class="level-edit-canvas" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
+        <div #editViewport class="draw-canvas-container" (scroll)="render()">
+            <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
+        </div>
+    </div>
+    <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}</div>
 </div>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
 <!-- <app-loading-spinner></app-loading-spinner> -->

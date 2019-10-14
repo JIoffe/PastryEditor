@@ -1,5 +1,9 @@
-<main class="pastry-grid">
-    <app-palette-library></app-palette-library>
-    <app-sprite-library></app-sprite-library>
-    <app-multi-tile-editor *ngIf="applicationState.activeSprite !== null" [stamp]="applicationState.activeSprite" title="Sprite Editor"></app-multi-tile-editor>
+<main class="pastry-grid-2col">
+    <div>
+        <app-palette-library></app-palette-library>
+        <app-sprite-library></app-sprite-library>
+    </div>
+    <div>
+        <app-multi-tile-editor *ngIf="applicationState.activeSprite !== null" [stamp]="applicationState.activeSprite" title="Sprite Editor"></app-multi-tile-editor>
+    </div>
 </main>

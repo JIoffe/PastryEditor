@@ -1,13 +1,13 @@
 <div class="control-group">
-    <div class="control-content clear">
-        <div class="caption">Trace Image</div>
+    <div class="caption">Trace Image</div>
+    <div class="content">
         <div class="draw-canvas-container">
-        <img *ngIf="!!applicationState.traceImage" src="{{applicationState.traceImage}}"/>
-        <div *ngIf="!applicationState.traceImage">(No image selected)</div>
-        <button (click)="selectImage_click($event)">Set Trace Image</button>
+            <img *ngIf="!!applicationState.traceImage" src="{{applicationState.traceImage}}"/>
+            <div *ngIf="!applicationState.traceImage">(No image selected)</div>
+            <button (click)="selectImage_click($event)">Set Trace Image</button>
         </div>
-        <div class="tool-status"></div>
     </div>
+    <div class="tool-status"></div>
 </div>
 <div class="modal" *ngIf="showImageSelection" (paste)="onImagePaste($event)">
     <div class="modal-content">

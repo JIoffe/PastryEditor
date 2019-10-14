@@ -1,37 +1,27 @@
-h1 {
-    margin: 0;
-    font-size: 24px;
-    padding: 5px;
+.pastry-header header{
+    padding: 4px 18px;
 }
 
-.pastry-header {
-    display: grid;
-    grid-template-rows: 50px 50px;
-    grid-template-columns: 20% 20% 20% 20% 20%;
+.pastry-header h1{
+    float: left;
 }
 
-header {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
+.pastry-header .console-selection{
+    float: right;
 }
 
-    .header {
-        background: #888;
-        border-bottom: 1px solid #000;
-    }
+.console-selection > select {
+    height: 100%;
+    width: 100%;
+}
 
-    .header select {
-        height: calc(100% - 1px);
-        width: 100%;
-        font-size: 20px;
-        background: #AAA;
-    }
+.console-selection {
+    height: 38px;
+    width: 400px;
+}
 
-.mode-selection {
-    grid-column-start: 1;
-    grid-column-end: 6;
-    grid-row-start: 2;
-    grid-row-end: 3;
+.pastry-header .tab-group {
+    padding: 8px 18px;
+    background: #CCC;
+    border-bottom: 1px solid black;
 }

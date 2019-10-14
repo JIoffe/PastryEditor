@@ -1,40 +1,38 @@
 <div class="control-group edit-active-tile">
-    <div class="control-content">
-        <div class="caption">{{title}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
-        <div class="fill-over-status clear">
-            <app-draw-color-selector></app-draw-color-selector>
-            <app-draw-tool-selector></app-draw-tool-selector>
-            <div class="button-container">
-                <span>
-                    Background:
-                    <select [(ngModel)]="backgroundMode">
-                        <option value="backdrop">Backdrop</option>
-                        <option value="trace">Trace</option>
-                    </select>
-                </span>
-                <span>
-                    <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid"/></label>
-                </span>
-                <span>
-                    <label>Name: <input type="text" [(ngModel)]="stamp.name"/></label>
-                </span>
-                <span>
-                    <button (click)="importImageClick($event)">Import Image</button>
-                </span>
-                <span>
-                    Zoom:
-                    <input type="range" min="10" max="10000" [(ngModel)]="zoom" (change)="onZoomChange($event)"/>
-                    {{zoom | number:'1.0-0'}}%
-                </span>
-            </div>
-            <div class="draw-canvas-container" #canvasContainer>
-                <canvas #grid class="grid-overlay" [ngStyle]="{'display': (showGrid ? 'block' : 'none'), 'width': (width * 8 * (zoom/100)) + 'px', 'height': (height * 8 * (zoom/100)) + 'px'}"></canvas>
-                <!-- <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div> -->
-                <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none, 'width': (width * 8 * (zoom/100)) + 'px', 'height': (height * 8 * (zoom/100)) + 'px'}"></canvas>
-            </div>
-        </div>
-        <div class="tool-status">Size: {{width}}x{{height}} tiles.  ({{width * 8}}x{{height * 8}} pixels)</div>
+    <div class="caption">{{title}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="button-container">
+        <span>
+            Background:
+            <select [(ngModel)]="backgroundMode">
+                <option value="backdrop">Backdrop</option>
+                <option value="trace">Trace</option>
+            </select>
+        </span>
+        <span>
+            <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid"/></label>
+        </span>
+        <span>
+            <label>Name: <input type="text" [(ngModel)]="stamp.name"/></label>
+        </span>
+        <span>
+            <button (click)="importImageClick($event)">Import Image</button>
+        </span>
+        <span>
+            Zoom:
+            <input type="range" min="10" max="10000" [(ngModel)]="zoom" (change)="onZoomChange($event)"/>
+            {{zoom | number:'1.0-0'}}%
+        </span>
     </div>
+    <div class="content clear">
+        <app-draw-color-selector></app-draw-color-selector>
+        <app-draw-tool-selector></app-draw-tool-selector>
+        <div class="draw-canvas-container" #canvasContainer>
+            <canvas #grid class="grid-overlay" [ngStyle]="{'display': (showGrid ? 'block' : 'none'), 'width': (width * 8 * (zoom/100)) + 'px', 'height': (height * 8 * (zoom/100)) + 'px'}"></canvas>
+            <!-- <div class="grid clear" #grid [hidden]="!showGrid" [ngStyle]="{'width': (stamp.width * 8 * (zoom/100)) + 'px', 'height': (stamp.height * 8 * (zoom/100)) + 'px'}"></div> -->
+            <canvas class="drawing-surface" (mousedown)="onDraw($event)" (mousemove)="onDraw($event)" #drawCanvas [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none, 'width': (width * 8 * (zoom/100)) + 'px', 'height': (height * 8 * (zoom/100)) + 'px'}"></canvas>
+        </div>
+    </div>
+    <div class="tool-status">Size: {{width}}x{{height}} tiles.  ({{width * 8}}x{{height * 8}} pixels)</div>
 </div>
 <app-image-importer *ngIf="showImageSelection" [width]="width" [height]="height" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

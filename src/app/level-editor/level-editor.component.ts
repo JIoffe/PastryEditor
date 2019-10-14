@@ -64,7 +64,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     );
   }
 
-  onZoomChange(ev: InputEvent){
+  onZoomChange(ev: any){
     // @ts-ignore
     this.zoom = ev.target.value;
     this.render();

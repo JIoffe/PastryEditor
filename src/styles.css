@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 *{
     box-sizing: border-box;
 }
@@ -8,154 +7,192 @@ body,html{
     margin: 0;
     padding: 0;
     background: #dedede;
+    overflow: auto;
 }
-.pastry-grid {
+
+/* FIRST COLUMN IS 400PX WIDE */
+.pastry-grid-1col, .pastry-grid-2col{
+    height: calc(100% - 92px);
+}
+.pastry-grid-2col {
     display: grid;
-    grid-template-rows: 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6% 6%;
-    grid-template-columns: 20% 20% 20% 20% 20%;
-    grid-auto-rows: 1fr;
-    min-height: 800px;
+    grid-template-rows: 1fr;
+    grid-template-columns: 400px min-content;
+    height: calc(100% - 92px);
 }
-h1,h2,h3,h4,h5,h6{
-    font-family: Arial Black,Arial Bold,Gadget,sans-serif; 
+.pastry-grid-1col{
+    display: grid;
+    width: 100%;
+    grid-template-columns: min-content;
 }
-.clear:after{
+
+.caption{
+    background: #0F2027;
+    background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);
+    background: linear-gradient(to top, #2C5364, #203A43, #0F2027);
+    color: #FFF;
+}
+
+h1, h2, h3, h4,h5,h6 {
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4,h5,h6, .tab-group {
+    font-family: Futura,Trebuchet MS,Arial,sans-serif;
+}
+
+.tab-group {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tab-group > li {
+    float: left;
+    margin: 4px;
+}
+
+.tab-group > li > a{
+    padding: 4px;
+    background: #4AC29A;
+    background: -webkit-linear-gradient(to top, #BDFFF3, #4AC29A);
+    background: linear-gradient(to top, #BDFFF3, #4AC29A);
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;  
+}
+
+.tab-group:after {
     content: '';
     display: block;
     clear: both;
 }
-.pointer{ cursor: pointer;}
-.no-select {
-    -webkit-user-select: none;  
-    -moz-user-select: none;    
-    -ms-user-select: none;      
-    user-select: none;
+
+.tab-group .active, .tab-group > li:hover > a{
+    background: #3494E6;
+    background: -webkit-linear-gradient(to top, #EC6EAD, #3494E6);
+    background: linear-gradient(to top, #EC6EAD, #3494E6);
+    color: #dedede;
 }
-/* Common Controls */
-canvas {  
-    display: block;
+
+.control-group {
+    margin: 12px 0 0 12px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    background: #CCC;
+    position: relative;
+    padding-bottom: 22px;
+    width: 100%;
+}
+
+.control-group.fill{
+    height: 100%;
+}
+
+.pastry-grid-2col > div:last-child{
+    padding-left: 18px;
+}
+
+.pastry-grid-2col > div:last-child .control-group{
+    height: 100%;
+}
+
+.control-group .content {
+    position: absolute;
+    top: 26px;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+.control-group .button-container + .content {
+    top: 56px;
+}
+
+.control-group .button-container input{
+    height: 18px;
+}
+
+.control-group .button-container {
+    padding: 4px;
+}
+
+.control-group .button-container button {
+    margin: 0 4px;
+}
+
+.control-group .caption {
+    padding: 4px;
+    position: relative;
+}
+
+.control-group .caption .btn-code {
+    position: absolute;
+    right: 4px;
+    font-size: 12px;
+    top: 4px;
+    border-radius: 4px;
+    background: #DDD;
+    border: none;
+    padding-top: 2px;
+    /* color: #FFF; */
+    cursor: pointer;
+}
+
+/* Common selection controls */
+.icons-container {
+    overflow-y: scroll;
+}
+.icons-container img, .draw-canvas-container img, .drawing-surface {
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
-.caption{
-    color: #FFF;
-    text-shadow: 2px 2px 4px #000;
-}
-.palette-swatch {
-    background: #FFF;
-    border: 2px ridge;
-    display: inline-block;
-}
 
-.control-group{
-    padding: 6px;
-    width: 100%;
-    height: 100%;
-}
-    .control-group .tool-status {
-        background: #DDD;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 16px;
-        border-top: ridge;
-    }
-    .control-content {
-        border: 2px ridge;
-        box-shadow: 0 0 2px;
-        height: 100%;
-        width: 100%;
-        background: #000;
-        position: relative;
-        padding-top: 26px;
-    }
-
-    .control-content.tab-group{
-        padding-top: 0;
-    }
-
-    .control-content > .caption {
-        font-size: 16px;
-        background: #888;
-        padding: 4px;
-        width: 100%;
-        height: 26px;
-        position: absolute;
-        top: 0;
-    }
-    .control-content > .fill-over-status{
-        height: calc(100% - 18px);
-        position: relative;
-    }
-    .control-group .caption .btn-code {
-        background: #666;
-        border: none;
-        box-shadow: inset 0 0 2px;
-        float: right;
-        cursor: pointer;
-        padding: 3px 6px;
-        color: #DDD;
-        font-size: 12px;
-    }
-    .control-group .button-container {
-        height: 20px;
-    }
-    
-    .control-group button {
-        height: 100%;
-    }
-    
-    .control-group button:not(:last-child) {
-        margin-right: 10px;
-    }
-/* TABS */
-
-/* TAB CONTROLS */
-.tab-group {
-    list-style: none;
-    margin: 0;
-    height: 100%;
+.draw-canvas-container{
+    overflow: scroll;
+    top:0;
+    bottom:0;
+    left: 80px;
+    right:0;
+    cursor: crosshair;
     padding: 0;
-    width: 100%;
-    font-family: Arial Black,Arial Bold,Gadget,sans-serif;
-    font-size: 14px;
-    cursor: pointer;
+    margin: 0;
+    position: absolute;
 }
-    .tab-group > li{
-        float: left;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-    }
 
-    .tab-group a, .tab-group a:visited {
-        background: #DDD;
-        height: 100%;
-        padding: 5px 10px;
-        box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
-        text-decoration: none;
-        display: inline-block;
-    }
+.icons-container > .icon{
+    margin: 4px;
+}
+.icons-container > .icon:hover, .icons-container > .icon.active {
+    cursor: pointer;
+    outline: 2px solid #FFF;
+}
+.icon{
+    float: left;
+    display: grid;
+    grid-auto-flow: row;
+}
+.icon > img{
+    width: 16px;
+    height: 16px;
+}
 
-    .tab-group:after {
-        display: block;
-        content: '';
-        clear: both;
-    }
+.tool-status {
+    height: 20px;
+    padding: 4px;
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #DDD;
+}
 
-    .tab-group > li:not(:last-child) {
-        border-right: 2px solid #FFF;
-    }
+.palette-swatch.active,.palette-swatch:hover {border: 2px solid #FFF;box-shadow: inset 0 0 1px 2px #000;}
 
-    .tab-group a:hover, .tab-group a.active {
-        color: #FFF;
-        background: #DDF;
-        box-shadow: inset 0 0 5px #AAF;
-        text-decoration: none;
-    }
 /*
     MODALS
 */
@@ -200,68 +237,6 @@ canvas {
         margin-left: 10px;
     }
 
-/* Common editing controls */
-
-.button-container {
-    background: #aaa;
-}
-.button-container input[type="range"] {
-    height: 10px;
-}
-.draw-canvas-container{
-    position: relative;
-    background: #DDD;
-    height: 100%;
-    width: 100%;
-}
-
-.draw-canvas-container .drawing-surface{
-    box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
-    background-repeat: no-repeat;
-    background-size: 100% 100%;  /* Stretch background to fit the whole canvas */
-}
-
-.grid{
-    position: absolute;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-}
-.grid > div{
-    float: left;
-    border: 1px solid #FFF;
-}
-/* Common selection controls */
-.icons-container {
-    overflow-y: scroll;
-}
-.icons-container.fill-over-status {
-    height: calc(100% - 36px);
-    max-height: 689px;
-}
-.icons-container img, .draw-canvas-container img {
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-crisp-edges;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-}
-.icons-container > .icon{
-    margin: 4px;
-}
-.icons-container > .icon:hover, .icons-container > .icon.active {
-    cursor: pointer;
-    outline: 2px solid #FFF;
-}
-.icon{
-    float: left;
-    display: grid;
-    grid-auto-flow: row;
-}
-.icon > img{
-    width: 16px;
-    height: 16px;
-}
-
 .screen-preview {
     height: 224px;
     width: 320px;
@@ -282,4 +257,24 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Utilities */
+.clear:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.pointer{ cursor: pointer;}
+.no-select {
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+}
+.scroll-y{
+    overflow-y: scroll;
+}
+.scroll-xy, .scroll{
+    overflow: scroll;
 }

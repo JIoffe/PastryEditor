@@ -1,26 +1,26 @@
 <div class="control-group edit-active-tile">
-    <div class="control-content">
-        <div class="caption">Edit Tile<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
-        <div class="fill-over-status clear">
+    <div class="caption">Edit Tile<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="fill-over-status clear">
+        <div class="button-container">
+            <span>
+                Background:
+                <select [(ngModel)]="backgroundMode">
+                    <option value="backdrop">Backdrop</option>
+                    <option value="trace">Trace</option>
+                </select>
+            </span>
+            <span>
+                <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid"/></label>
+            </span>
+        </div>
+        <div class="content">
             <app-draw-color-selector></app-draw-color-selector>
-            <div class="button-container">
-                <span>
-                    Background:
-                    <select [(ngModel)]="backgroundMode">
-                        <option value="backdrop">Backdrop</option>
-                        <option value="trace">Trace</option>
-                    </select>
-                </span>
-                <span>
-                    <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid"/></label>
-                </span>
-            </div>
             <div class="draw-canvas-container">
                 <canvas #grid class="grid-overlay" [ngStyle]="{'display': (showGrid ? 'block' : 'none')}"></canvas>
                 <img #drawingSurface draggable="false" ondragstart="return false;" class="drawing-surface no-select" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS(), 'background-image': backgroundMode === 'trace' ? 'url(' + applicationState.traceImage + ')' : none}" (mousedown)="canvas_onMouse($event)" (mousemove)="canvas_onMouse($event)" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
             </div>
         </div>
-        <div class="tool-status"></div>
     </div>
+    <div class="tool-status"></div>
 </div>
 <app-code-editor *ngIf="showCodeEditor" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

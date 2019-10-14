@@ -1,19 +1,17 @@
-<div class="control-group level-library">
-    <div class="control-content">
-        <div class="caption">Level Tools</div>
-        <div class="button-container">
-            <label>Tiles: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="tiles"/></label> &nbsp;
-            <label>Stamps: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="stamps"/></label> &nbsp;
-            <label>Eraser: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="eraser"/></label>
-        </div>    
-        <div class="fill-over-status icons-container clear" *ngIf="applicationState.levelEditMode === 'tiles'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 
-            <img class="icon" *ngFor="let tile of applicationState.tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>   
-        </div>
-        <div class="fill-over-status icons-container clear" *ngIf="applicationState.levelEditMode === 'stamps'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 
-            <div class="icon" *ngFor="let stamp of applicationState.stamps; index as i" [ngStyle]="{'grid-template-rows': stamp.gridTemplateRows(), 'grid-template-columns': stamp.gridTemplateColumns(), width: stamp.width * 16 + 'px', height: stamp.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
-                <img *ngFor="let tile of stamp.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}"/>
-            </div>   
-        </div>
-        <div class="tool-status">{{tooltip}}</div>
+<div class="control-group fill">
+    <div class="caption">Level Tools</div>
+    <div class="button-container">
+        <label>Tiles: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="tiles"/></label> &nbsp;
+        <label>Stamps: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="stamps"/></label> &nbsp;
+        <label>Eraser: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="eraser"/></label>
+    </div>    
+    <div class="content icons-container clear" *ngIf="applicationState.levelEditMode === 'tiles'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 
+        <img class="icon" *ngFor="let tile of applicationState.tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>   
     </div>
+    <div class="content icons-container clear" *ngIf="applicationState.levelEditMode === 'stamps'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 
+        <div class="icon" *ngFor="let stamp of applicationState.stamps; index as i" [ngStyle]="{'grid-template-rows': stamp.gridTemplateRows(), 'grid-template-columns': stamp.gridTemplateColumns(), width: stamp.width * 16 + 'px', height: stamp.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': stamp === applicationState.activeStamp}"> 
+            <img *ngFor="let tile of stamp.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}"/>
+        </div>   
+    </div>
+    <div class="tool-status">{{tooltip}}</div>
 </div>

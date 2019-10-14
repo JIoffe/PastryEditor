@@ -1,24 +1,11 @@
-:host {
-    grid-column-start: 2;
-    grid-column-end: 6;
-    grid-row-start: 1;
-    grid-row-end: 21;
+:host{
+    display: block;
+    height: calc(100% - 28px);
+    width: calc(100vw - 450px);
 }
 
 :host .button-container label:not(:last-child){
     margin-right: 26px;
-}
-
-.draw-canvas-container{
-    overflow: scroll;
-    height: calc(100% - 20px);
-    width: calc(100% - 80px);
-    left: 80px;
-    cursor: crosshair;
-    max-height: 882px;
-    padding: 0;
-    margin: 0;
-    position: absolute;
 }
 
 .button-container span:not(:last-child){

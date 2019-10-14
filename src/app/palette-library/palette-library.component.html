@@ -5,7 +5,7 @@
             <div *ngFor="let palette of palettes; index as i">
                 <input type="radio" name="active-palette" value="{{i}}" [checked]="palette == activePalette" (change)="palettes_onChange($event, palette)"/>
                 <ng-template ngFor let-color [ngForOf]="palette" let-j="index">
-                    <div class="palette-swatch pointer" [ngStyle]="{'backgroundColor': color.toCSS()}" (click)="swatch_onClick($event, color)" (mouseenter)="swatch_onHover($event, i, j)" (mouseleave)="palettes_onMouseLeave($event)"></div>
+                    <div class="palette-swatch clear pointer" [ngStyle]="{'backgroundColor': color.toCSS()}" (click)="swatch_onClick($event, color)" (mouseenter)="swatch_onHover($event, i, j)" (mouseleave)="palettes_onMouseLeave($event)"></div>
                 </ng-template>
             </div>
         </div>

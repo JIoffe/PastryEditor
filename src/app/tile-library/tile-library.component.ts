@@ -37,7 +37,8 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
     const tile = new Uint8Array(64);
     this.applicationState.tiles.push(tile);
     this.applicationState.TilesetObservable.next(this.applicationState.tiles);
-    this.applicationState.TileSelectedObservable.next(this.applicationState.tiles[this.applicationState.tiles.length - 1]);
+    this.applicationState.TileSelectedObservable.next(tile);
+    console.log('tile');
   }
 
   remove_onClick(ev: MouseEvent){

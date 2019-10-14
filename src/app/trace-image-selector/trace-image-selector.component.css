@@ -1,8 +1,6 @@
-:host{
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 7;
+.control-group{
+    height: calc(100% - 28px);
+    width: 900px;
 }
 
 .control-group button {

@@ -1,411 +1,409 @@
 <div class="control-group">
-    <div class="control-content clear">
-        <div class="caption">VDP Registers<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
-        <div class="fill-over-status">
-            <table class="vdp-registers">
-                <tr>
-                    <th>Register</th>
-                    <th>Desription</th>
-                    <th>Options</th>
-                    <th>Value</th>
-                </tr>
-                <tr>
-                    <td colspan="4" class="division">Initialization Registers - Set on Boot</td>
-                </tr>
-                <tr>
-                    <td>00</td>
-                    <td>Mode Register 1</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Color Mode</div>
-                            <select [(ngModel)]="colorMode">
-                                <option value="9bit">9-bit (512 colors)</option>
-                                <option value="3bit">3-bit (8 colors)</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>H/V Counter</div>
-                            <select [(ngModel)]="hvCounter">
-                                <option value="enabled">Enabled</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>Horizontal Interrupt</div>
-                            <select [(ngModel)]="hblank">
-                                <option value="enabled">Enabled</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
-                    </td>
-                    <td>
-                        {{register0}}
-                    </td>
-                </tr>
+    <div class="caption">VDP Registers<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="content scroll-y">
+        <table class="vdp-registers">
+            <tr>
+                <th>Register</th>
+                <th>Desription</th>
+                <th>Options</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td colspan="4" class="division">Initialization Registers - Set on Boot</td>
+            </tr>
+            <tr>
+                <td>00</td>
+                <td>Mode Register 1</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Color Mode</div>
+                        <select [(ngModel)]="colorMode">
+                            <option value="9bit">9-bit (512 colors)</option>
+                            <option value="3bit">3-bit (8 colors)</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>H/V Counter</div>
+                        <select [(ngModel)]="hvCounter">
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>Horizontal Interrupt</div>
+                        <select [(ngModel)]="hblank">
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>
+                </td>
+                <td>
+                    {{register0}}
+                </td>
+            </tr>
 
-                <tr>
-                    <td>01</td>
-                    <td>Mode Register 2</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>V Cells (PAL/NTSC)</div>
-                            <select [(ngModel)]="vcellmode">
-                                <option value="vpal">V30 PAL</option>
-                                <option value="vntsc">V28 NTSC</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>DMA</div>
-                            <select [(ngModel)]="dma">
-                                <option value="enabled">Enabled</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>Vertical Interrupt</div>
-                            <select [(ngModel)]="vblank">
-                                <option value="enabled">Enabled</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
-                    </td>
-                    <td>
-                        {{register1}}
-                    </td>
-                </tr>
+            <tr>
+                <td>01</td>
+                <td>Mode Register 2</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>V Cells (PAL/NTSC)</div>
+                        <select [(ngModel)]="vcellmode">
+                            <option value="vpal">V30 PAL</option>
+                            <option value="vntsc">V28 NTSC</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>DMA</div>
+                        <select [(ngModel)]="dma">
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>Vertical Interrupt</div>
+                        <select [(ngModel)]="vblank">
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>
+                </td>
+                <td>
+                    {{register1}}
+                </td>
+            </tr>
 
-                <tr>
-                    <td>02</td>
-                    <td>Plane A Table Address</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Plane A VRAM Address</div>
-                            <select [(ngModel)]="addressA">
-                                <option *ngFor="let addr of scrollPlaneValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
-                            </select>
-                        </label>    
-                    </td>
-                    <td>{{register2}}</td>
-                </tr>
+            <tr>
+                <td>02</td>
+                <td>Plane A Table Address</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Plane A VRAM Address</div>
+                        <select [(ngModel)]="addressA">
+                            <option *ngFor="let addr of scrollPlaneValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
+                        </select>
+                    </label>    
+                </td>
+                <td>{{register2}}</td>
+            </tr>
 
-                <tr>
-                    <td>03</td>
-                    <td>Window Table Address</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Window VRAM Address</div>
-                            <select [(ngModel)]="addressWindow">
-                                <option value="10000">Disabled</option>
-                                <option *ngFor="let addr of windowValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
-                            </select>
-                        </label>                          
-                    </td>
-                    <td>{{register3}}</td>
-                </tr>
+            <tr>
+                <td>03</td>
+                <td>Window Table Address</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Window VRAM Address</div>
+                        <select [(ngModel)]="addressWindow">
+                            <option value="10000">Disabled</option>
+                            <option *ngFor="let addr of windowValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
+                        </select>
+                    </label>                          
+                </td>
+                <td>{{register3}}</td>
+            </tr>
 
-                <tr>
-                    <td>04</td>
-                    <td>Plane B Table Address</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Plane B VRAM Address</div>
-                            <select [(ngModel)]="addressB">
-                                <option *ngFor="let addr of scrollPlaneValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
-                            </select>
-                        </label>    
-                    </td>
-                    <td>{{register4}}</td>
-                </tr>
+            <tr>
+                <td>04</td>
+                <td>Plane B Table Address</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Plane B VRAM Address</div>
+                        <select [(ngModel)]="addressB">
+                            <option *ngFor="let addr of scrollPlaneValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
+                        </select>
+                    </label>    
+                </td>
+                <td>{{register4}}</td>
+            </tr>
 
-                <tr>
-                    <td>05</td>
-                    <td>Sprite Table Address<br/>(640 bytes)</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Sprite Table VRAM Address</div>
-                            <select [(ngModel)]="addressSprites">
-                                <option *ngFor="let addr of spriteValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
-                            </select>
-                        </label>                            
-                    </td>
-                    <td>{{register5}}</td>
-                </tr>
+            <tr>
+                <td>05</td>
+                <td>Sprite Table Address<br/>(640 bytes)</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Sprite Table VRAM Address</div>
+                        <select [(ngModel)]="addressSprites">
+                            <option *ngFor="let addr of spriteValidAddresses" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
+                        </select>
+                    </label>                            
+                </td>
+                <td>{{register5}}</td>
+            </tr>
 
-                <tr>
-                    <td>06</td>
-                    <td>(UNUSED)</td>
-                    <td></td>
-                    <td>{{register6}}</td>
-                </tr>
+            <tr>
+                <td>06</td>
+                <td>(UNUSED)</td>
+                <td></td>
+                <td>{{register6}}</td>
+            </tr>
 
-                <tr>
-                    <td>07</td>
-                    <td>Background Color</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>BG Palette</div>
-                            <select [(ngModel)]="bgPalette">
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>BG Color</div>
-                            <select [(ngModel)]="bgColor">
-                                <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
-                                <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
-                                <option value="8">8</option><option value="9">9</option><option value="A">10</option><option value="B">11</option>
-                                <option value="C">12</option><option value="D">13</option><option value="E">14</option><option value="F">15</option>
-                            </select>
-                        </label>      
-                    </td>
-                    <td>{{register7}}</td>
-                </tr>
+            <tr>
+                <td>07</td>
+                <td>Background Color</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>BG Palette</div>
+                        <select [(ngModel)]="bgPalette">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>BG Color</div>
+                        <select [(ngModel)]="bgColor">
+                            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                            <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+                            <option value="8">8</option><option value="9">9</option><option value="A">10</option><option value="B">11</option>
+                            <option value="C">12</option><option value="D">13</option><option value="E">14</option><option value="F">15</option>
+                        </select>
+                    </label>      
+                </td>
+                <td>{{register7}}</td>
+            </tr>
 
-                <tr>
-                    <td>08</td>
-                    <td>(UNUSED)</td>
-                    <td></td>
-                    <td>{{register8}}</td>
-                </tr>
+            <tr>
+                <td>08</td>
+                <td>(UNUSED)</td>
+                <td></td>
+                <td>{{register8}}</td>
+            </tr>
 
-                <tr>
-                    <td>09</td>
-                    <td>(UNUSED)</td>
-                    <td></td>
-                    <td>{{register9}}</td>
-                </tr>
+            <tr>
+                <td>09</td>
+                <td>(UNUSED)</td>
+                <td></td>
+                <td>{{register9}}</td>
+            </tr>
 
-                <tr>
-                    <td>0A</td>
-                    <td>H Int Counter</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>H Int every...</div>
-                            <input type="number" min="1" max="255" [(ngModel)]="hintcounter"/> lines
-                        </label>
-                    </td>
-                    <td>{{register10}}</td>
-                </tr>
+            <tr>
+                <td>0A</td>
+                <td>H Int Counter</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>H Int every...</div>
+                        <input type="number" min="1" max="255" [(ngModel)]="hintcounter"/> lines
+                    </label>
+                </td>
+                <td>{{register10}}</td>
+            </tr>
 
-                <tr>
-                    <td>0B</td>
-                    <td>Mode Register 3</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>V Scroll Mode</div>
-                            <select [(ngModel)]="vscrollMode">
-                                <option value="full">Full</option>
-                                <option value="cell">Every 2 Cells</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>H Scroll Mode</div>
-                            <select [(ngModel)]="hscrollMode">
-                                <option value="full">Full</option>
-                                <option value="cell">Per Cell</option>
-                                <option value="line">Per Line</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>External Interrupts</div>
-                            <select [(ngModel)]="extint">
-                                <option value="enabled">Enabled</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>                        
-                    </td>
-                    <td>{{register11}}</td>
-                </tr>
+            <tr>
+                <td>0B</td>
+                <td>Mode Register 3</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>V Scroll Mode</div>
+                        <select [(ngModel)]="vscrollMode">
+                            <option value="full">Full</option>
+                            <option value="cell">Every 2 Cells</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>H Scroll Mode</div>
+                        <select [(ngModel)]="hscrollMode">
+                            <option value="full">Full</option>
+                            <option value="cell">Per Cell</option>
+                            <option value="line">Per Line</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>External Interrupts</div>
+                        <select [(ngModel)]="extint">
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>                        
+                </td>
+                <td>{{register11}}</td>
+            </tr>
 
-                <tr>
-                    <td>0C</td>
-                    <td>Mode Register 4</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>H Cells</div>
-                            <select [(ngModel)]="hcellmode">
-                                <option value="h32">H32 CELL</option>
-                                <option value="h40">H40 CELL</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>Shadow/Highlight Mode</div>
-                            <select [(ngModel)]="shadowhighlight">
-                                <option value="enabled">Enabled</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>Interlacing</div>
-                            <select [(ngModel)]="interlace">
-                                <option value="enabled">Interlace</option>
-                                <option value="double">Interlace (Double)</option>
-                                <option value="disabled">Disabled</option>
-                            </select>
-                        </label>
-                    </td>
-                    <td>{{register12}}</td>
-                </tr>
+            <tr>
+                <td>0C</td>
+                <td>Mode Register 4</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>H Cells</div>
+                        <select [(ngModel)]="hcellmode">
+                            <option value="h32">H32 CELL</option>
+                            <option value="h40">H40 CELL</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>Shadow/Highlight Mode</div>
+                        <select [(ngModel)]="shadowhighlight">
+                            <option value="enabled">Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>Interlacing</div>
+                        <select [(ngModel)]="interlace">
+                            <option value="enabled">Interlace</option>
+                            <option value="double">Interlace (Double)</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </label>
+                </td>
+                <td>{{register12}}</td>
+            </tr>
 
-                <tr>
-                    <td>0D</td>
-                    <td>H Scroll Address</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>H Scroll Table VRAM Address</div>
-                            <select [(ngModel)]="addressHScroll">
-                                <option *ngFor="let addr of multiplesOf400" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
-                            </select>
-                        </label>                            
-                    </td>
-                    <td>{{register13}}</td>
-                </tr>
+            <tr>
+                <td>0D</td>
+                <td>H Scroll Address</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>H Scroll Table VRAM Address</div>
+                        <select [(ngModel)]="addressHScroll">
+                            <option *ngFor="let addr of multiplesOf400" value="{{addr.toString(16).toUpperCase()}}">{{addr.toString(16).toUpperCase()}}</option>
+                        </select>
+                    </label>                            
+                </td>
+                <td>{{register13}}</td>
+            </tr>
 
-                <tr>
-                    <td>0E</td>
-                    <td>(UNUSED)</td>
-                    <td></td>
-                    <td>{{register14}}</td>
-                </tr>
+            <tr>
+                <td>0E</td>
+                <td>(UNUSED)</td>
+                <td></td>
+                <td>{{register14}}</td>
+            </tr>
 
-                <tr>
-                    <td>0F</td>
-                    <td>VDP Auto Increment</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>VDP Data R/W Auto-Increment...</div>
-                            <input type="number" min="0" max="255" [(ngModel)]="vdpautoincrement"/> bytes
-                        </label>                        
-                    </td>
-                    <td>{{register15}}</td>
-                </tr>
+            <tr>
+                <td>0F</td>
+                <td>VDP Auto Increment</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>VDP Data R/W Auto-Increment...</div>
+                        <input type="number" min="0" max="255" [(ngModel)]="vdpautoincrement"/> bytes
+                    </label>                        
+                </td>
+                <td>{{register15}}</td>
+            </tr>
 
-                <tr>
-                    <td>10</td>
-                    <td>Scroll Plane Size<br/>(64*128 and 128*128 are not valid)</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>V Size</div>
-                            <select [(ngModel)]="planesizeV">
-                                <option value="32">V32 CELL</option>
-                                <option value="64">V64 CELL</option>
-                                <option value="128">V128 CELL</option>
-                            </select>
-                        </label>  
-                        <label class="vdp-register-group">
-                            <div>H Size</div>
-                            <select [(ngModel)]="planesizeH">
-                                <option value="32">H32 CELL</option>
-                                <option value="64">H64 CELL</option>
-                                <option value="128">H128 CELL</option>
-                            </select>
-                        </label>    
-                    </td>
-                    <td>{{register16}}</td>
-                </tr>
+            <tr>
+                <td>10</td>
+                <td>Scroll Plane Size<br/>(64*128 and 128*128 are not valid)</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>V Size</div>
+                        <select [(ngModel)]="planesizeV">
+                            <option value="32">V32 CELL</option>
+                            <option value="64">V64 CELL</option>
+                            <option value="128">V128 CELL</option>
+                        </select>
+                    </label>  
+                    <label class="vdp-register-group">
+                        <div>H Size</div>
+                        <select [(ngModel)]="planesizeH">
+                            <option value="32">H32 CELL</option>
+                            <option value="64">H64 CELL</option>
+                            <option value="128">H128 CELL</option>
+                        </select>
+                    </label>    
+                </td>
+                <td>{{register16}}</td>
+            </tr>
 
-                <tr>
-                    <td>11</td>
-                    <td>Window H Position</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Alignment</div>
-                            <select [(ngModel)]="winHAlignment">
-                                <option value="left">Left</option>
-                                <option value="right">Right</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>H Edge</div>
-                            <input type="number" min="0" max="255" [(ngModel)]="winHPosition"/> cells from {{winHAlignment}}
-                        </label>      
-                    </td>
-                    <td>{{register17}}</td>
-                </tr>
+            <tr>
+                <td>11</td>
+                <td>Window H Position</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Alignment</div>
+                        <select [(ngModel)]="winHAlignment">
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>H Edge</div>
+                        <input type="number" min="0" max="255" [(ngModel)]="winHPosition"/> cells from {{winHAlignment}}
+                    </label>      
+                </td>
+                <td>{{register17}}</td>
+            </tr>
 
-                <tr>
-                    <td>12</td>
-                    <td>Window V Position</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>Alignment</div>
-                            <select [(ngModel)]="winVAlignment">
-                                <option value="top">Top</option>
-                                <option value="bottom">Bottom</option>
-                            </select>
-                        </label>
-                        <label class="vdp-register-group">
-                            <div>V Edge</div>
-                            <input type="number" min="0" max="255" [(ngModel)]="winVPosition"/> cells from {{winVAlignment}}
-                        </label>      
-                    </td>
-                    <td>{{register18}}</td>
-                </tr>
+            <tr>
+                <td>12</td>
+                <td>Window V Position</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>Alignment</div>
+                        <select [(ngModel)]="winVAlignment">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                        </select>
+                    </label>
+                    <label class="vdp-register-group">
+                        <div>V Edge</div>
+                        <input type="number" min="0" max="255" [(ngModel)]="winVPosition"/> cells from {{winVAlignment}}
+                    </label>      
+                </td>
+                <td>{{register18}}</td>
+            </tr>
 
-                <tr>
-                    <td colspan="4" class="division">DMA Registers - Use before DMA Transfer</td>
-                </tr>
+            <tr>
+                <td colspan="4" class="division">DMA Registers - Use before DMA Transfer</td>
+            </tr>
 
-                <tr>
-                    <td>13</td>
-                    <td>DMA Length LO Byte</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>DMA Length</div>
-                            <input type="number" min="0" max="65535" [(ngModel)]="dmaLength"/> bytes
-                        </label>  
-                    </td>
-                    <td>{{register19}}</td>
-                </tr>
-                
-                <tr>
-                    <td>14</td>
-                    <td>DMA Length HI Byte</td>
-                    <td></td>
-                    <td>{{register20}}</td>
-                </tr>
+            <tr>
+                <td>13</td>
+                <td>DMA Length LO Byte</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>DMA Length</div>
+                        <input type="number" min="0" max="65535" [(ngModel)]="dmaLength"/> bytes
+                    </label>  
+                </td>
+                <td>{{register19}}</td>
+            </tr>
+            
+            <tr>
+                <td>14</td>
+                <td>DMA Length HI Byte</td>
+                <td></td>
+                <td>{{register20}}</td>
+            </tr>
 
-                <tr>
-                    <td>15</td>
-                    <td>DMA Source Low</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>DMA Source Address</div>
-                            <input type="number" min="0" [(ngModel)]="dmaSource"/>
-                        </label>  
-                    </td>
-                    <td>{{register21}}</td>
-                </tr>
+            <tr>
+                <td>15</td>
+                <td>DMA Source Low</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>DMA Source Address</div>
+                        <input type="number" min="0" [(ngModel)]="dmaSource"/>
+                    </label>  
+                </td>
+                <td>{{register21}}</td>
+            </tr>
 
-                <tr>
-                    <td>16</td>
-                    <td>DMA Source Mid</td>
-                    <td></td>
-                    <td>{{register22}}</td>
-                </tr>
+            <tr>
+                <td>16</td>
+                <td>DMA Source Mid</td>
+                <td></td>
+                <td>{{register22}}</td>
+            </tr>
 
-                <tr>
-                    <td>17</td>
-                    <td>DMA Source High</td>
-                    <td>
-                        <label class="vdp-register-group">
-                            <div>DMA Mode</div>
-                            <select [(ngModel)]="dmaMode">
-                                <option value="ramtovram">68k RAM -> VRAM</option>
-                                <option value="vramfill">VRAM Fill</option>
-                                <option value="vramtovram">VRAM to VRAM Copy</option>
-                            </select>
-                        </label>
-                    </td>
-                    <td>{{register23}}</td>
-                </tr>
-            </table>
-        </div>
-        <div class="tool-status">{{tooltip}}</div>
+            <tr>
+                <td>17</td>
+                <td>DMA Source High</td>
+                <td>
+                    <label class="vdp-register-group">
+                        <div>DMA Mode</div>
+                        <select [(ngModel)]="dmaMode">
+                            <option value="ramtovram">68k RAM -> VRAM</option>
+                            <option value="vramfill">VRAM Fill</option>
+                            <option value="vramtovram">VRAM to VRAM Copy</option>
+                        </select>
+                    </label>
+                </td>
+                <td>{{register23}}</td>
+            </tr>
+        </table>
     </div>
+    <div class="tool-status">{{tooltip}}</div>
 </div>
 
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

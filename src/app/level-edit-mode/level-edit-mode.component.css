@@ -1,9 +1,7 @@
-:host {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 7;
-    grid-row-end: 21;
-    cursor: crosshair;
+:host{
+    height: 661px;
+    width: 100%;
+    display: block;
 }
 
 .icon{

@@ -1,6 +1,10 @@
-<main class="pastry-grid short-tile-library">
-    <app-palette-library></app-palette-library>
-    <app-level-library></app-level-library>
-    <app-level-edit-mode></app-level-edit-mode>
-    <app-level-editor *ngIf="!!applicationState.activeLevel"></app-level-editor>
+<main class="pastry-grid-2col">
+    <div>
+        <app-palette-library></app-palette-library>
+        <app-level-library></app-level-library>
+        <app-level-edit-mode></app-level-edit-mode>
+    </div>
+    <div>
+        <app-level-editor *ngIf="!!applicationState.activeLevel"></app-level-editor>
+    </div>
 </main>

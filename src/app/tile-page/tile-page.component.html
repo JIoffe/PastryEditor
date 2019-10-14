@@ -1,5 +1,9 @@
-<main class="pastry-grid">
-    <app-palette-library></app-palette-library>
-    <app-tile-library></app-tile-library>
-    <app-tile-editor *ngIf="!!applicationState.activeTile"></app-tile-editor>
+<main class="pastry-grid-2col">
+    <div>
+        <app-palette-library></app-palette-library>
+        <app-tile-library></app-tile-library>
+    </div>
+    <div>
+        <app-tile-editor *ngIf="!!applicationState.activeTile"></app-tile-editor>
+    </div>
 </main>
