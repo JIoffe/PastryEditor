@@ -165,6 +165,8 @@ export class ImageImporterComponent implements OnInit {
       }
 
       const q = await this.imageQuantizer.quantizeImage(srcImageData.data, this.palette, w, h, this.ditheringMode);
+      this.customPalette[0].clampToSegaMD();
+
       const targetImageData = ctx.createImageData(w, h);
       const n = w * h * 4;
       for(let i = n - 1; i >= 0; --i){
@@ -187,23 +189,29 @@ export class ImageImporterComponent implements OnInit {
     let srcColors = await Color.getDistinctColors(srcImageData.data);
     
     if(transparentColor !== null){
-      let index = srcColors.findIndex(c => c.equals(transparentColor));
-      let temp = srcColors[0];
-      srcColors[0] = transparentColor;
-      srcColors[index] = temp;
-      //srcColors = srcColors.filter(c => !c.equals(transparentColor));
+      srcColors = srcColors.filter(c => !c.equals(transparentColor));
     }
 
-    srcColors.forEach(c => c.clampToSegaMD());
+    let reducedPalette;
 
-    //15 colors - first one is transparent!
-    const reducedPalette = await this.colorKMeansSolver.SolveKMeans(srcColors, 15, 500);
+    if(srcColors.length <= 15){
+      reducedPalette = srcColors;
+    }else{
+      srcColors.forEach(c => c.clampToSegaMD());
+
+      //15 colors - first one is transparent!
+      reducedPalette = await this.colorKMeansSolver.SolveKMeans(srcColors, 15, 500);
+    }
+
     reducedPalette.forEach(c => c.clampToSegaMD());
 
     //Sometimes this is out of date
     if(!!reducedPalette.find(c => c.r + c.g + c.b > 0)){
-      this.customPalette = [new Color(0,0,0)];
+      this.customPalette = [transparentColor || new Color(0,0,0)];
       this.customPalette.push(...reducedPalette);
+      while(this.customPalette.length < 16){
+        this.customPalette.push(new Color(0,0,0));
+      }
     }
 
     return this.customPalette;

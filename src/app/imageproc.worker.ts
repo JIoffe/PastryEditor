@@ -5,7 +5,7 @@ import { Color } from "src/model/color";
 addEventListener('message', ({ data }) => {
   const nPixels = data.width * data.height,
         len     = nPixels * 4,
-        palette = data.palette.slice(1),
+        palette = data.palette,
         srcPixels = data.pixels,
         targetPixels = new Uint8ClampedArray(len);
 
@@ -39,10 +39,10 @@ addEventListener('message', ({ data }) => {
                 errorG = (g - colorMatch.g) >> 4,
                 errorB = (b - colorMatch.b) >> 4;
     
-                targetPixels[pixelI] = colorMatch.r;
-                targetPixels[pixelI + 1] = colorMatch.g;
-                targetPixels[pixelI + 2] = colorMatch.b;
-                targetPixels[pixelI + 3] = 255;
+            targetPixels[pixelI] = colorMatch.r;
+            targetPixels[pixelI + 1] = colorMatch.g;
+            targetPixels[pixelI + 2] = colorMatch.b;
+            targetPixels[pixelI + 3] = 255;
     
             // //Apply error to neighboring pixels
             let neighbor;

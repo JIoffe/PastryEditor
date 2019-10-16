@@ -45,16 +45,6 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   }
 
   ngOnInit() {
-    const canvas  = this.canvas.nativeElement,
-    rect    = canvas.getBoundingClientRect(),
-    w       = rect.right - rect.left,
-    h       = rect.bottom - rect.top;
-
-    canvas.setAttribute('width', w + '');
-    canvas.setAttribute('height', h + '');
-
-    const ctx = canvas.getContext('2d');
-
     this.render();
 
     this.subscribe(
@@ -96,7 +86,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     this.cursorY = Math.floor(factorY);
 
     this.cursorDisplayX = this.cursorX*pixelSize - scrollLeft;
-    this.cursorDisplayY = this.cursorY*pixelSize + 24 - scrollTop;
+    this.cursorDisplayY = this.cursorY*pixelSize - scrollTop;
 
     if(ev.buttons === 0)
       return;
@@ -254,7 +244,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
         let palette = this.applicationState.palettes[(tileIndex & 0x6000) / 0x2000];
 
-        const tile = this.applicationState.tiles[0x00FF & tileIndex];
+        const tile = this.applicationState.tiles[0x07FF & tileIndex];
         let   indexX = Math.floor((factorX - tileX) * 8),
               indexY = Math.floor((factorY - tileY) * 8);
 
@@ -311,7 +301,6 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   onCodeChanged(code: string){
     if(!!this.code){
       const level = Level.fromCode(code);
-      console.log(level);
       if(!!level){
         this.applicationState.activeLevel.copy(level);
         this.render();

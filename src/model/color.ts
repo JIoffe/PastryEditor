@@ -186,9 +186,9 @@ export class Color{
         for(let i = colors.length - 2; i >= 0; --i){
             let color = colors[i];
             let di = !!color.squaredDistance ? color.squaredDistance(r,g,b)
-                : Color.squaredDistance(color.r, color.g, color.g, r,g,b);
+                : Color.squaredDistance(color.r, color.g, color.b, r,g,b);
 
-            if(di < d){
+            if(di <= d){
                 d = di;
                 nearestColor = colors[i];
             }
