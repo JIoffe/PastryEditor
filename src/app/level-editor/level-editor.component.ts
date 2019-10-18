@@ -34,6 +34,8 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
   cursorFlipX = false;
   cursorFlipY = false;
 
+  ignoreBlanks = false;
+
   lastCursorDrawX = -1;
   lastCursorDrawY = -1;
 
@@ -60,6 +62,10 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     this.render();
   }
 
+  onCanvasMouseUp(ev: MouseEvent){
+    this.lastCursorDrawX = -1;
+    this.lastCursorDrawY = -1;
+  }
   onCanvasMouseMove(ev: MouseEvent){
     const level = this.applicationState.activeLevel;
     const canvas  = this.canvas.nativeElement,
@@ -148,6 +154,31 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
         break;
       case 'eraser':
         level.tiles[i] = -1;
+        break;
+      case 'patterns':
+        if(!!this.applicationState.activePattern){
+          const pattern = this.applicationState.activePattern;
+          for(let x = pattern.width - 1; x >= 0; --x){
+            for(let y = pattern.height - 1; y >= 0; --y){
+              let destX = this.cursorX + x;
+              let destY = this.cursorY + y;
+              if(destX >= level.width || destY >= level.height)
+                continue;
+
+              let xsrc = this.cursorFlipX ? pattern.width - 1 - x : x;
+              let ysrc = this.cursorFlipY ? pattern.height - 1 - y : y;
+
+              let i = xsrc + ysrc * pattern.width;
+
+              let tile = pattern.tiles[i];
+
+              if(this.ignoreBlanks && tile === -1)
+                continue;
+
+              level.tiles[destX + destY * level.width] = tile === -1 ? tile : tile ^ flipMask;
+            }
+          }
+        }
         break;
       case 'tiles':
       default:

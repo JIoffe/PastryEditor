@@ -8,3 +8,7 @@
     width: 32px;
     height: 32px;
 }
+
+.content select{
+    width: 100%;
+}

@@ -34,6 +34,8 @@ import { SpriteGroupLibraryComponent } from './sprite-group-library/sprite-group
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { MemoryMapComponent } from './memory-map/memory-map.component';
 import { HexPipe } from 'src/pipes/hex-pipe';
+import { LevelSiblingsPipe } from 'src/pipes/level-siblings-pipe';
+import { LevelRendererComponent } from './level-renderer/level-renderer.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -50,6 +52,7 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     HexPipe,
+    LevelSiblingsPipe,
     AppComponent,
     ColorPickerComponent,
     ColorSliderComponent,
@@ -78,7 +81,8 @@ const appRoutes: Routes = [
     SpriteGroupPageComponent,
     SpriteGroupLibraryComponent,
     LoadingSpinnerComponent,
-    MemoryMapComponent
+    MemoryMapComponent,
+    LevelRendererComponent
   ],
   imports: [
     RouterModule.forRoot(

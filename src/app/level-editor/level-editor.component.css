@@ -4,6 +4,10 @@
     width: calc(100vw - 450px);
 }
 
+.content{
+    overflow: hidden;
+}
+
 :host .button-container label:not(:last-child){
     margin-right: 26px;
 }

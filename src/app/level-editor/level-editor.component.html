@@ -8,10 +8,13 @@
             <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
         </span>
         <span>
-            <label>Flip H: <input type="checkbox" [(ngModel)]="this.cursorFlipX"/></label>
+            <label>Flip H: <input type="checkbox" [(ngModel)]="cursorFlipX"/></label>
         </span>
         <span>
-            <label>Flip V: <input type="checkbox" [(ngModel)]="this.cursorFlipY"/></label>
+            <label>Flip V: <input type="checkbox" [(ngModel)]="cursorFlipY"/></label>
+        </span>
+        <span>
+            <label>Ignore Blanks: <input type="checkbox" [(ngModel)]="ignoreBlanks"/></label>
         </span>
         <span>
             <button (click)="importImageClick($event)">Import Image</button>
@@ -30,9 +33,10 @@
             </div>
             <div *ngIf="applicationState.levelEditMode === 'stamps' && !!applicationState.activeStamp" class="icon" [ngStyle]="{'grid-template-rows': applicationState.activeStamp.gridTemplateRows(), 'grid-template-columns': applicationState.activeStamp.gridTemplateColumns(), 'width': (zoom*0.08*applicationState.activeStamp.width) + 'px', 'height': (zoom*0.08*applicationState.activeStamp.height) + 'px'}"> 
                 <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" *ngFor="let tile of applicationState.activeStamp.tiles" src="{{applicationState.tileImageData.get(tile)}}"/>
-            </div>   
+            </div>
+            <app-level-renderer  *ngIf="applicationState.levelEditMode === 'patterns' && !!applicationState.activePattern" [level]="applicationState.activePattern" [width]="applicationState.activePattern.width*zoom*0.08" [height]="applicationState.activePattern.height*zoom*0.08"></app-level-renderer>
         </div>
-        <canvas #canvas class="level-edit-canvas" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
+        <canvas #canvas class="level-edit-canvas" (mouseup)="onCanvasMouseUp($event)" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
         <div #editViewport class="draw-canvas-container" (scroll)="render()">
             <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
         </div>

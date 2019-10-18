@@ -71,6 +71,8 @@ export class ApplicationState {
 
     levels: Level[] = [];
     activeLevel: Level = null;
+    activePattern: Level = null;
+
     levelEditMode = 'tiles';
 
     constructor(private tileRenderer: TileRenderer){
