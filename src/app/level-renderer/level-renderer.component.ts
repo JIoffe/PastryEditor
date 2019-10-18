@@ -21,6 +21,8 @@ export class LevelRendererComponent extends BaseSubscriberComponent implements O
   @Input() offsetX: number = 0;
   @Input() offsetY: number = 0;
 
+  @Input() isViewport = false;
+
   constructor(private applicationState: ApplicationState) {
     super();
   }
@@ -49,15 +51,21 @@ export class LevelRendererComponent extends BaseSubscriberComponent implements O
     const buffer = ctx.createImageData(w, h);
     const data = buffer.data;
 
-    const cellSizeX = w / this.level.width * this.zoom * 0.01,
-          cellSizeY = h / this.level.height * this.zoom * 0.01;
+    let cellSizeX, cellSizeY;
+
+    if(this.isViewport){
+      cellSizeX = w / this.level.width * this.zoom * 0.01;
+      cellSizeY = h / this.level.height * this.zoom * 0.01; 
+    }else{
+      cellSizeY = cellSizeX = this.zoom * 0.08;
+    }
 
     for(let x = w - 1; x >= 0; --x){
       for(let y = h - 1; y >= 0; --y){
         const i = (x + y * w) * 4;
 
-        const factorX = x / cellSizeX,
-              factorY = y / cellSizeY;
+        const factorX = (x + this.offsetX) / cellSizeX,
+              factorY = (y + this.offsetY) / cellSizeY;
 
         if(factorX >= this.level.width || factorY >= this.level.height){
           data[i] = 0;

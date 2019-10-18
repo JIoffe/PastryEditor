@@ -368,7 +368,28 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
           }
 
           //Compare to existing tiles
-          let tileIndex = this.applicationState.tiles.findIndex(t => TileUtils.tileCmp(tileCursor, t));
+          let tileIndex = -1;
+          
+          for(let i = this.applicationState.tiles.length - 1; i >= 0; --i){
+            const tile = this.applicationState.tiles[i];
+            const cmp = TileUtils.tileCmpAll(tileCursor, tile);
+
+            if(cmp === -1)
+              continue;
+
+            tileIndex = i;
+
+            if(cmp === 1){
+              tileIndex |= hflipFlag;
+            }else if(cmp === 2){
+              tileIndex |= vflipFlag;
+            }else if(cmp === 3){
+              tileIndex |= hflipFlag|vflipFlag;
+            }
+
+            break;
+          }
+          
           if(tileIndex < 0){
             tileIndex = this.applicationState.tiles.length;
             this.applicationState.tiles.push(tileCursor);
