@@ -1,0 +1,22 @@
+<div class="modal code-editor">
+    <div class="modal-content">
+        <div class="caption">Sprite Cutter - Assembler</div>
+        <div class="buttons-container">
+            <label>Width: <input type="number" max="4" min="1" [(ngModel)]="cursorWidth"/></label>
+            &nbsp;&nbsp;
+            <label>Height: <input type="number" max="4" min="1" [(ngModel)]="cursorHeight"/></label>
+        </div>
+        <div class="viewport" (mousemove)="assemblerMouseMove($event)">
+            <div class="cursor" [ngClass]="{'flash': cursorFlash}" [ngStyle]="{'left': cursorX + 'px', 'top': cursorY + 'px', 'width': (cursorWidth * pixelSizeMultiplier * 8) + 'px', 'height': (cursorHeight * pixelSizeMultiplier * 8) + 'px'}"></div>
+            <div class="bounds" *ngFor="let s of frame.sprites" [ngClass]="{'flash': cursorFlash}" [ngStyle]="{'left': (s.offsetX * pixelSizeMultiplier) + 'px', 'top': (s.offsetY * pixelSizeMultiplier) + 'px', 'width': (s.width * pixelSizeMultiplier * 8) + 'px', 'height': (s.height * pixelSizeMultiplier * 8) + 'px'}"></div>
+            <canvas #drawCanvas (click)="assemblerClick($event)"></canvas>
+        </div>
+        <hr/>
+        <div class="buttons-container">
+            <button class="btn-ok" (click)="ok_click($event)">OK</button>
+            <button class="btn-cancel" (click)="cancel_click($event)">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<option *ngFor="let s of applicationState.compiledSprites; index as i" [ngValue]="s">{{s.name}}</option>

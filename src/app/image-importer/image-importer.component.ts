@@ -3,6 +3,7 @@ import { ApplicationState } from 'src/services/application-state';
 import { Color } from 'src/model/color';
 import { ColorKMeansSolver } from 'src/services/color-k-means-solver';
 import { ImageQuantizer } from 'src/services/image-quantizer';
+import { PalettizedImage } from 'src/model/palettized-image';
 
 @Component({
   selector: 'app-image-importer',
@@ -10,24 +11,26 @@ import { ImageQuantizer } from 'src/services/image-quantizer';
   styleUrls: ['./image-importer.component.css']
 })
 export class ImageImporterComponent implements OnInit {
-  @Input() width: number;
-  @Input() height: number;
+  @Input() width: number = -1;
+  @Input() height: number = -1;
+  @Input() useNaturalSize: boolean = false;
+  
   @ViewChild('imageImportCanvas', null) imageImportCanvas:ElementRef;
   @ViewChild('imageImportSource', null) imageImportSource:ElementRef;
-  @Output() imageProcessed = new EventEmitter<Uint8Array>();
+  @Output() imageProcessed = new EventEmitter<PalettizedImage>();
   selectedImage = null;
   ditheringMode = 'none';
 
   palette: Color[];
 
-  paletteSelection: string;
+  paletteSelection: number;
   transparencySelection: string;
   customPalette: Color[] = null;
 
   constructor(private applicationState: ApplicationState, private colorKMeansSolver: ColorKMeansSolver, private imageQuantizer: ImageQuantizer) { }
 
   ngOnInit() {
-    this.paletteSelection = "0";
+    this.paletteSelection = 0;
     this.transparencySelection = "none";
     this.palette = this.applicationState.activePalette;
   }
@@ -39,7 +42,7 @@ export class ImageImporterComponent implements OnInit {
     const ctx = this.imageImportCanvas.nativeElement.getContext('2d');
     const imageData = ctx.getImageData(0, 0, w, h);
 
-    if(this.paletteSelection === '-1'){
+    if(this.paletteSelection === -1){
       //Replace palette
       for(let i = 0; i < 16; ++i){
         var target = this.applicationState.activePalette[i];
@@ -75,7 +78,11 @@ export class ImageImporterComponent implements OnInit {
 
     this.selectedImage = null;
     this.customPalette = null;
-    this.imageProcessed.emit(indices);
+    this.imageProcessed.emit({
+      width: w,
+      height: h,
+      indices: indices
+    });
   }
 
   cancel_click(ev: MouseEvent){
@@ -96,7 +103,6 @@ export class ImageImporterComponent implements OnInit {
     if(!!url && !!url.length){
       this.selectedImage = url;
       this.customPalette = null;
-      this.reprocessImage();
       return;
     }
 
@@ -109,7 +115,6 @@ export class ImageImporterComponent implements OnInit {
       reader.onload = ev => {
         this.selectedImage = (<any>ev.target).result;
         this.customPalette = null;
-        this.reprocessImage();
       };
 
       reader.readAsDataURL(blob);
@@ -118,10 +123,20 @@ export class ImageImporterComponent implements OnInit {
   }
 
   reprocessImage(){
-    const w = this.width  * 8,
-          h = this.height * 8;
-
     const img = <HTMLImageElement>this.imageImportSource.nativeElement;
+
+    let w: number,
+    h: number;
+
+    if(this.useNaturalSize){
+      w = img.naturalWidth || img.width
+      h = img.naturalHeight || img.height
+      this.width = Math.floor(w / 8);
+      this.height = Math.floor(h / 8);
+    }else{
+      w = this.width  * 8;
+      h = this.height * 8;
+    }
 
     var proc = async () => {
       //Style images to keep image's aspect ratio for preview purposes
@@ -158,7 +173,7 @@ export class ImageImporterComponent implements OnInit {
       this.customPalette = await this.getCustomPalette(srcImageData, transparentColor);
 
       
-      if(+this.paletteSelection >= 0){
+      if(this.paletteSelection >= 0){
         this.palette = this.applicationState.palettes[this.paletteSelection];
       }else{
         this.palette = this.customPalette;

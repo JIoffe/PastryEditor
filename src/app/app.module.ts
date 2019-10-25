@@ -36,6 +36,10 @@ import { MemoryMapComponent } from './memory-map/memory-map.component';
 import { HexPipe } from 'src/pipes/hex-pipe';
 import { LevelSiblingsPipe } from 'src/pipes/level-siblings-pipe';
 import { LevelRendererComponent } from './level-renderer/level-renderer.component';
+import { SpriteCutterPageComponent } from './sprite-cutter-page/sprite-cutter-page.component';
+import { SpriteCutterLibraryComponent } from './sprite-cutter-library/sprite-cutter-library.component';
+import { SpriteCutterComponent } from './sprite-cutter/sprite-cutter.component';
+import { SpriteCutterAssemblerComponent } from './sprite-cutter-assembler/sprite-cutter-assembler.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -46,6 +50,7 @@ const appRoutes: Routes = [
   { path: 'options', component: OptionsPageComponent },
   { path: 'vdp', component: VdpPageComponent},
   { path: 'memmap', component: MemoryMapComponent },
+  { path: 'sprite-cutter', component: SpriteCutterPageComponent },
   { path: '**', component: TilePageComponent }
 ];
 
@@ -82,7 +87,11 @@ const appRoutes: Routes = [
     SpriteGroupLibraryComponent,
     LoadingSpinnerComponent,
     MemoryMapComponent,
-    LevelRendererComponent
+    LevelRendererComponent,
+    SpriteCutterPageComponent,
+    SpriteCutterLibraryComponent,
+    SpriteCutterComponent,
+    SpriteCutterAssemblerComponent
   ],
   imports: [
     RouterModule.forRoot(

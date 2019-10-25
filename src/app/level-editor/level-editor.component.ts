@@ -3,6 +3,7 @@ import { ApplicationState } from 'src/services/application-state';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { TileUtils } from 'src/utils/tile-utils';
 import { Level } from 'src/model/level';
+import { PalettizedImage } from 'src/model/palettized-image';
 
 //Constants for bit flags on tiles
 const paletteFlags = [
@@ -347,8 +348,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     this.showImageSelection = true;
   }
 
-  onImageProcessed(imageIndices: Uint8Array){
-    if(!!imageIndices){
+  onImageProcessed(image: PalettizedImage){
+    if(!!image && !!image.indices){
+      const imageIndices = image.indices;
       const level = this.applicationState.activeLevel;
       const paletteMask = this.applicationState.palettes.indexOf(this.applicationState.activePalette) * 0x2000;
 

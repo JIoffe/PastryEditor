@@ -3,6 +3,7 @@ import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { ApplicationState } from 'src/services/application-state';
 import { Stamp } from 'src/model/stamp';
 import { TileRenderer } from 'src/services/tile-renderer';
+import { PalettizedImage } from 'src/model/palettized-image';
 
 @Component({
   selector: 'app-multi-tile-editor',
@@ -187,8 +188,10 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
     this.showImageSelection = true;
   }
 
-  onImageProcessed(imageIndices: Uint8Array){
-    if(!!imageIndices){
+  onImageProcessed(image: PalettizedImage){
+    if(!!image && !!image.indices){
+      const imageIndices = image.indices;
+
       const w = this.stamp.width * 8;
 
       const updatedTilesSet = new Set<Uint8Array>();

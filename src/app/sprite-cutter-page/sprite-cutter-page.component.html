@@ -1,0 +1,9 @@
+<main class="pastry-grid-2col">
+    <div>
+        <app-palette-library></app-palette-library>
+        <app-sprite-cutter-library></app-sprite-cutter-library>
+    </div>
+    <div>
+        <app-sprite-cutter *ngIf="applicationState.activeCompiledSprite !== null"></app-sprite-cutter>
+    </div>
+</main>

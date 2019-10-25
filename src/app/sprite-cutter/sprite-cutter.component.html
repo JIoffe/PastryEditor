@@ -1,0 +1,62 @@
+<div class="control-group edit-active-tile">
+    <div class="caption">Sprite Cutter<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="fill-over-status clear">
+        <div class="button-container">
+            <span>
+                <label>Name:  <input type="text" [(ngModel)]="applicationState.activeCompiledSprite.name"/></label>
+            </span>
+            <span>
+                <label>Animations: 
+                <select [(ngModel)]="activeAnimation" (change)="animationChanged()">
+                    <option *ngFor="let anim of applicationState.activeCompiledSprite.animations; index as i" [ngValue]="anim">{{anim.name}}</option>
+                </select>
+                </label>
+                &nbsp;
+                <button class="btn-add" (click)="add_onClick($event)">Add</button>
+                &nbsp;
+                <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
+            </span>
+            <span>
+                <label>Show Bounds: <input type="checkbox" [(ngModel)]="showBounds"/></label>
+            </span>
+            <span>
+                Zoom:
+                <input type="range" min="50" max="2500" [(ngModel)]="zoom" (change)="onZoomChange($event)"/>
+                {{zoom | number:'1.0-0'}}%
+            </span>
+        </div>
+        <div class="content">
+
+            <div *ngIf="!!activeAnimation" class="frame-panel">
+                <div class="viewport" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
+                    <div *ngIf="showBounds">
+                        <div class="bounds" *ngFor="let s of activeAnimation.frames[activeFrame].sprites" [ngClass]="{'flash': cursorFlash}" [ngStyle]="{'left': (s.offsetX * zoom * 0.01) + 'px', 'top': (s.offsetY * zoom * 0.01) + 'px', 'width': (s.width * zoom * 0.08) + 'px', 'height': (s.height * zoom * 0.08) + 'px'}"></div>
+                    </div>
+                    <canvas #drawCanvas></canvas>
+                </div>
+                <nav>
+                    <div>
+                        <label>Name:  <input type="text" [(ngModel)]="activeAnimation.name"/></label>
+                    </div>
+                    <div *ngIf="!!activeAnimation.frames && !!activeAnimation.frames.length">
+                        <hr/>
+                            {{activeFrame + 1}} / {{activeAnimation.frames.length}} Frame(s)
+                            &nbsp;&nbsp;
+                            <button (click)="importImageClick($event)">Import Image</button>
+                    </div>
+                    <div>
+                        <hr/>
+                        <button (click)="removeFrameClick($event)">Remove</button>
+                        <button (click)="previousFrameClick($event)">Prev.</button>
+                        <button (click)="nextFrameClick($event)">Next.</button>
+                        <button (click)="addFrameClick($event)">Add</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="tool-status"></div>
+</div>
+<app-sprite-cutter-assembler *ngIf="!!assemblerImage" [image]="assemblerImage" (frameProcessed)="onFrameProcessed($event)"></app-sprite-cutter-assembler>
+<app-image-importer *ngIf="showImageSelection" useNaturalSize="true" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
+<app-code-editor *ngIf="showCodeEditor" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

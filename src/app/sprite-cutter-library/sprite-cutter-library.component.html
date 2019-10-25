@@ -1,0 +1,14 @@
+<div class="control-group fill">
+    <div class="caption">Compiled Sprites&nbsp;({{applicationState.compiledSprites.length}})<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="button-container">
+        <button class="btn-add" (click)="add_onClick($event)">Add</button>
+        <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
+    </div>  
+    <div class="content" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
+        <select [(ngModel)]="applicationState.activeCompiledSprite">
+            <option *ngFor="let s of applicationState.compiledSprites; index as i" [value]="s">{{s.name}}</option>
+        </select> 
+    </div>
+    <div class="tool-status">{{tooltip}}</div>
+</div>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

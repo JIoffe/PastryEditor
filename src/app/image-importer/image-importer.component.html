@@ -16,7 +16,7 @@
             <tr>
                 <td>
                     <h2 *ngIf="selectedImage === null">Drag or Paste an Image</h2>
-                    <img #imageImportSource [hidden]="selectedImage === null" src="{{selectedImage}}" crossorigin="anonymous"/>
+                    <img #imageImportSource (load)="reprocessImage()" [hidden]="selectedImage === null" src="{{selectedImage}}" crossorigin="anonymous"/>
                 </td>
                 <td>
                     <label>Transparency:<br/>
@@ -29,8 +29,8 @@
                     <br/><br/>
                     <label>Palette:<br/>
                         <select (change)="onPaletteChange($event)" [(ngModel)]="paletteSelection">
-                            <option *ngFor="let palette of applicationState.palettes; index as i" [value]="i">Palette {{i}}</option>
-                            <option value="-1">Replace Active Palette</option>
+                            <option *ngFor="let palette of applicationState.palettes; index as i" [ngValue]="i">Palette {{i}}</option>
+                            <option [ngValue]="-1">Replace Active Palette</option>
                         </select>
                     </label>
                     <div>
@@ -48,7 +48,7 @@
                     </label>
                 </td>
                 <td>
-                    <canvas #imageImportCanvas></canvas>
+                    <canvas class="crisp" #imageImportCanvas></canvas>
                 </td>
             </tr>
         </table>

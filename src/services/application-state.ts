@@ -7,6 +7,7 @@ import { Sprite } from 'src/model/sprite';
 import { Level } from 'src/model/level';
 import { SpriteGroup } from 'src/model/sprite-group';
 import { MemoryMapEntry } from 'src/model/memory-map-entry';
+import { CompiledSprite } from 'src/model/compiled-sprite';
 
 @Injectable({
     providedIn: 'root',
@@ -72,6 +73,9 @@ export class ApplicationState {
     levels: Level[] = [];
     activeLevel: Level = null;
     activePattern: Level = null;
+
+    compiledSprites: CompiledSprite[] = [];
+    activeCompiledSprite: CompiledSprite = null;
 
     levelEditMode = 'tiles';
 

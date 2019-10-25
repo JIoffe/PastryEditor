@@ -1,0 +1,9 @@
+:host{
+    height: calc(100% - 208px);
+    width: 100%;
+    display: block;
+}
+
+.content select {
+    width: 100%;
+}

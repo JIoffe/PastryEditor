@@ -1,0 +1,31 @@
+canvas{
+    width: 1280px;
+    height: 896px;
+}
+
+.modal{
+    top: 20px;
+}
+
+.viewport{
+    position: relative;
+}
+
+.cursor{
+    position: absolute;
+    pointer-events: none;
+    border: 1px solid #FFF
+}
+.cursor.flash{
+    border-color: #000;
+}
+
+.bounds{
+    position: absolute;
+    pointer-events: none;
+    border: 1px solid #0F0;
+}
+
+.bounds.flash{
+    border-color: #0A0;
+}
