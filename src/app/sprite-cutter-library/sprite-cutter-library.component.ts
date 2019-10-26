@@ -24,6 +24,10 @@ export class SpriteCutterLibraryComponent extends BaseSubscriberComponent {
   }
 
   remove_onClick(ev: MouseEvent){
-
+    if(!!this.applicationState.activeCompiledSprite){
+      const i = this.applicationState.compiledSprites.indexOf(this.applicationState.activeCompiledSprite);
+      this.applicationState.compiledSprites.splice(i, 1);
+      this.applicationState.activeCompiledSprite = this.applicationState.compiledSprites[i - 1] || this.applicationState.compiledSprites[0] || null;
+    }
   }
 }

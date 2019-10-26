@@ -19,6 +19,7 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
   }
 
   ngOnInit() {
+    this.applicationState.redrawAllTiles();
   }
 
   library_onMouseLeave(ev: MouseEvent){
@@ -38,7 +39,6 @@ export class TileLibraryComponent extends BaseSubscriberComponent implements OnI
     this.applicationState.tiles.push(tile);
     this.applicationState.TilesetObservable.next(this.applicationState.tiles);
     this.applicationState.TileSelectedObservable.next(tile);
-    console.log('tile');
   }
 
   remove_onClick(ev: MouseEvent){

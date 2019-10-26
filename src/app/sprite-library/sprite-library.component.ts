@@ -39,6 +39,7 @@ export class SpriteLibraryComponent extends BaseSubscriberComponent implements O
   }
 
   ngOnInit() {
+    this.applicationState.redrawAllTiles();
   }
 
   add_onClick(ev: MouseEvent){

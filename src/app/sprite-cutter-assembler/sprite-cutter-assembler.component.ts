@@ -74,6 +74,7 @@ export class SpriteCutterAssemblerComponent extends BaseSubscriberComponent impl
     s.offsetX = this.cursorX / this.pixelSizeMultiplier;
     s.offsetY = this.cursorY / this.pixelSizeMultiplier;
 
+    this.applicationState.addSprite(s);
     this.frame.sprites.push(s);
   }
 
