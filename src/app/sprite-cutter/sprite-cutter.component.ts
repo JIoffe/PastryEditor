@@ -186,33 +186,6 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
         }
       }
     });
-    // this.activeAnimation.frames[this.activeFrame].sprites.forEach(s => {
-    //   const sw = s.width * 8;
-    //   const sh = s.height * 8;
-
-    //   for(let x = sw - 1; x >= 0; --x){
-    //     for(let y = sh - 1; y >= 0; --y){
-    //       const x1 = x + s.offsetX,
-    //             y1 = y + s.offsetY;
-
-    //       if(x1 >= w || y1 >= h)
-    //         continue;
-
-    //       const pixelI = (x1 + y1 * w) * 4;
-
-    //       const spriteX = Math.floor(x);
-    //       const spriteY = Math.floor(y);
-    //       const index = s.getTexel(spriteX, spriteY);
-
-    //       const color = this.applicationState.activePalette[index];
-          
-    //       data[pixelI] = color.r;
-    //       data[pixelI + 1] = color.g;
-    //       data[pixelI + 2] = color.b;
-    //       data[pixelI + 3] = 255;
-    //     }
-    //   }
-    // });
 
     ctx.putImageData(buffer, 0, 0);
   }
@@ -234,6 +207,13 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
     this.activeAnimation.frames[this.activeFrame] = frame;
 
     this.render();
+  }
+
+  code_onClick(ev: MouseEvent){
+    if(!this.applicationState.activeCompiledSprite)
+      return;
+
+    this.code = this.applicationState.activeCompiledSprite.toCode();
   }
 
   onCodeChanged(code: string){

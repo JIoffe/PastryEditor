@@ -59,4 +59,4 @@
 </div>
 <app-sprite-cutter-assembler *ngIf="!!assemblerImage" [image]="assemblerImage" (frameProcessed)="onFrameProcessed($event)"></app-sprite-cutter-assembler>
 <app-image-importer *ngIf="showImageSelection" useNaturalSize="true" (imageProcessed)="onImageProcessed($event)"></app-image-importer>
-<app-code-editor *ngIf="showCodeEditor" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
+<app-code-editor *ngIf="!!code" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

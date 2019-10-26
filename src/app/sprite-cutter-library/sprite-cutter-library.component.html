@@ -6,7 +6,7 @@
     </div>  
     <div class="content" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
         <select [(ngModel)]="applicationState.activeCompiledSprite">
-            <option *ngFor="let s of applicationState.compiledSprites; index as i" [value]="s">{{s.name}}</option>
+            <option *ngFor="let s of applicationState.compiledSprites; index as i" [ngValue]="s">{{s.name}}</option>
         </select> 
     </div>
     <div class="tool-status">{{tooltip}}</div>
