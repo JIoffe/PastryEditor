@@ -13,12 +13,14 @@
             <div class="content scroll-y">
                 <table>
                     <tr>
-                        <th>Label(s)</th><th>Size</th><th>Description</th><th>Address</th><th></th>
+                        <th></th><th>Label(s)</th><th>Size</th><th>Description</th><th>Address</th><th></th>
                     </tr>
                     <tr *ngFor="let mapEntry of applicationState.memoryMap; index as i">
+                        <td><button (click)="moveUpClick(mapEntry, i)">Move Up</button><button (click)="moveDownClick(mapEntry, i)">Move Down</button></td>
                         <td><input type="text" [(ngModel)]="mapEntry.label"/></td>
                         <td>
                             <select [(ngModel)]="mapEntry.size" (change)="onSizeChanged(i, mapEntry.size)">
+                                <option [ngValue]="0">ALIAS</option>
                                 <option [ngValue]="1">BYTE</option>
                                 <option [ngValue]="2">WORD</option>
                                 <option [ngValue]="4">LONG</option>

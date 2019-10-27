@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApplicationState } from 'src/services/application-state';
+import { MemoryMapEntry } from 'src/model/memory-map-entry';
 
 const constantSpacing = 32;
 
@@ -23,8 +24,6 @@ export class MemoryMapComponent {
     if(!!this.applicationState.memoryMap.length){
       let lastEntry = this.applicationState.memoryMap[this.applicationState.memoryMap.length - 1];
       address = lastEntry.address + lastEntry.size;
-      console.log(lastEntry.address);
-      console.log(address);
     }else{
       address = this.memoryStart;
     }
@@ -48,11 +47,10 @@ export class MemoryMapComponent {
   }
 
   code_onClick(ev: MouseEvent){
-    const sizeComments = [null, 'BYTE', 'WORD', null, 'LONG'];
+    const sizeComments = ['(additional alias)', 'BYTE', 'WORD', null, 'LONG'];
 
     let code = '';
     this.applicationState.memoryMap.forEach(entry => {
-      console.log(entry);
       code += entry.label.padEnd(constantSpacing, ' ');
       code += 'EQU $' + entry.address.toString(16).toUpperCase();
       code += (';' + sizeComments[entry.size]).padStart(12, ' ');
@@ -62,13 +60,34 @@ export class MemoryMapComponent {
     this.code = code;
   }
 
+  moveUpClick(entry: MemoryMapEntry, i: number){
+    if(i === 0)
+      return;
+
+    var temp = this.applicationState.memoryMap[i - 1];
+    this.applicationState.memoryMap[i - 1] = this.applicationState.memoryMap[i];
+    this.applicationState.memoryMap[i] = temp;
+
+    this.onSizeChanged(0, this.applicationState.memoryMap[0].size);
+  }
+
+  moveDownClick(entry: MemoryMapEntry, i: number){
+    if(i >= this.applicationState.memoryMap.length - 1)
+      return;
+
+    var temp = this.applicationState.memoryMap[i + 1];
+    this.applicationState.memoryMap[i + 1] = this.applicationState.memoryMap[i];
+    this.applicationState.memoryMap[i] = temp;
+
+    this.onSizeChanged(0, this.applicationState.memoryMap[0].size);
+  }
+
   onCodeChanged(code: string){
     if(!!code){
       this.applicationState.memoryMap = code
         .split(/[\r\n]+/g)
         .filter(line => !!line.trim().length)
         .map(line => {
-          console.log(line);
           const label = line.match(/(^.*)(EQU)/i)[1].trim();
           return {
             label: label,
