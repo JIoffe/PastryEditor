@@ -71,16 +71,20 @@ export class CompiledSprite{
                     code += `    dc.w $${FormattingUtils.padWord(tileDataSize)}           ; (total tiles in frame * 64) - 1\r\n`;
 
                     f.sprites.forEach(s => {
-                        s.tiles.forEach(tile => {
+                        for(let x = 0; x < s.width; ++x){
+                            for(let y = 0; y < s.height; ++y){
+                                const i = x + y * s.width;
+                                const tile = s.tiles[i];
 
-                            const indices = Array.from(tile).map(n => n.toString(16).toUpperCase());
-                            let line = `$${indices.slice(0, 8).reduce((p,c) => p + c, '')}`;
-    
-                            for(let j = 8; j < 64; j += 8){
-                                line += `, $${indices.slice(j, j + 8).reduce((p,c) => p + c, '')}`;
+                                const indices = Array.from(tile).map(n => n.toString(16).toUpperCase());
+                                let line = `$${indices.slice(0, 8).reduce((p,c) => p + c, '')}`;
+        
+                                for(let j = 8; j < 64; j += 8){
+                                    line += `, $${indices.slice(j, j + 8).reduce((p,c) => p + c, '')}`;
+                                }
+                                code += `        dc.l ${line}\r\n`;
                             }
-                            code += `        dc.l ${line}\r\n`;
-                        });
+                        }
                     });
                 }
 
