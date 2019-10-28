@@ -47,7 +47,7 @@ export class MemoryMapComponent {
   }
 
   code_onClick(ev: MouseEvent){
-    const sizeComments = ['(additional alias)', 'BYTE', 'WORD', null, 'LONG'];
+    const sizeComments = ['(alias)', 'BYTE', 'WORD', null, 'LONG'];
 
     let code = '';
     this.applicationState.memoryMap.forEach(entry => {
