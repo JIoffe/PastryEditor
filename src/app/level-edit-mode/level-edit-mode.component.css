@@ -12,3 +12,7 @@
 .content select{
     width: 100%;
 }
+
+.button-container select{
+    width: 100%;
+}

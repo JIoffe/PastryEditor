@@ -78,6 +78,8 @@ export class ApplicationState {
     activeCompiledSprite: CompiledSprite = null;
 
     levelEditMode = 'tiles';
+    eraserWidth = 1;
+    eraserHeight = 1;
 
     constructor(private tileRenderer: TileRenderer){
         //This is a singleton so these watchers do not need to be cleared

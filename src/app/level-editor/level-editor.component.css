@@ -38,7 +38,11 @@
     width: calc(100% - 57px);
     height: calc(100% - 18px);
 }
-
+.eraser-cursor{
+    background: red;
+    opacity: 0.5;
+    border: 2px solid red;
+}
 .level-cursor{
     position: absolute;
     z-index: 2;

@@ -154,7 +154,11 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
         }
         break;
       case 'eraser':
-        level.tiles[i] = -1;
+        for(let x = Math.min(this.cursorX + this.applicationState.eraserWidth, level.width) - 1; x >= this.cursorX; --x){
+          for(let y = Math.min(this.cursorY + this.applicationState.eraserHeight, level.height) - 1; y >= this.cursorY; --y){
+            level.tiles[x + y * level.width] = -1;
+          }
+        }
         break;
       case 'patterns':
         if(!!this.applicationState.activePattern){

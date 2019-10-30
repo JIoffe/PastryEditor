@@ -1,5 +1,6 @@
 import { SpriteAnimation } from './sprite-animation';
 import { FormattingUtils } from 'src/utils/formatting-utils';
+import { ApplicationState } from 'src/services/application-state';
 
 /**
  * Represents an entire asset with collision information, multiple sprites, tile data, and animations
@@ -23,7 +24,7 @@ export class CompiledSprite{
         return [200,200];
     }
 
-    toCode(): string{
+    toCode(applicationState?: ApplicationState): string{
         /*
             Structure of file:
             * Compression: NONE
@@ -90,9 +91,24 @@ export class CompiledSprite{
 
                 code += `        dc.w ${FormattingUtils.padWord(f.sprites.length - 1)}\r\n`;
 
-                f.sprites.forEach(s => {
-                    code += `        dc.w $${FormattingUtils.padByte(s.offsetY)}${FormattingUtils.padByte(s.offsetX)}           ; Offset YYXX\r\n`;
+                f.sprites.forEach((s, k) => {                 
+                    code += `        dc.w $${FormattingUtils.padByte(s.offsetY)}           ; Offset Vertical\r\n`;
                     code += `        dc.w $${FormattingUtils.padWord(s.getMDSize())}           ; sprite Size\r\n`;
+
+                    let index: number = -1;
+                    if(!!applicationState){
+                        index = applicationState.tiles.indexOf(s.tiles[0]);
+                    }
+
+                    if(index === -1){
+                        index = 0;
+                        for(let l = 0; l < k; ++l){
+                            index += f.sprites[l].tiles.length;
+                        }
+                    }
+
+                    code += `        dc.w $${FormattingUtils.padWord(index)}           ; sprite tile ID\r\n`;
+                    code += `        dc.w $${FormattingUtils.padWord(s.offsetX)}           ; Offset Horizontal\r\n`;
                 });
             });
         });

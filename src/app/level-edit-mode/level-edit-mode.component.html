@@ -1,10 +1,13 @@
 <div class="control-group fill">
     <div class="caption">Level Tools</div>
     <div class="button-container">
-        <label>Tiles: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="tiles"/></label> &nbsp;
-        <label>Stamps: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="stamps"/></label> &nbsp;
-        <label>Patterns: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="patterns"/></label> &nbsp;
-        <label>Eraser: <input type="radio" [(ngModel)]="applicationState.levelEditMode" value="eraser"/></label>
+        <select [(ngModel)]="applicationState.levelEditMode">
+            <option value="tiles">Tiles</option>
+            <option value="stamps">Stamps</option>
+            <option value="patterns">Patterns (Levels)</option>
+            <option value="collision">Collision</option>
+            <option value="eraser">Tile Eraser</option>
+        </select>
     </div>    
     <div class="content icons-container clear" *ngIf="applicationState.levelEditMode === 'tiles'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 
         <img class="icon" *ngFor="let tile of applicationState.tiles; index as i" src="{{applicationState.tileImageData.get(tile)}}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': tile === applicationState.activeTile}"/>   
@@ -19,6 +22,12 @@
             <option *ngFor="let level of applicationState.levels;" [ngValue]="level">{{level.name}} - {{level.width}} x {{level.height}}</option>
         </select>
         <app-level-renderer *ngIf="!!applicationState.activePattern" [level]="applicationState.activePattern" width="400" height="200"></app-level-renderer>
+    </div>
+
+    <div class="content" *ngIf="applicationState.levelEditMode === 'eraser'">
+        <label>Eraser Width: <input type="number" [(ngModel)]="applicationState.eraserWidth"/></label>
+        <br/>
+        <label>Eraser Height: <input type="number" [(ngModel)]="applicationState.eraserHeight"/></label>
     </div>
     <div class="tool-status">{{tooltip}}</div>
 </div>
