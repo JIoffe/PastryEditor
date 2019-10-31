@@ -5,7 +5,6 @@
             <option value="tiles">Tiles</option>
             <option value="stamps">Stamps</option>
             <option value="patterns">Patterns (Levels)</option>
-            <option value="collision">Collision</option>
             <option value="eraser">Tile Eraser</option>
         </select>
     </div>    
@@ -25,9 +24,9 @@
     </div>
 
     <div class="content" *ngIf="applicationState.levelEditMode === 'eraser'">
-        <label>Eraser Width: <input type="number" [(ngModel)]="applicationState.eraserWidth"/></label>
+        <label>Eraser Width:&nbsp; <input type="number" [(ngModel)]="applicationState.eraserWidth"/> tiles</label>
         <br/>
-        <label>Eraser Height: <input type="number" [(ngModel)]="applicationState.eraserHeight"/></label>
+        <label>Eraser Height: <input type="number" [(ngModel)]="applicationState.eraserHeight"/> tiles</label>
     </div>
     <div class="tool-status">{{tooltip}}</div>
 </div>

@@ -1,0 +1,41 @@
+.control-group{
+    height: calc(100% - 20px);
+    width: 44vw;
+    float: left;
+}
+
+.icon{
+    width: 64px;
+    height: 64px;
+}
+
+table td, table th {
+    padding: 8px;
+    border: 1px solid black;
+}
+
+tr.active, tr:hover{
+    background: #AAAADD;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    cursor: pointer;
+}
+
+.heightmap-viewport {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    margin-left: -250px;
+    width: 500px;
+    height: 500px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.heightmap-viewport img {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}

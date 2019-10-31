@@ -8,6 +8,7 @@ import { Level } from 'src/model/level';
 import { SpriteGroup } from 'src/model/sprite-group';
 import { MemoryMapEntry } from 'src/model/memory-map-entry';
 import { CompiledSprite } from 'src/model/compiled-sprite';
+import { TileCollision } from 'src/model/tile-collision';
 
 @Injectable({
     providedIn: 'root',
@@ -55,6 +56,8 @@ export class ApplicationState {
     activeTile = this.tiles[0];
     tileImageData: Map<Uint8Array, string> = new Map();
 
+    tileCollisionMap: Map<Uint8Array, TileCollision> = new Map();
+
     stamps: Stamp[] = [];
     activeStamp: Stamp = null;
 
@@ -85,10 +88,17 @@ export class ApplicationState {
         //This is a singleton so these watchers do not need to be cleared
         this.TileUpdatedObservable.subscribe(tile => {
           this.tileImageData.set(tile, this.tileRenderer.renderTileDataUrl(tile, this.activePalette));
+          this.autoPopulateTileHeightmap(tile);
         });
         this.TileSelectedObservable.subscribe(tile => this.activeTile = tile);
         this.TilesetObservable.subscribe(tiles => {
           this.tiles = tiles;
+          this.tiles.forEach(tile => {
+            if(this.tileCollisionMap.has(tile))
+              return;
+
+            this.autoPopulateTileHeightmap(tile);
+          });
           this.redrawAllTiles();
         });
 
@@ -151,5 +161,32 @@ export class ApplicationState {
       spriteGroup.sprites.forEach(s => this.addSprite(s));
       this.spriteGroups.push(spriteGroup);
       this.SpriteGroupsUpdatedObservable.next(this.spriteGroups);
+    }
+
+    autoPopulateTileHeightmap(tile: Uint8Array){
+      console.log(tile);
+      const heightmap = new Uint8Array(8);
+      for(let i = 7; i >= 0; --i){
+        let columnHeight = 0;
+        for(let y = 0; y < 8; ++y){
+          console.log(tile[i + y * 8]);
+          if(tile[i + y * 8] !== 0){
+            columnHeight = 7 - y;
+            break;
+          }
+        }
+
+        heightmap[i] = columnHeight + 1;
+      }
+
+      const collision = {
+        top: true,
+        bottom: true,
+        left: true,
+        right: true,
+        heightmap: heightmap
+      };
+      
+      this.tileCollisionMap.set(tile, collision);
     }
 }

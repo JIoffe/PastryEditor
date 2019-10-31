@@ -1,0 +1,41 @@
+<div class="control-group">
+    <div class="caption">Tile Collisions<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+    <div class="content scroll-y">
+        <table>
+            <tr>
+                <th>Tile ID</th>
+                <th>Tile Image</th>
+                <th>Collision Flags</th>
+                <th>Heightmap</th>
+            </tr>
+            <tr *ngFor="let tile of applicationState.tiles; index as i" [ngClass]="{'active': tile === applicationState.activeTile}">
+                <td>
+                    {{i}}
+                </td>
+                <td [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}">
+                    <img class="icon crisp" src="{{applicationState.tileImageData.get(tile)}}"/>     
+                </td>
+                <td>
+                    <label>Top: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).top"/></label>&nbsp;&nbsp;
+                    <label>Bottom: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).bottom"/></label>&nbsp;&nbsp;
+                    <label>Left: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).left"/></label>&nbsp;&nbsp;
+                    <label>Right: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).right"/></label>
+                </td>
+                <td>
+                    <app-tile-heightmap-renderer [heightmap]="applicationState.tileCollisionMap.get(tile).heightmap"></app-tile-heightmap-renderer>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="tool-status"></div>
+</div>
+<div *ngIf="!!applicationState.activeTile" class="control-group">
+    <div class="caption">Tile Heightmap</div>
+    <div class="content">
+        <div class="heightmap-viewport" #viewport (click)="heightmapMouse($event)" (mousemove)="heightmapMouse($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}">
+            <app-tile-heightmap-renderer class="overlay" bgColor="rgba(0,0,0,0)" fgColor="#EFFFEF" [width]="500" [height]="500" [heightmap]="applicationState.tileCollisionMap.get(applicationState.activeTile).heightmap"></app-tile-heightmap-renderer>
+            <img class="icon crisp" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
+        </div>
+    </div>
+    <div class="tool-status">{{applicationState.tiles.indexOf(applicationState.activeTile)}}</div>
+</div>
