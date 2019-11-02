@@ -179,17 +179,27 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
         }
         break;
       case 'patterns':
-        if(!!this.applicationState.activePattern){
-          const pattern = this.applicationState.activePattern;
-          for(let x = pattern.width - 1; x >= 0; --x){
-            for(let y = pattern.height - 1; y >= 0; --y){
-              let destX = this.cursorX + x;
-              let destY = this.cursorY + y;
-              if(destX >= level.width || destY >= level.height)
+        if(!this.applicationState.activePattern)
+          return;
+
+        const pattern = this.applicationState.activePattern,
+              w = pattern.width,
+              h = pattern.height;
+
+        const drawFunc = (level: Level, startX: number, startY: number, isValid?: ValidateCoordsDelegate) => {
+          for(let x = w - 1; x >= 0; --x){
+            for(let y = h - 1; y >= 0; --y){
+              let destX = startX + x;
+              let destY = startY + y;
+
+              if(destX < 0 || destY < 0 || destX >= level.width || destY >= level.height)
                 continue;
 
-              let xsrc = this.cursorFlipX ? pattern.width - 1 - x : x;
-              let ysrc = this.cursorFlipY ? pattern.height - 1 - y : y;
+              if(!!isValid && !isValid(destX, destY))
+                continue;
+
+              let xsrc = this.cursorFlipX ? w - 1 - x : x;
+              let ysrc = this.cursorFlipY ? h - 1 - y : y;
 
               let i = xsrc + ysrc * pattern.width;
 
@@ -201,7 +211,25 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
               level.tiles[destX + destY * level.width] = tile === -1 ? tile : tile ^ flipMask;
             }
           }
+
         }
+
+        switch(this.applicationState.drawMode){
+          case 'b':
+            const validCoords = this.seekBucketFillCoords(level, this.cursorX, this.cursorY),
+                  validateCoords = (x: number, y: number) => validCoords.findIndex(coord => coord[0] === x && coord[1] == y) >= 0;
+
+            for(let x = -(w - this.cursorX % w); x < level.width; x += w){
+              for(let y = -(h - this.cursorY % h); y < level.height; y += h){
+                drawFunc(level, x, y, validateCoords)
+              }
+            }
+
+            break;
+          default:
+              drawFunc(level, this.cursorX, this.cursorY);
+            break;
+        }   
         break;
       case 'tiles':
       default:
