@@ -164,12 +164,10 @@ export class ApplicationState {
     }
 
     autoPopulateTileHeightmap(tile: Uint8Array){
-      console.log(tile);
       const heightmap = new Uint8Array(8);
       for(let i = 7; i >= 0; --i){
         let columnHeight = 0;
         for(let y = 0; y < 8; ++y){
-          console.log(tile[i + y * 8]);
           if(tile[i + y * 8] !== 0){
             columnHeight = 7 - y;
             break;

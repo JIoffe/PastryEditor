@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ɵSWITCH_VIEW_CONTAINER_REF_FACTORY__POST_R3__ } from '@angular/core';
 import { ApplicationState } from 'src/services/application-state';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { TileUtils } from 'src/utils/tile-utils';
@@ -16,6 +16,17 @@ const paletteFlags = [
 const hflipFlag = 0x0800;
 const vflipFlag = 0x1000;
 
+interface TileDelegate {
+  (level: Level, x:number,y:number): void;
+}
+
+interface SeekCoordsDelegate{
+  (coords: number[]): number[][];
+}
+
+interface ValidateCoordsDelegate{
+  (x: number, y: number): boolean;
+}
 @Component({
   selector: 'app-level-editor',
   templateUrl: './level-editor.component.html',
@@ -104,53 +115,60 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     this.lastCursorDrawX = this.cursorX;
     this.lastCursorDrawY = this.cursorY;
 
-    let paletteMask: number = 0;
-    switch(this.applicationState.palettes.indexOf(this.applicationState.activePalette)){
-        case 0:
-          paletteMask = 0;
-          break;
-        case 1:
-          paletteMask = 0x2000;
-          break;
-        case 2:
-          paletteMask = 0x4000;
-          break;
-        case 3:
-          paletteMask = 0x6000;
-          break;
-    }
-
-    let flipMask = 0;
-    if(!!this.cursorFlipX)
-      flipMask |= hflipFlag;
-    if(!!this.cursorFlipY)
-      flipMask |= vflipFlag;
+    const paletteMask = this.getPaletteMask(),
+          flipMask = this.getFlipMask();
 
     const i = this.cursorX + this.cursorY * level.width;
     switch(this.applicationState.levelEditMode){
       case 'stamps':{
-          const stamp = this.applicationState.activeStamp;
-          if(!!stamp){
-            for(let x1 = stamp.width - 1; x1 >= 0; --x1){
-              for(let y1 = stamp.height - 1; y1 >= 0; --y1){
-                let paintX = this.cursorX + x1,
-                    paintY = this.cursorY + y1;
+        if(!this.applicationState.activeStamp)
+          return;
 
-                if(paintX >= level.width || paintY >= level.height){
+          const stamp = this.applicationState.activeStamp,
+                w     = stamp.width,
+                h     = stamp.height;
+          
+          const drawFunc = (level: Level, startX: number, startY: number, isValid?: ValidateCoordsDelegate) => {
+            for(let x1 = w - 1; x1 >= 0; --x1){
+              for(let y1 = h - 1; y1 >= 0; --y1){
+                let paintX = startX + x1,
+                    paintY = startY + y1;
+
+                if(paintX < 0 || paintY < 0 || paintX >= level.width || paintY >= level.height){
                   continue;
                 }
 
-                const xLookup = this.cursorFlipX ? stamp.width - 1 - x1 : x1;
-                const yLookup = this.cursorFlipY ? stamp.height - 1 - y1 : y1;
+                if(!!isValid && !isValid(paintX, paintY))
+                  continue;
+
+                const xLookup = this.cursorFlipX ? w - 1 - x1 : x1;
+                const yLookup = this.cursorFlipY ? h - 1 - y1 : y1;
 
                 const paintI = paintX + paintY * level.width;
-                const tile = stamp.tiles[xLookup + yLookup * stamp.width];
+                const tile = stamp.tiles[xLookup + yLookup * w];
                 const tileIndex = this.applicationState.tiles.indexOf(tile);
 
                 level.tiles[paintI] = tileIndex|paletteMask|flipMask;
               }
             }
           }
+
+          switch(this.applicationState.drawMode){
+            case 'b':
+              const validCoords = this.seekBucketFillCoords(level, this.cursorX, this.cursorY),
+                    validateCoords = (x: number, y: number) => validCoords.findIndex(coord => coord[0] === x && coord[1] == y) >= 0;
+
+              for(let x = -(w - this.cursorX % w); x < level.width; x += w){
+                for(let y = -(h - this.cursorY % h); y < level.height; y += h){
+                  drawFunc(level, x, y, validateCoords)
+                }
+              }
+
+              break;
+            default:
+                drawFunc(level, this.cursorX, this.cursorY);
+              break;
+          }   
         }
         break;
       case 'eraser':
@@ -188,32 +206,15 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
       case 'tiles':
       default:
         if(!!this.applicationState.activeTile){
-          let newTile = this.applicationState.tiles.indexOf(this.applicationState.activeTile)|paletteMask|flipMask;
-
+          const newTile = this.applicationState.tiles.indexOf(this.applicationState.activeTile)|paletteMask|flipMask
           switch(this.applicationState.drawMode){
-            case 'b':
-              const tileToChange = level.tiles[i];
-              if(newTile !== tileToChange){
-                const stack = [[this.cursorX, this.cursorY]];
-                while(!!stack.length){
-                  const coord = stack.pop();
-                  if(coord[0] < 0 || coord[0] >= level.width || coord[1] < 0 || coord[1] >= level.height){
-                    continue;
-                  }
+            case 'b':{
+              if(level.tiles[i] === newTile)
+                return;
 
-                  const i1 = coord[0] + coord[1] * level.width;
-                  if(level.tiles[i1] !== tileToChange)
-                    continue;
-
-                  level.tiles[i1] = newTile;
-                  stack.push(
-                    [coord[0], coord[1]+1],
-                    [coord[0], coord[1]-1],
-                    [coord[0]+1, coord[1]],
-                    [coord[0]-1, coord[1]]);
-                }
-              }
-              break;
+              this.seekBucketFillCoords(level, this.cursorX, this.cursorY)
+                .forEach(coord => level.tiles[coord[0] + coord[1] * level.width] = newTile);
+            }
             default:
                 level.tiles[i] = newTile;
               break;
@@ -345,6 +346,110 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
     this.code = null;
   }
+
+  // Drawing utilities
+  /**
+   * Seeks a range of tiles to use as a bucket fill target
+   * @param level 
+   * @param startX 
+   * @param startY 
+   */
+  seekBucketFillCoords(level: Level, startX: number, startY: number){
+    const visitedTiles = new Uint8Array(level.tiles.length).fill(0);
+    const tileToSeek = level.tiles[startX + startY * level.width];
+
+    const stack = [[startX, startY]];
+    const coordsToFill = [];
+
+    while(!!stack.length){
+      const coord = stack.pop();
+      if(coord[0] < 0 || coord[0] >= level.width || coord[1] < 0 || coord[1] >= level.height){
+        continue;
+      }
+
+      const i = coord[0] + coord[1] * level.width;
+      if(level.tiles[i] !== tileToSeek)
+        continue;
+
+      if(visitedTiles[i] !== 0)
+        continue;
+
+      coordsToFill.push(coord);
+      visitedTiles[i] = 1;
+
+      stack.push([coord[0],coord[1]+1],
+        [coord[0], coord[1]-1],
+        [coord[0]+1, coord[1]],
+        [coord[0]-1, coord[1]]);
+    }
+
+    //Return coords sorted by row and column
+    return coordsToFill.sort((a, b) => {
+        const cmp = a[1] - b[1];
+        if(cmp !== 0)
+          return cmp;
+
+        return a[0] - b[0];
+      });
+  }
+
+  getSteppedFillCoords(coords: number[][], stepX: number, stepY: number){
+    if(!coords || !coords.length)
+      return [];
+
+    const b = [coords[0]];
+    for(let i = 1; i < coords.length; ++i){
+      const lastCoord = b[b.length - 1],
+            currentCoord = coords[i];
+
+      if(Math.abs(currentCoord[0] - lastCoord[0]) >= stepX && Math.abs(currentCoord[1] - lastCoord[1]) >= stepY)
+        b.push(currentCoord);
+    }
+	  return b;
+  }
+
+  bucketFill(level: Level, startX: number, startY: number, seekCoordsDelegate:SeekCoordsDelegate, tileDelegate: TileDelegate){
+    const tileToChange = level.tiles[startX + startY * level.width];
+    const stack = [[startX, startY]];
+    while(!!stack.length){
+      const coord = stack.pop();
+      if(coord[0] < 0 || coord[0] >= level.width || coord[1] < 0 || coord[1] >= level.height){
+        continue;
+      }
+
+      const i = coord[0] + coord[1] * level.width;
+      if(level.tiles[i] !== tileToChange)
+        continue;
+
+      tileDelegate(level, coord[0] - startX, coord[1] - startY);
+
+      stack.push(...seekCoordsDelegate(coord));
+    }
+  }
+
+  getPaletteMask(){
+    switch(this.applicationState.palettes.indexOf(this.applicationState.activePalette)){
+      case 1:
+        return 0x2000;
+      case 2:
+        return 0x4000;
+      case 3:
+        return 0x6000;
+      case 0:
+      default:
+        return 0;
+    }
+  }
+
+  getFlipMask(){
+    let flipMask = 0;
+    if(!!this.cursorFlipX)
+      flipMask |= hflipFlag;
+    if(!!this.cursorFlipY)
+      flipMask |= vflipFlag;
+
+    return flipMask;
+  } 
 
   //Img proessing
 
