@@ -16,13 +16,12 @@
                     <img class="icon crisp" src="{{applicationState.tileImageData.get(tile)}}"/>     
                 </td>
                 <td>
-                    <label>Top: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).top"/></label>&nbsp;&nbsp;
-                    <label>Bottom: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).bottom"/></label>&nbsp;&nbsp;
-                    <label>Left: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).left"/></label>&nbsp;&nbsp;
-                    <label>Right: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).right"/></label>
+                    <label>Is Wall: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).isWall"/></label>&nbsp;&nbsp;
+                    <label>Is Floor: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).isFloor" (change)="flagsChanged()"/></label>&nbsp;&nbsp;
+                    <label>Is Ceiling: <input type="checkbox" [(ngModel)]="applicationState.tileCollisionMap.get(tile).isCeiling" (change)="flagsChanged()"/></label>&nbsp;&nbsp;
                 </td>
                 <td>
-                    <app-tile-heightmap-renderer [heightmap]="applicationState.tileCollisionMap.get(tile).heightmap"></app-tile-heightmap-renderer>
+                    <app-tile-heightmap-renderer [tileCollision]="applicationState.tileCollisionMap.get(tile)"></app-tile-heightmap-renderer>
                 </td>
             </tr>
         </table>
@@ -33,7 +32,7 @@
     <div class="caption">Tile Heightmap</div>
     <div class="content">
         <div class="heightmap-viewport" #viewport (click)="heightmapMouse($event)" (mousemove)="heightmapMouse($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}">
-            <app-tile-heightmap-renderer class="overlay" bgColor="rgba(0,0,0,0)" fgColor="#EFFFEF" [width]="500" [height]="500" [heightmap]="applicationState.tileCollisionMap.get(applicationState.activeTile).heightmap"></app-tile-heightmap-renderer>
+            <app-tile-heightmap-renderer class="overlay" bgColor="rgba(0,0,0,0)" fgColor="#EFFFEF" [width]="500" [height]="500" [tileCollision]="applicationState.tileCollisionMap.get(applicationState.activeTile)"></app-tile-heightmap-renderer>
             <img class="icon crisp" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
         </div>
     </div>

@@ -28,10 +28,18 @@ export class TileCollisionEditorComponent extends BaseSubscriberComponent implem
           px = Math.floor((ev.pageX - rect.left) / (rect.right - rect.left) * 8),
           py = Math.floor((ev.pageY - rect.top) / (rect.bottom - rect.top) * 8);
 
-    var h = new Uint8Array(this.applicationState.tileCollisionMap.get(this.applicationState.activeTile).heightmap);
-    h[px] = 8 - py;
+    const collision = this.applicationState.tileCollisionMap.get(this.applicationState.activeTile);
+    collision.heightmap[px] = collision.isCeiling && !collision.isFloor ? py + 1:  8 - py;
 
-    this.applicationState.tileCollisionMap.get(this.applicationState.activeTile).heightmap = h;
+    this.applicationState.tileCollisionMap.set(this.applicationState.activeTile, Object.assign({}, collision));
+  }
+
+  flagsChanged(){
+    if(!this.applicationState.activeTile)
+      return;
+
+      const collision = this.applicationState.tileCollisionMap.get(this.applicationState.activeTile);  
+      this.applicationState.tileCollisionMap.set(this.applicationState.activeTile, Object.assign({}, collision));
   }
 
   code_onClick(ev: MouseEvent){

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { ApplicationState } from 'src/services/application-state';
+import { TileCollision } from 'src/model/tile-collision';
 
 @Component({
   selector: 'app-tile-heightmap-renderer',
@@ -11,7 +12,7 @@ export class TileHeightmapRendererComponent extends BaseSubscriberComponent impl
   @ViewChild('canvas', null) canvas:ElementRef;
   @Input() width: number = 64;
   @Input() height: number = 64;
-  @Input() heightmap: Uint8Array;
+  @Input() tileCollision: TileCollision;
 
   @Input() bgColor: string = 'green';
   @Input() fgColor: string = '#FFF';
@@ -29,6 +30,12 @@ export class TileHeightmapRendererComponent extends BaseSubscriberComponent impl
   }
 
   private redraw(){
+    if(!this.tileCollision || !this.tileCollision.heightmap){
+      return;
+    }
+
+    const heightmap = this.tileCollision.heightmap;
+
     const canvas = this.canvas.nativeElement;
     canvas.setAttribute('width', this.width + '');
     canvas.setAttribute('height', this.height + '');
@@ -38,12 +45,16 @@ export class TileHeightmapRendererComponent extends BaseSubscriberComponent impl
     ctx.fillStyle = this.bgColor;
     ctx.fillRect(0,0,this.width,this.height);
 
-    const columnWidth = Math.floor(this.width / this.heightmap.length),
+    const columnWidth = Math.floor(this.width / heightmap.length),
           scale       = this.height / 8;
     ctx.fillStyle = this.fgColor;
 
-    for(let i = 0; i < this.heightmap.length; ++i){
-      ctx.fillRect(i * columnWidth, Math.floor(this.height - this.heightmap[i] * scale), columnWidth, this.heightmap[i] * scale);
+    for(let i = 0; i < heightmap.length; ++i){
+      const y = this.tileCollision.isCeiling && !this.tileCollision.isFloor
+                ? 0
+                : Math.floor(this.height - heightmap[i] * scale);
+
+      ctx.fillRect(i * columnWidth, y, columnWidth, heightmap[i] * scale);
     }
   }
 }

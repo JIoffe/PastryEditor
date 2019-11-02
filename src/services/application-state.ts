@@ -180,10 +180,9 @@ export class ApplicationState {
       }
 
       const collision = {
-        top: true,
-        bottom: true,
-        left: true,
-        right: true,
+        isWall: true,
+        isFloor: true,
+        isCeiling: true,
         heightmap: heightmap
       };
       

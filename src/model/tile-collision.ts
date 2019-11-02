@@ -1,7 +1,6 @@
 export interface TileCollision{
-    top: boolean,
-    bottom: boolean,
-    left: boolean,
-    right: boolean,
+    isWall: boolean;
+    isFloor: boolean;
+    isCeiling: boolean;
     heightmap: Uint8Array
 }
