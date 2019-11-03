@@ -231,6 +231,10 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
             break;
         }   
         break;
+      case 'player-start':
+        level.playerStart[0] = this.cursorX;
+        level.playerStart[1] = this.cursorY;
+        break;
       case 'tiles':
       default:
         if(!!this.applicationState.activeTile){

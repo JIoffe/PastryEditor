@@ -2,15 +2,16 @@
     <div class="caption">Level Editor - {{this.applicationState.activeLevel.name}}<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
     <div class="button-container">
         <span>
-            <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid" (change)="render()"/></label>
-        </span>
-        <span>
             <label>Name: <input type="text" [(ngModel)]="applicationState.activeLevel.name"/></label>
         </span>
         <span>
-            <label>Mode: <select>
-                <option>Level</option>
-                <option>Pattern</option>
+            <label>Show Grid: <input type="checkbox" [(ngModel)]="showGrid" (change)="render()"/></label>
+        </span>
+        <span>
+            <label>Mode: 
+            <select [(ngModel)]="applicationState.activeLevel.mode">
+                <option value="level">Level</option>
+                <option value="pattern">Pattern</option>
             </select></label>
         </span>
         <span>
@@ -42,6 +43,9 @@
             </div>
             <div class="eraser-cursor" *ngIf="applicationState.levelEditMode === 'eraser'" [ngStyle]="{'width': (applicationState.eraserWidth * zoom*0.08) + 'px', 'height': (applicationState.eraserHeight * zoom*0.08) + 'px'}"></div>
             <app-level-renderer  *ngIf="applicationState.levelEditMode === 'patterns' && !!applicationState.activePattern" [level]="applicationState.activePattern" [width]="applicationState.activePattern.width*zoom*0.08" [height]="applicationState.activePattern.height*zoom*0.08" [isViewport]="true"></app-level-renderer>
+        </div>
+        <div class="player-start" [ngStyle]="{'top': (applicationState.activeLevel.playerStart[1] * zoom * 0.08) + 'px', 'left': (40 + applicationState.activeLevel.playerStart[0] * zoom * 0.08) + 'px', 'width': (zoom*0.08) + 'px', 'height': (zoom*0.08)+'px'}" *ngIf="applicationState.activeLevel.mode === 'level'">
+            <img src="/assets/images/player-start.png"/>
         </div>
         <canvas #canvas class="level-edit-canvas" (mouseup)="onCanvasMouseUp($event)" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
         <div #editViewport class="draw-canvas-container" (scroll)="render()">

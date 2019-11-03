@@ -6,6 +6,7 @@
             <option value="stamps">Stamps</option>
             <option value="patterns">Patterns (Levels)</option>
             <option value="eraser">Tile Eraser</option>
+            <option value="player-start">Place player start</option>
         </select>
     </div>    
     <div class="content icons-container clear" *ngIf="applicationState.levelEditMode === 'tiles'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 

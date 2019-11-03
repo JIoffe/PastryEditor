@@ -8,12 +8,22 @@ export class Level{
 
         this.tiles = new Int32Array(w * h);
         this.tiles.fill(-1);
+
+        this.mode = 'level';
+
+        this.playerStart = new Int32Array(2);
     }
 
     name: string;
     width: number;
     height: number;
     tiles: Int32Array;
+    playerStart: Int32Array;
+
+    /**
+     * Whether this is treated as a pattern or a full level
+     */
+    mode: string;
 
     copy(src: Level){
         this.name = src.name;
@@ -28,12 +38,26 @@ export class Level{
         //For each tile:
         //WORD for index, palette, and h/v flip
         let code = `${this.name}:\r\n`;
+
+        if(this.mode === 'level'){
+            code += `   dc.l ${this.name}_playerstart\r\n`;
+        }
         code += `   dc.l $${FormattingUtils.padWord(this.height)}${FormattingUtils.padWord(this.width)}   \r\n`
 
         this.tiles.forEach((tile, i) => {
             var tileValue = (tile+0x0001);
             code += `   dc.w $${FormattingUtils.padWord(tileValue)}   \r\n`
         });
+
+        if(this.mode !== 'level')
+            return code;
+
+        
+        //Add player start position
+
+        code += `${this.name}_playerstart:\r\n`;
+        code += `   dc.l $${FormattingUtils.padWord(this.playerStart[1] * 8)}${FormattingUtils.padWord(this.playerStart[0] * 8)}   \r\n`
+
         return code;
     }
 
@@ -47,19 +71,42 @@ export class Level{
 
         const name = lines[0].replace(/:*/, '');
 
-        const size = lines[1].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
+        let i = 1;
+
+        //Skip over any pointers to level data
+        if(lines[i].indexOf('playerstart') >= 0){
+            ++i;
+        }
+
+        const size = lines[i].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
         const width = parseInt(size.substr(4), 16),
               height = parseInt(size.substr(0, 4), 16);
 
         const level = new Level(name, width, height);
-
-        for(let i = 2; i < lines.length; ++i){
+        i++;
+        for(let j = 0; j < level.tiles.length; ++j){
             const line = lines[i].trim();
             if(!line.length)
                 continue;
 
-            level.tiles[i - 2] = parseInt(line.match(/[a-f0-9]{4}\s*$/gi)[0], 16)-1;
+            level.tiles[j] = parseInt(line.match(/[a-f0-9]{4}\s*$/gi)[0], 16)-1;
+
+            ++i;
         }
+
+        if(i >= lines.length){
+            level.mode = 'pattern';
+            return level;
+        }
+
+        level.mode = 'level';
+        
+        //Expect certain things to be here...
+        i++;
+        const playerPos = lines[i++].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
+        level.playerStart[0] = parseInt(playerPos.substr(4), 16) / 8;
+        level.playerStart[1] = parseInt(playerPos.substr(0, 4), 16) / 8;
+
 
         return level;
     }
