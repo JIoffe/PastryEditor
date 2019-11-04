@@ -53,6 +53,8 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
   code: string = null;
   showImageSelection = false;
+
+  tooltip: string = '';
   
   constructor(private applicationState: ApplicationState) { 
     super();
@@ -62,10 +64,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     this.render();
 
     this.subscribe(
-      this.applicationState.LevelSelectedObservable.subscribe(level => {
-        console.log('hello');
-        this.render();
-      })
+      this.applicationState.LevelSelectedObservable.subscribe(level => this.render())
     );
   }
 
@@ -107,6 +106,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     this.cursorDisplayX = this.cursorX*pixelSize - scrollLeft;
     this.cursorDisplayY = this.cursorY*pixelSize - scrollTop;
 
+    const i = this.cursorX + this.cursorY * level.width;
+
+    this.tooltip = `X: ${this.cursorX} Y: ${this.cursorY} Tile Value: ${this.applicationState.activeLevel.tiles[i]}`;
     if(ev.buttons === 0)
       return;
 
@@ -119,7 +121,6 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
     const paletteMask = this.getPaletteMask(),
           flipMask = this.getFlipMask();
 
-    const i = this.cursorX + this.cursorY * level.width;
     switch(this.applicationState.levelEditMode){
       case 'stamps':{
         if(!this.applicationState.activeStamp)

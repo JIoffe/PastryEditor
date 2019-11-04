@@ -52,7 +52,7 @@
             <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
         </div>
     </div>
-    <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}</div>
+    <div class="tool-status">Level Size: {{this.applicationState.activeLevel.width}} x {{this.applicationState.activeLevel.height}}&nbsp;&nbsp;&nbsp;{{tooltip}}</div>
 </div>
 <app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
 <!-- <app-loading-spinner></app-loading-spinner> -->
