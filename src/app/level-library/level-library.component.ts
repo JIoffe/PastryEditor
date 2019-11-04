@@ -14,6 +14,8 @@ export class LevelLibraryComponent implements OnInit {
   newLevelHeight = 1;
   newLevelName = 'untitled';
 
+  code: string = null;
+
   constructor(private applicationState: ApplicationState) { }
 
   ngOnInit() {
@@ -51,5 +53,20 @@ export class LevelLibraryComponent implements OnInit {
 
   newLevelCancel(ev: MouseEvent){
     this.showNewLevelModal = false;
+  }
+
+  code_onClick(ev: MouseEvent){
+    if(!!this.applicationState.levels.length){
+      this.code = Level.manyToCode(this.applicationState.levels);
+    }else{
+      this.code = '';
+    }    
+  }
+
+  onCodeChanged(code: string){
+    if(!!code){
+      this.applicationState.levels = Level.manyFromCode(code);
+    }
+    this.code = null;
   }
 }

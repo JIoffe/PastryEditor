@@ -27,3 +27,4 @@
         </div>
     </div>
 </div>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>

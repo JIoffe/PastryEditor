@@ -1,5 +1,7 @@
 import { FormattingUtils } from 'src/utils/formatting-utils';
 
+const LEVEL_SEPARATOR = '**************************************************\r\n';
+
 export class Level{
     constructor(name, w, h){
         this.name = name;
@@ -61,11 +63,20 @@ export class Level{
         return code;
     }
 
+    static manyToCode(levels: Level[]){
+        return levels.map(level => level.toCode())
+            .reduce((p,c) => p + c + LEVEL_SEPARATOR, '');
+    }
+
+    static manyFromCode(code: string){
+        return code.split(/\*+[\r\n]*/g).map(c => this.fromCode(c));
+    }
+
     static fromCode(code: string){
         if(code == null || !code.length)
             return null;
 
-        let lines = code.split(/[\r\n]+/g);
+        let lines = code.split(/[\r\n]+/g).filter(l => !!l.length);
         if(lines.length < 3)
             return null;
 
@@ -75,7 +86,7 @@ export class Level{
 
         //Skip over any pointers to level data
         if(lines[i].indexOf('playerstart') >= 0){
-            ++i;
+
         }
 
         const size = lines[i].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
