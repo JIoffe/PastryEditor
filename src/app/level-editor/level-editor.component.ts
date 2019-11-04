@@ -63,6 +63,7 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
     this.subscribe(
       this.applicationState.LevelSelectedObservable.subscribe(level => {
+        console.log('hello');
         this.render();
       })
     );

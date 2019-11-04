@@ -74,7 +74,16 @@ export class ApplicationState {
     memoryMap: MemoryMapEntry[] = [];
 
     levels: Level[] = [];
-    activeLevel: Level = null;
+
+    private _activeLevel: Level = null;
+    get activeLevel(): Level {
+        return this._activeLevel;
+    }
+    set activeLevel(level: Level) {
+        this._activeLevel = level;
+        this.LevelSelectedObservable.next(level);
+    }
+
     activePattern: Level = null;
 
     compiledSprites: CompiledSprite[] = [];
@@ -115,7 +124,6 @@ export class ApplicationState {
         this.SpriteSetUpdatedObservable.subscribe(sprites => this.sprites = sprites);
         this.SpriteSelectedObservable.subscribe(sprite => this.activeSprite = sprite);
 
-        this.LevelSelectedObservable.subscribe(level => this.activeLevel = level);
         this.LevelsUpdatedObservable.subscribe(levels => this.levels = levels);
 
         this.SpriteGroupSelectedObservable.subscribe(sg => this.activeSpriteGroup = sg);

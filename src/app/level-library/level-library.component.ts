@@ -36,9 +36,9 @@ export class LevelLibraryComponent implements OnInit {
 
     if(this.applicationState.levels.length >= 0){
       const nextLevel = this.applicationState.levels[index] || this.applicationState.levels[index - 1];
-      this.applicationState.LevelSelectedObservable.next(nextLevel);
+      this.applicationState.activeLevel = nextLevel;
     }else{
-      this.applicationState.LevelSelectedObservable.next(null);
+      this.applicationState.activeLevel = null;
     }
   }
 
@@ -47,7 +47,7 @@ export class LevelLibraryComponent implements OnInit {
 
     this.applicationState.levels.push(level);
     this.applicationState.LevelsUpdatedObservable.next(this.applicationState.levels);
-    this.applicationState.LevelSelectedObservable.next(level);
+    this.applicationState.activeLevel = level;
     this.showNewLevelModal = false;
   }
 
