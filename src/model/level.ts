@@ -69,7 +69,7 @@ export class Level{
     }
 
     static manyFromCode(code: string){
-        return code.split(/\*+[\r\n]*/g).map(c => this.fromCode(c));
+        return code.split(/\*+[\r\n]*/g).filter(l => !!l.length).map(c => this.fromCode(c));
     }
 
     static fromCode(code: string){
@@ -80,7 +80,8 @@ export class Level{
         if(lines.length < 3)
             return null;
 
-        const name = lines[0].replace(/:*/, '');
+        const name = lines[0].replace(/:*/g, '');
+        console.log(name);
 
         let i = 1;
 

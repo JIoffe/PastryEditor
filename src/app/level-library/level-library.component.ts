@@ -66,6 +66,8 @@ export class LevelLibraryComponent implements OnInit {
   onCodeChanged(code: string){
     if(!!code){
       this.applicationState.levels = Level.manyFromCode(code);
+      this.applicationState.activeLevel = this.applicationState.levels[0] || null;
+      this.applicationState.LevelsUpdatedObservable.next(this.applicationState.levels);
     }
     this.code = null;
   }
