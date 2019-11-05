@@ -87,7 +87,7 @@ export class Level{
 
         //Skip over any pointers to level data
         if(lines[i].indexOf('playerstart') >= 0){
-
+            ++i;
         }
 
         const size = lines[i].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
