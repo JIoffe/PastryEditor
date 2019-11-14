@@ -36,8 +36,14 @@ export class ImageImporterComponent implements OnInit {
   }
 
   ok_click(ev: MouseEvent){
-    const w = this.width  * 8,
-          h = this.height * 8;
+    let w: number, h: number;
+    if(this.useNaturalSize){
+      w = this.width;
+      h = this.height;
+    }else{
+      w = this.width * 8;
+      h = this.height * 8;
+    }
 
     const ctx = this.imageImportCanvas.nativeElement.getContext('2d');
     const imageData = ctx.getImageData(0, 0, w, h);
@@ -131,8 +137,9 @@ export class ImageImporterComponent implements OnInit {
     if(this.useNaturalSize){
       w = img.naturalWidth || img.width
       h = img.naturalHeight || img.height
-      this.width = Math.floor(w / 8);
-      this.height = Math.floor(h / 8);
+
+      this.width = w;
+      this.height = h;
     }else{
       w = this.width  * 8;
       h = this.height * 8;

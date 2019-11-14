@@ -1,6 +1,7 @@
 import { SpriteAnimation } from './sprite-animation';
 import { FormattingUtils } from 'src/utils/formatting-utils';
 import { ApplicationState } from 'src/services/application-state';
+import { calcFrameWidth } from './sprite-frame';
 
 /**
  * Represents an entire asset with collision information, multiple sprites, tile data, and animations
@@ -64,12 +65,14 @@ export class CompiledSprite{
             });
 
             anim.frames.forEach((f,i) => {
+                const framePixelWidth = calcFrameWidth(f);
+
                 code += `    ${this.name}_${anim.name}${i}:\r\n`;
 
                 //Actual tile data for the frame
                 if(this.embedded){
-                    const tileDataSize = (f.sprites.map(s => s.tiles.length).reduce((p,c) => p + c, 0) * 64) - 1;
-                    code += `    dc.w $${FormattingUtils.padWord(tileDataSize)}           ; (total tiles in frame * 64) - 1\r\n`;
+                    const tileDataSize = (f.sprites.map(s => s.tiles.length).reduce((p,c) => p + c, 0) * 8) - 1;
+                    code += `    dc.w $${FormattingUtils.padWord(tileDataSize)}           ; (total tiles in frame * 8) - 1\r\n`;
 
                     f.sprites.forEach(s => {
                         for(let x = 0; x < s.width; ++x){
@@ -89,11 +92,11 @@ export class CompiledSprite{
                     });
                 }
 
-                code += `        dc.w ${FormattingUtils.padWord(f.sprites.length - 1)}\r\n`;
+                code += `        dc.w $${FormattingUtils.padWord(f.sprites.length - 1)}\r\n`;
 
                 f.sprites.forEach((s, k) => {                 
                     code += `        dc.w $${FormattingUtils.padByte(s.offsetY)}           ; Offset Vertical\r\n`;
-                    code += `        dc.w $${FormattingUtils.padWord(s.getMDSize())}           ; sprite Size\r\n`;
+                    code += `        dc.w $${FormattingUtils.padByte(s.getMDSize())}00     ; sprite Size\r\n`;
 
                     let index: number = -1;
                     if(!!applicationState){
@@ -108,7 +111,10 @@ export class CompiledSprite{
                     }
 
                     code += `        dc.w $${FormattingUtils.padWord(index)}           ; sprite tile ID\r\n`;
-                    code += `        dc.w $${FormattingUtils.padWord(s.offsetX)}           ; Offset Horizontal\r\n`;
+
+                    //Encode separate offsets for flipped and non-flipped varieties
+                    const flippedOffsetX = framePixelWidth - (s.offsetX + (s.width * 8));
+                    code += `        dc.w $${FormattingUtils.padByte(flippedOffsetX)}${FormattingUtils.padByte(s.offsetX)}           ; Offset Horizontal\r\n`;
                 });
             });
         });
