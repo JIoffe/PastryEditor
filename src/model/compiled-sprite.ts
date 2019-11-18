@@ -1,7 +1,9 @@
 import { SpriteAnimation } from './sprite-animation';
 import { FormattingUtils } from 'src/utils/formatting-utils';
 import { ApplicationState } from 'src/services/application-state';
-import { calcFrameWidth } from './sprite-frame';
+import { calcFrameWidth, SpriteFrame } from './sprite-frame';
+import { Sprite } from './sprite';
+import { PositionedSprite } from './positioned-sprite';
 
 /**
  * Represents an entire asset with collision information, multiple sprites, tile data, and animations
@@ -18,7 +20,73 @@ export class CompiledSprite{
     animations: SpriteAnimation[];
 
     static fromCode(code: string): CompiledSprite{
-        return null;
+        if(!code || !code.length)
+            return null;
+
+        const compiledSprite = new CompiledSprite();
+        const lines = code.match(/[^\r\n]+/g);
+        
+        compiledSprite.embedded = !!lines.find(l => !!l.match(/embedded\s*:\s*(Y)|(true)/gi));
+
+        let i = lines.findIndex(l => l[0] != '*');      //data starts here
+        compiledSprite.name = lines[i++].replace(/:/g, '');
+
+        while(i < lines.length){
+            let animation: SpriteAnimation = {
+                name: lines[i++].replace(/:/g, ''),
+                frames: []
+            };
+
+            const nFrames = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
+            //skip over for the number of frames (array of pointers)
+            i += nFrames;
+
+            for(let j = 0; j < nFrames; ++j){
+                i++;    //skip over frame label
+
+                if(compiledSprite.embedded){
+                    //Get tiles
+                    const nTiles = (parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1) / 8;
+                    const tiles = new Array(nTiles);
+                    for(let k = 0; k < nTiles; ++k){
+                        let tileData = lines[i++].match(/[0-9a-fA-F]{8}/g)
+                            .reduce((p,c) => p.concat(c), [])
+                            .reduce((p,c) => p + c, '')
+                            .split('')
+                            .map(c => parseInt(c, 16));
+
+                        let tile = new Uint8Array(tileData);
+                        tiles[k] = tile;
+                    }
+                    
+                    var frame: SpriteFrame = {
+                        sprites: []
+                    }
+
+                    const nSprites = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
+                    for(let k = 0; k < nSprites; ++k){
+                        const offsetY = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16)
+                        const sizeCode = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
+                        const tileId = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
+                        const offsetX = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(3), 16)
+
+                        const sprite = PositionedSprite.fromSizeCode(sizeCode);
+                        sprite.offsetX = offsetX;
+                        sprite.offsetY = offsetY;
+
+                        sprite.tiles = tiles.slice(tileId, tileId + (sprite.width * sprite.height));
+                        sprite.resortTiles();
+                        frame.sprites.push(sprite);
+                    }
+
+                    animation.frames.push(frame);
+                }
+            }
+
+            compiledSprite.animations.push(animation);
+        }
+        
+        return compiledSprite;
     }
 
     getExtents(){

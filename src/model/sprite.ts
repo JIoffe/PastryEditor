@@ -17,6 +17,17 @@ export class Sprite extends Stamp{
           this.tiles[i] = new Uint8Array(64);
     }
 
+    static fromSizeCode(sizeCode: number){
+        if(!(sizeCode & 0x00FF)){
+            sizeCode = sizeCode >> 8;
+        }
+
+        var height = (sizeCode & 3) + 1;
+        var width = ((sizeCode - (height - 1)) / 4) + 1
+
+        return new Sprite(width, height);
+    }
+
     getMDSize(){
         return (((this.width-1)*4)+this.height-1);
     }

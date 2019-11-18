@@ -6,6 +6,7 @@ import { PalettizedImage } from 'src/model/palettized-image';
 import { SpriteFrame } from 'src/model/sprite-frame';
 import { interval } from 'rxjs/internal/observable/interval';
 import { takeUntil } from 'rxjs/operators';
+import { CompiledSprite } from 'src/model/compiled-sprite';
 
 @Component({
   selector: 'app-sprite-cutter',
@@ -217,6 +218,14 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
   }
 
   onCodeChanged(code: string){
+    if(!!code){
+      const sprite = CompiledSprite.fromCode(code);
+      if(!!sprite){
+        this.applicationState.compiledSprites.push(sprite);
+        this.applicationState.activeCompiledSprite = sprite;
+      }
+    }
+
     this.code = null;
   }
 
