@@ -33,9 +33,10 @@ export class CompiledSprite{
 
         while(i < lines.length){
             let animation: SpriteAnimation = {
-                name: lines[i++].replace(/:/g, ''),
+                name: lines[i++].replace(/:/g, '').replace(`${compiledSprite.name}_`, '').trim(),
                 frames: []
             };
+            
 
             const nFrames = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
             //skip over for the number of frames (array of pointers)
