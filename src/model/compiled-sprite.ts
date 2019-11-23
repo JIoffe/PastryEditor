@@ -5,6 +5,8 @@ import { calcFrameWidth, SpriteFrame } from './sprite-frame';
 import { Sprite } from './sprite';
 import { PositionedSprite } from './positioned-sprite';
 
+const SPRITE_SEPARATOR = '**************************************************\r\n';
+
 /**
  * Represents an entire asset with collision information, multiple sprites, tile data, and animations
  */
@@ -19,7 +21,36 @@ export class CompiledSprite{
     name: string;
     animations: SpriteAnimation[];
 
-    static fromCode(code: string): CompiledSprite{
+    /**
+     * Returns a complete set of all tiles from all animations in this sprite collection
+     */
+    get completeTileset(){
+        return this.completeSpriteSet
+            .map(s => s.tiles)
+            .reduce((p, c) => p.concat(c), []);
+    }
+
+    /**
+     * Returns a complete set of all subsprites in this sprite collection
+     */
+    get completeSpriteSet(){
+        return this.animations
+            .map(a => a.frames)
+            .reduce((p,c) => p.concat(c), [])
+            .map(f => f.sprites)
+            .reduce((p, c) => p.concat(c), [])
+    }
+
+    static manyToCode(compiledSprites: CompiledSprite[]){
+        return compiledSprites.map(s => s.toCode())
+            .reduce((p,c) => p + c + SPRITE_SEPARATOR, '');
+    }
+
+    static manyFromCode(code: string){
+        return code.split(/^\*+[\r\n]$/g).filter(l => !!l.length).map(c => CompiledSprite.fromCode(c));
+    }
+
+    static fromCode(code: string, applicationState?: ApplicationState): CompiledSprite{
         if(!code || !code.length)
             return null;
 
@@ -45,10 +76,12 @@ export class CompiledSprite{
             for(let j = 0; j < nFrames; ++j){
                 i++;    //skip over frame label
 
+                let tiles: Uint8Array[];
+
                 if(compiledSprite.embedded){
                     //Get tiles
                     const nTiles = (parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1) / 8;
-                    const tiles = new Array(nTiles);
+                    tiles = new Array(nTiles);
                     for(let k = 0; k < nTiles; ++k){
                         let tileData = lines[i++].match(/[0-9a-fA-F]{8}/g)
                             .reduce((p,c) => p.concat(c), [])
@@ -59,29 +92,30 @@ export class CompiledSprite{
                         let tile = new Uint8Array(tileData);
                         tiles[k] = tile;
                     }
-                    
-                    var frame: SpriteFrame = {
-                        sprites: []
-                    }
-
-                    const nSprites = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
-                    for(let k = 0; k < nSprites; ++k){
-                        const offsetY = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16)
-                        const sizeCode = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
-                        const tileId = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
-                        const offsetX = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(3), 16)
-
-                        const sprite = PositionedSprite.fromSizeCode(sizeCode);
-                        sprite.offsetX = offsetX;
-                        sprite.offsetY = offsetY;
-
-                        sprite.tiles = tiles.slice(tileId, tileId + (sprite.width * sprite.height));
-                        sprite.resortTiles();
-                        frame.sprites.push(sprite);
-                    }
-
-                    animation.frames.push(frame);
+                }else{
+                    tiles = applicationState.tiles;
                 }
+                    
+                var frame: SpriteFrame = {
+                    sprites: []
+                }
+
+                const nSprites = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
+                for(let k = 0; k < nSprites; ++k){
+                    const offsetY = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16)
+                    const sizeCode = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
+                    const tileId = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
+                    const offsetX = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(3), 16)
+
+                    const sprite = PositionedSprite.fromSizeCode(sizeCode);
+                    sprite.offsetX = offsetX;
+                    sprite.offsetY = offsetY;
+
+                    sprite.tiles = tiles.slice(tileId, tileId + (sprite.width * sprite.height));
+                    frame.sprites.push(sprite);
+                }
+
+                animation.frames.push(frame);
             }
 
             compiledSprite.animations.push(animation);
@@ -121,7 +155,7 @@ export class CompiledSprite{
         let code = '';
 
         code += '* Compression: NONE\r\n';
-        code += '* Embedded: TRUE\r\n';
+        code += `* Embedded: ${this.embedded ? 'TRUE' : 'FALSE'}\r\n`;
 
         code += `${this.name}:\r\n`;
         this.animations.forEach(anim => {

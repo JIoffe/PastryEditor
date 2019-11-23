@@ -136,8 +136,11 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
   }
 
   animationChanged(){
-    this.resetFrame();
-    this.render();
+    //give angular a couple of frames to catch up (this feels awful)
+    setTimeout(() => {
+      this.resetFrame();
+      this.render();
+    }, 30);
   }
 
   render(){
@@ -206,6 +209,7 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
       return;
 
     this.activeAnimation.frames[this.activeFrame] = frame;
+    this.applicationState.replaceActiveCompiledSprite(this.applicationState.activeCompiledSprite);
 
     this.render();
   }
@@ -219,10 +223,9 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
 
   onCodeChanged(code: string){
     if(!!code){
-      const sprite = CompiledSprite.fromCode(code);
+      const sprite = CompiledSprite.fromCode(code, this.applicationState);
       if(!!sprite){
-        this.applicationState.compiledSprites.push(sprite);
-        this.applicationState.activeCompiledSprite = sprite;
+        this.applicationState.replaceActiveCompiledSprite(sprite);
       }
     }
 

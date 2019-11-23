@@ -99,7 +99,9 @@ export class ApplicationState {
           this.tileImageData.set(tile, this.tileRenderer.renderTileDataUrl(tile, this.activePalette));
           this.autoPopulateTileHeightmap(tile);
         });
+
         this.TileSelectedObservable.subscribe(tile => this.activeTile = tile);
+
         this.TilesetObservable.subscribe(tiles => {
           this.tiles = tiles;
           this.tiles.forEach(tile => {
@@ -145,6 +147,20 @@ export class ApplicationState {
       sprite.resortTiles();
     }
 
+    addSprites(...sprites: Sprite[]){
+      if(!sprites || !sprites.length)
+        return;
+
+      sprites.forEach(s => {
+        this.tiles.push(...s.tiles);
+        this.sprites.push(s);
+        s.resortTiles();
+      });
+
+      this.TilesetObservable.next(this.tiles);
+      this.SpriteSetUpdatedObservable.next(this.sprites);
+    }
+
     removeSprite(sprite: Sprite){
       const n = sprite.width * sprite.height;
 
@@ -165,10 +181,88 @@ export class ApplicationState {
       this.SpriteSelectedObservable.next(this.activeSprite);
     }
 
+    removeSprites(...sprites: Sprite[]){
+      if(!sprites)
+        return;
+
+      sprites.forEach(s => this.removeSprite(s));
+    }
+
     addSpriteGroup(spriteGroup: SpriteGroup){
       spriteGroup.sprites.forEach(s => this.addSprite(s));
       this.spriteGroups.push(spriteGroup);
       this.SpriteGroupsUpdatedObservable.next(this.spriteGroups);
+    }
+
+    removeCompiledSprite(compiledSprite: CompiledSprite){
+      if(!compiledSprite)
+        return;
+
+      const i = this.compiledSprites.indexOf(compiledSprite);
+      this.removeSprites(...compiledSprite.completeSpriteSet);
+      this.compiledSprites.splice(i, 1);
+      this.activeCompiledSprite = this.compiledSprites[Math.max(i - 1, 0)] || this.compiledSprites[0] || null;
+
+      this.SpriteSetUpdatedObservable.next(this.sprites);
+      this.TilesetObservable.next(this.tiles);
+      this.SpriteSelectedObservable.next(null);
+    }
+
+    removeCompiledSprites(...compiledSprites: CompiledSprite[]){
+      if(!compiledSprites || !compiledSprites.length)
+        return;
+      
+      compiledSprites.forEach(compiledSprite => {
+        const i = this.compiledSprites.indexOf(compiledSprite);
+        this.removeSprites(...compiledSprite.completeSpriteSet);
+        this.compiledSprites.splice(i, 1);
+      });
+
+      this.activeCompiledSprite = null;
+  
+      this.SpriteSetUpdatedObservable.next(this.sprites);
+      this.TilesetObservable.next(this.tiles);
+      this.SpriteSelectedObservable.next(null);
+    }
+
+    addCompiledSprites(...compiledSprites: CompiledSprite[]){
+      if(!compiledSprites || !compiledSprites.length)
+        return;
+      
+      compiledSprites.forEach(compiledSprite => {
+        this.compiledSprites.push(compiledSprite);
+        this.addSprites(...compiledSprite.completeSpriteSet);
+      });
+    }
+
+    replaceActiveCompiledSprite(compiledSprite: CompiledSprite){
+      let i: number;
+      if(!!this.activeCompiledSprite){
+        i = this.compiledSprites.indexOf(this.activeCompiledSprite);
+        this.removeSprites(...this.activeCompiledSprite.completeSpriteSet);
+      }else{
+        i = this.compiledSprites.length;
+        if(i === 0){
+          this.compiledSprites.push(null);
+        }
+      }
+
+      this.compiledSprites[i] = compiledSprite;
+      this.activeCompiledSprite = compiledSprite;
+      this.addSprites(...compiledSprite.completeSpriteSet);
+    }
+
+    removeTiles(...tiles: Uint8Array[]){
+      if(!tiles)
+        return;
+
+      tiles.forEach(t => {
+        const i = this.tiles.indexOf(t);
+        if(i < 0)
+          return;
+
+        this.tiles.splice(i, 1);
+      });
     }
 
     autoPopulateTileHeightmap(tile: Uint8Array){

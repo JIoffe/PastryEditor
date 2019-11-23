@@ -17,6 +17,9 @@
                 <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
             </span>
             <span>
+                <label>Embedded: <input type="checkbox" [(ngModel)]="applicationState.activeCompiledSprite.embedded"/></label>
+            </span>
+            <span>
                 <label>Show Bounds: <input type="checkbox" [(ngModel)]="showBounds"/></label>
             </span>
             <span>
@@ -26,7 +29,6 @@
             </span>
         </div>
         <div class="content">
-
             <div *ngIf="!!activeAnimation" class="frame-panel">
                 <div class="viewport" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
                     <div *ngIf="showBounds">

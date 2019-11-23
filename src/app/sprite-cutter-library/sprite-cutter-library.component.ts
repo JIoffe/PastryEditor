@@ -30,4 +30,19 @@ export class SpriteCutterLibraryComponent extends BaseSubscriberComponent {
       this.applicationState.activeCompiledSprite = this.applicationState.compiledSprites[i - 1] || this.applicationState.compiledSprites[0] || null;
     }
   }
+
+  code_onClick(ev: MouseEvent){
+    this.code = CompiledSprite.manyToCode(this.applicationState.compiledSprites);
+  }
+
+  onCodeChanged(code: string){
+
+    if(!!code){
+      this.applicationState.removeCompiledSprites(...this.applicationState.compiledSprites);
+      const compiledSprites = CompiledSprite.manyFromCode(code);
+      this.applicationState.addCompiledSprites(...compiledSprites);
+    }
+
+    this.code = null;
+  }
 }
