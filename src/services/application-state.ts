@@ -9,6 +9,10 @@ import { SpriteGroup } from 'src/model/sprite-group';
 import { MemoryMapEntry } from 'src/model/memory-map-entry';
 import { CompiledSprite } from 'src/model/compiled-sprite';
 import { TileCollision } from 'src/model/tile-collision';
+import { ItemDefinition } from 'src/model/item-definition';
+
+//Mostly dealing with this particular game...
+import { Items } from 'src/assets/item-definitions/baolongtu-items';
 
 @Injectable({
     providedIn: 'root',
@@ -90,8 +94,12 @@ export class ApplicationState {
     activeCompiledSprite: CompiledSprite = null;
 
     levelEditMode = 'tiles';
+
     eraserWidth = 1;
     eraserHeight = 1;
+
+    itemDefinitions: ItemDefinition[] = Items;
+    selectedItemDefinition: ItemDefinition = null;
 
     constructor(private tileRenderer: TileRenderer){
         //This is a singleton so these watchers do not need to be cleared

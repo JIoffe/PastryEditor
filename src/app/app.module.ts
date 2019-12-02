@@ -43,6 +43,7 @@ import { SpriteCutterAssemblerComponent } from './sprite-cutter-assembler/sprite
 import { TileCollisionPageComponent } from './tile-collision-page/tile-collision-page.component';
 import { TileCollisionEditorComponent } from './tile-collision-editor/tile-collision-editor.component';
 import { TileHeightmapRendererComponent } from './tile-heightmap-renderer/tile-heightmap-renderer.component';
+import { ObjectRendererComponent } from './object-renderer/object-renderer.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -98,7 +99,8 @@ const appRoutes: Routes = [
     SpriteCutterAssemblerComponent,
     TileCollisionPageComponent,
     TileCollisionEditorComponent,
-    TileHeightmapRendererComponent
+    TileHeightmapRendererComponent,
+    ObjectRendererComponent
   ],
   imports: [
     RouterModule.forRoot(

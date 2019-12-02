@@ -70,13 +70,13 @@
     transform: rotateX(180deg) rotateY(180deg);
 }
 
-.player-start {
-    position: relative;
+.object-icon {
+    position: absolute;
     z-index: 2;
     pointer-events: none;
 }
 
-.player-start > img {
+.object-icon > img {
     width: 100%;
     height: 100%;
     position: absolute;

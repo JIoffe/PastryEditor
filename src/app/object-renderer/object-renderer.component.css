@@ -1,0 +1,13 @@
+:host, :host > div {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+}
+
+:host > div > img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}

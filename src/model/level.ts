@@ -1,4 +1,6 @@
 import { FormattingUtils } from 'src/utils/formatting-utils';
+import { Enemy } from './enemy';
+import { Item } from './item';
 
 const LEVEL_SEPARATOR = '**************************************************\r\n';
 
@@ -14,6 +16,8 @@ export class Level{
         this.mode = 'level';
 
         this.playerStart = new Int32Array(2);
+
+        this.items = [];
     }
 
     name: string;
@@ -21,6 +25,9 @@ export class Level{
     height: number;
     tiles: Int32Array;
     playerStart: Int32Array;
+
+    enemies: Enemy[];
+    items: Item[];
 
     /**
      * Whether this is treated as a pattern or a full level
@@ -43,6 +50,7 @@ export class Level{
 
         if(this.mode === 'level'){
             code += `   dc.l ${this.name}_playerstart\r\n`;
+            code += `   dc.l ${this.name}_items\r\n`;
         }
         code += `   dc.l $${FormattingUtils.padWord(this.height)}${FormattingUtils.padWord(this.width)}   \r\n`
 
@@ -60,6 +68,16 @@ export class Level{
         code += `${this.name}_playerstart:\r\n`;
         code += `   dc.l $${FormattingUtils.padWord(this.playerStart[1] * 8)}${FormattingUtils.padWord(this.playerStart[0] * 8)}   \r\n`
 
+        //Add items
+        code += `${this.name}_items:\r\n`;
+
+        //Items are stored as a single array sorted by X position
+        code += `   dc.w $${FormattingUtils.padWord(this.tiles.length - 1)}   ; items length - 1\r\n`
+        code += this.items
+            .sort((a, b) => a.positionX - b.positionX)
+            .map(item => item.toCode())
+            .reduce((p, c) => p + c, '');
+            
         return code;
     }
 

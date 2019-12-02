@@ -7,6 +7,8 @@
             <option value="patterns">Patterns (Levels)</option>
             <option value="eraser">Tile Eraser</option>
             <option value="player-start">Place player start</option>
+            <option value="place-item">Place Item</option>
+            <option value="remove-item">Remove Item</option>
         </select>
     </div>    
     <div class="content icons-container clear" *ngIf="applicationState.levelEditMode === 'tiles'" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}"> 
@@ -28,6 +30,12 @@
         <label>Eraser Width:&nbsp; <input type="number" [(ngModel)]="applicationState.eraserWidth"/> tiles</label>
         <br/>
         <label>Eraser Height: <input type="number" [(ngModel)]="applicationState.eraserHeight"/> tiles</label>
+    </div>
+
+    <div class="content" *ngIf="applicationState.levelEditMode === 'place-item'">
+        <select [(ngModel)]="applicationState.selectedItemDefinition">
+            <option *ngFor="let d of applicationState.itemDefinitions" [ngValue]="d">{{d.label}}</option>
+        </select>
     </div>
     <div class="tool-status">{{tooltip}}</div>
 </div>

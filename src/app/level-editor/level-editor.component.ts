@@ -4,6 +4,7 @@ import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { TileUtils } from 'src/utils/tile-utils';
 import { Level } from 'src/model/level';
 import { PalettizedImage } from 'src/model/palettized-image';
+import { Item } from 'src/model/item';
 
 //Constants for bit flags on tiles
 const paletteFlags = [
@@ -93,6 +94,9 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
 
     const factorX = (x + scrollLeft) / cellSize,
           factorY = (y + scrollTop) / cellSize;
+
+    const cursorLevelPositionX = Math.floor(factorX * 8),
+          cursorLevelPositionY = Math.floor(factorY * 8);
 
     if(factorX >= level.width || factorY >= level.height){
       this.cursorX = -1;
@@ -236,6 +240,25 @@ export class LevelEditorComponent extends BaseSubscriberComponent implements OnI
       case 'player-start':
         level.playerStart[0] = this.cursorX;
         level.playerStart[1] = this.cursorY;
+        break;
+      case 'place-item':
+        const item = new Item(this.applicationState.selectedItemDefinition.type);
+        item.state = this.applicationState.selectedItemDefinition.defaultState;
+        item.positionX = cursorLevelPositionX;
+        item.positionY = cursorLevelPositionY;
+
+        item.width = this.applicationState.selectedItemDefinition.width;
+        item.height = this.applicationState.selectedItemDefinition.height;
+
+        level.items.push(item);
+        break;
+      case 'remove-item':
+        const selectedItem = level.items.findIndex(item => item.positionX <= cursorLevelPositionX && item.positionX + item.width >= cursorLevelPositionX &&
+            item.positionY <= cursorLevelPositionY && item.positionY + item.width >= cursorLevelPositionY);
+
+        if(selectedItem >= 0){
+          level.items.splice(selectedItem, 1);
+        }
         break;
       case 'tiles':
       default:

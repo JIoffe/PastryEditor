@@ -46,9 +46,15 @@
         </div>
         <canvas #canvas class="level-edit-canvas" (mouseup)="onCanvasMouseUp($event)" (mousedown)="onCanvasMouseMove($event)" (mousemove)="onCanvasMouseMove($event)" (mouseleave)="onCanvasMouseLeave($event)" [ngStyle]="{'background-color': applicationState.activePalette[0].toCSS()}"></canvas>
         <div #editViewport class="draw-canvas-container" (scroll)="render()">
-            <div class="player-start" [ngStyle]="{'top': (applicationState.activeLevel.playerStart[1] * zoom * 0.08) + 'px', 'left': (applicationState.activeLevel.playerStart[0] * zoom * 0.08) + 'px', 'width': (zoom*0.08) + 'px', 'height': (zoom*0.08)+'px'}" *ngIf="applicationState.activeLevel.mode === 'level'">
+            <div class="object-icon" [ngStyle]="{'top': (applicationState.activeLevel.playerStart[1] * zoom * 0.08) + 'px', 'left': (applicationState.activeLevel.playerStart[0] * zoom * 0.08) + 'px', 'width': (zoom*0.08) + 'px', 'height': (zoom*0.08)+'px'}" *ngIf="applicationState.activeLevel.mode === 'level'">
                 <img src="/assets/images/player-start.png"/>
             </div>
+            <app-object-renderer *ngFor="let item of applicationState.activeLevel.items" [item]="item" [zoom]="zoom">
+            </app-object-renderer>
+
+            <!-- <div class="object-icon" *ngFor="let item of applicationState.activeLevel.items; index as i" [ngStyle]="{'top': (item.positionY * zoom * 0.01) + 'px', 'left': (item.positionX * zoom * 0.01) + 'px', 'width': (zoom*0.32) + 'px', 'height': (zoom*0.24)+'px'}">
+                <img src="/assets/images/ruby.png"/>
+            </div> -->
             <div class="scroll-extender" [ngStyle]="{'width': (zoom*0.08*this.applicationState.activeLevel.width) + 'px', 'height': (zoom*0.08*this.applicationState.activeLevel.height) + 'px'}">.</div>
         </div>
     </div>

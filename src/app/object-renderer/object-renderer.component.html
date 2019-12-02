@@ -1,0 +1,3 @@
+<div [ngStyle]="{'top': (item.positionY * this.zoom * 0.01) + 'px', 'left': (item.positionX * zoom * 0.01) + 'px'}">
+    <img *ngFor="let img of imgs" [src]="img.src" [ngStyle]="{width: img.width + 'px', height: img.height + 'px', left: img.x + 'px', top: img.y + 'px'}"/>
+</div>
