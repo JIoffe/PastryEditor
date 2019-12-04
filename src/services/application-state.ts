@@ -152,7 +152,6 @@ export class ApplicationState {
       this.sprites.push(sprite);
       this.SpriteSetUpdatedObservable.next(this.sprites);
       this.SpriteSelectedObservable.next(sprite);
-      sprite.resortTiles();
     }
 
     addSprites(...sprites: Sprite[]){
@@ -162,7 +161,6 @@ export class ApplicationState {
       sprites.forEach(s => {
         this.tiles.push(...s.tiles);
         this.sprites.push(s);
-        s.resortTiles();
       });
 
       this.TilesetObservable.next(this.tiles);

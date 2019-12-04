@@ -133,6 +133,7 @@ export class CompiledSprite{
             Structure of file:
             * Compression: NONE
             * Embedded: Y
+            * Tiles to Allocate: #
             Name as label:
                 (For Each Animation)
                 Animation Name as Label:
@@ -156,6 +157,15 @@ export class CompiledSprite{
 
         code += '* Compression: NONE\r\n';
         code += `* Embedded: ${this.embedded ? 'TRUE' : 'FALSE'}\r\n`;
+
+        //Output the size of the buffer we would need if streaming tiles on the fly
+        const maxTilesInFrame = this.animations
+            .map(a => a.frames)
+            .reduce((p,c) => p.concat(c), [])
+            .map(f => f.sprites.reduce((p,c) => p + c.tiles.length, 0))
+            .reduce((p,c) => Math.max(p,c), 0);
+
+        code += `* Tiles to Allocate: ${maxTilesInFrame}\r\n`;
 
         code += `${this.name}:\r\n`;
         this.animations.forEach(anim => {

@@ -5,7 +5,7 @@
         <button class="btn-remove" (click)="remove_onClick($event)">Remove</button>
     </div>  
     <div class="content icons-container clear" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
-        <div class="icon" *ngFor="let s of applicationState.sprites; index as i" [ngStyle]="{'grid-template-rows': s.gridTemplateRows(), 'grid-template-columns': s.gridTemplateColumns(), width: s.width * 16 + 'px', height: s.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': s === applicationState.activeSprite}"> 
+        <div class="icon" *ngFor="let s of applicationState.sprites; index as i" [ngStyle]="{'grid-auto-flow': 'column', 'grid-template-rows': s.gridTemplateRows(), 'grid-template-columns': s.gridTemplateColumns(), width: s.width * 16 + 'px', height: s.height * 16 + 'px'}" (click)="icon_onClick($event, i)" (mouseleave)="library_onMouseLeave($event)" (mouseenter)="icon_onHover($event, i)" [ngClass]="{'active': s === applicationState.activeSprite}"> 
             <img *ngFor="let tile of s.tiles; index as j" src="{{applicationState.tileImageData.get(tile)}}"/>
         </div>   
     </div>

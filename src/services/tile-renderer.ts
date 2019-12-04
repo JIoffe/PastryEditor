@@ -83,7 +83,7 @@ export class TileRenderer{
                     data[pixelI + 1] = 0;
                     data[pixelI + 2] = 0;
                     data[pixelI + 3] = 0;
-                continue;
+                    continue;
                 }
         
                 const color = palette[colorIndex];

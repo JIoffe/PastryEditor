@@ -59,16 +59,6 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
     this.subscribe(
       this.applicationState.PaletteObservable.subscribe(palette => {
         this.redrawCanvas();
-      }),
-
-      this.applicationState.TileUpdatedObservable.subscribe(tile => {
-        if(!this.stamp)
-          return;
-        
-        const tileIndex = this.stamp.tiles.indexOf(tile);
-        if(tileIndex >= 0){
-          this.redrawCanvasWhereDirty(tileIndex);
-        }
       })
     )
 
@@ -83,6 +73,7 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
 
   onZoomChange(){
     this.redrawGrid();
+    this.redrawCanvas();
   }
 
   onDraw(ev: MouseEvent){
@@ -90,14 +81,18 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
       return;
 
     //The client rect moves with the parent's scroll
-    const rect = this.drawCanvas.nativeElement.getBoundingClientRect(),
+    const canvas = this.drawCanvas.nativeElement,
+          ctx    = canvas.getContext('2d'),
+          rect  = canvas.getBoundingClientRect(),
           w    = rect.right - rect.left,
           h    = rect.bottom - rect.top;
 
     const x = Math.floor(((ev.pageX - rect.left) / w) * this.stamp.width  * 8),
           y = Math.floor(((ev.pageY - rect.top)  / h) * this.stamp.height * 8);
 
-          
+    const buffer = ctx.getImageData(0, 0, this.stamp.width  * 8, this.stamp.height * 8),
+          data = buffer.data;
+
     switch(this.applicationState.drawMode){
       case 'b':
         {
@@ -110,6 +105,13 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
               const indexAtCoords = this.stamp.getTexel(coords[0], coords[1]);
               if(indexAtCoords === indexToChange){
                 dirtyTilesSet.add(this.stamp.setTexel(coords[0], coords[1], this.applicationState.activeColor));
+                const pixelI = (coords[0] + coords[1] * this.stamp.width  * 8) * 4,
+                      color = this.applicationState.activePalette[this.applicationState.activeColor];
+
+                data[pixelI] = color.r;
+                data[pixelI + 1] = color.g;
+                data[pixelI + 2] = color.b;
+                data[pixelI + 3] = 255;
   
                 stack.push(
                   [coords[0], coords[1]+1],
@@ -127,9 +129,19 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
         {
           const updatedTile = this.stamp.setTexel(x, y, this.applicationState.activeColor);
           this.applicationState.TileUpdatedObservable.next(updatedTile);
+
+          const pixelI = (x + y * this.stamp.width  * 8) * 4,
+                color = this.applicationState.activePalette[this.applicationState.activeColor];
+                
+          data[pixelI] = color.r;
+          data[pixelI + 1] = color.g;
+          data[pixelI + 2] = color.b;
+          data[pixelI + 3] = 255;
         }
         break;
     }
+
+    ctx.putImageData(buffer, 0, 0);
   }
 
   redrawGrid(){
@@ -141,6 +153,9 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
 
     canvas.setAttribute('width', '' + w);
     canvas.setAttribute('height', '' + h);
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0)";
+    ctx.fillRect(0,0,w,h);
 
     const stepX = w / (this.stamp.width * 8);
     const stepY = h / (this.stamp.height * 8);
@@ -162,26 +177,34 @@ export class MultiTileEditorComponent  extends BaseSubscriberComponent implement
     }
   }
 
-  redrawCanvasWhereDirty(tileIndex: number){
-    const ctx = this.drawCanvas.nativeElement.getContext('2d');
-    const imageData = this.tileRenderer.renderTileImageData(ctx, this.stamp.tiles[tileIndex], this.applicationState.activePalette);
-
-    const pos = this.stamp.getTilePos(tileIndex);
-    
-    ctx.putImageData(imageData, pos[0], pos[1]);
-  }
-
   redrawCanvas(){
     //View is disabled
     if(!this.drawCanvas || !this.stamp)
       return;
 
-    this.drawCanvas.nativeElement.setAttribute('width', this.stamp.width * 8 + '');
-    this.drawCanvas.nativeElement.setAttribute('height', this.stamp.height * 8 + '');
+    const w = this.stamp.width * 8,
+          h = this.stamp.height * 8,
+          canvas = this.drawCanvas.nativeElement;
 
-    for(let i = this.stamp.tiles.length - 1; i >= 0; --i){
-      this.redrawCanvasWhereDirty(i);
+    canvas.setAttribute('width', w + '');
+    canvas.setAttribute('height', h + '');
+
+    const ctx = canvas.getContext('2d');
+    const buffer = ctx.createImageData(w, h);
+    const data = buffer.data;
+
+    for(let x = w - 1; x >= 0; --x){
+      for(let y = h - 1; y >= 0; --y){
+        const i = (x + y * w) * 4;
+        let color = this.applicationState.activePalette[this.stamp.getTexel(x, y)];
+        data[i] = color.r;
+        data[i + 1] = color.g;
+        data[i + 2] = color.b;
+        data[i + 3] = 255;
+      }
     }
+
+    ctx.putImageData(buffer, 0, 0);
   }
 
   importImageClick(ev: MouseEvent){

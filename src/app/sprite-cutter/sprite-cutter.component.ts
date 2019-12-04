@@ -180,6 +180,9 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
           const srcX = Math.floor((x / sw) * (s.width * 8));
           const srcY = Math.floor((y / sh) * (s.height * 8));
           const index = s.getTexel(srcX, srcY);
+          if(index < 0)
+            continue;
+            
           const color = this.applicationState.activePalette[index];
 
           const pixelI = (x1 + y1 * w) * 4;
