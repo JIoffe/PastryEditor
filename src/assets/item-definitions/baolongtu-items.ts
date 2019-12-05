@@ -2,14 +2,17 @@ import { ItemDefinition } from 'src/model/item-definition'
 
 export const ItemTypes = {
     GemHorizontal: 0,
-    GemVertical: 1
+    GemVertical: 1,
+    MogurenEnemy: 2
 }
 
 export const ItemDimensions = {
     GemSpacingH: 20,
     GemSpacingV: 16,
     GemWidth: 16,
-    GemHeight: 12
+    GemHeight: 12,
+    MogurenWidth: 32,
+    MogurenHeight: 40
 }
 
 export const Gems: ItemDefinition[] = [
@@ -134,4 +137,14 @@ export const Gems: ItemDefinition[] = [
     }
 ];
 
-export const Items = [].concat(Gems);
+export const Enemies = [
+    {
+        type: ItemTypes.MogurenEnemy,
+        label: 'Moguren - Mushroom Man',
+        defaultState: 0,
+        width: ItemDimensions.MogurenWidth,
+        height: ItemDimensions.MogurenHeight
+    }
+];
+
+export const Items = [].concat(Gems,Enemies);

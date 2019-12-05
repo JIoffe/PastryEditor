@@ -13,23 +13,24 @@
             <div class="content scroll-y">
                 <table>
                     <tr>
-                        <th></th><th>Label(s)</th><th>Size</th><th>Description</th><th>Address</th><th></th>
+                        <th></th><th>Label(s)</th><th class="size-column">Size</th><th class="address-column">Address</th><th></th>
                     </tr>
                     <tr *ngFor="let mapEntry of applicationState.memoryMap; index as i">
                         <td><button (click)="moveUpClick(mapEntry, i)">Move Up</button><button (click)="moveDownClick(mapEntry, i)">Move Down</button></td>
-                        <td><input type="text" [(ngModel)]="mapEntry.label"/></td>
-                        <td>
-                            <select [(ngModel)]="mapEntry.size" (change)="onSizeChanged(i, mapEntry.size)">
+                        <td><input type="text" class="full-width" [(ngModel)]="mapEntry.label"/></td>
+                        <td class="size-column">
+                            <label>Is Array:&nbsp;<input type="checkbox" [(ngModel)]="mapEntry.isArray"/></label>
+                            <select *ngIf="!mapEntry.isArray" [(ngModel)]="mapEntry.size" (change)="onSizeChanged(i, mapEntry.size)">
                                 <option [ngValue]="0">ALIAS</option>
                                 <option [ngValue]="1">BYTE</option>
                                 <option [ngValue]="2">WORD</option>
                                 <option [ngValue]="4">LONG</option>
                             </select>
+                            <label *ngIf="mapEntry.isArray">Length: <input type="number" class="small" [(ngModel)]="mapEntry.arrayLength" (change)="onSizeChanged(i, mapEntry.size)"/></label>
+                            &nbsp;
+                            <label *ngIf="mapEntry.isArray">El. Size: <input type="number" class="small" [(ngModel)]="mapEntry.arrayElementSize" (change)="onSizeChanged(i, mapEntry.size)"/></label>
                         </td>
-                        <td>
-                            <input type="text" [(ngModel)]="mapEntry.description"/>
-                        </td>
-                        <td>
+                        <td class="address-column">
                             <input type="text" readonly [ngModel]="mapEntry.address|toHex"/>
                         </td>
                         <td><button (click)="memoryMapRemove($event, i)">Remove</button></td>
@@ -42,7 +43,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="tool-status"></div>
+            <div class="tool-status">Total Memory Allocated: {{applicationState.memoryUsage}} byte(s)</div>
         </div>
     </div>
 </main>

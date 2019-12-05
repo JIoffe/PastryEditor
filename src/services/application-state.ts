@@ -76,6 +76,12 @@ export class ApplicationState {
     drawMode: string = 'p';
 
     memoryMap: MemoryMapEntry[] = [];
+    get memoryUsage(): number{
+      if(!this.memoryMap || !this.memoryMap.length)
+        return 0;
+
+      return this.memoryMap.map(m => m.size).reduce((p, c) => p + c, 0);
+    }
 
     levels: Level[] = [];
 

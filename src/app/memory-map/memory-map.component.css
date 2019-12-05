@@ -4,13 +4,35 @@ table{
     background: #DDD;
     text-align: left;
     border-collapse: collapse;
+    table-layout: fixed;
+    border-spacing: 2px;
 }
 
-table input[type="text"], table select {
+.full-width {
     width: 100%;
 }
 
 .control-group{
     height: calc(100% - 28px);
-    width: 900px;
+    width: 1280px;
 }
+
+table input{
+    max-width: 100%;
+}
+
+.address-column{
+    width: 6em;
+}
+
+.size-column{
+    width: 24em;
+}
+
+input.small{
+    width: 6em;
+}
+
+/* .size-column input{
+    width: 4em;
+} */

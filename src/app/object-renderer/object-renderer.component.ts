@@ -30,7 +30,7 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
 
     switch(this.item.type){
       case ItemTypes.GemHorizontal:
-        for(let i = 0; i < 7; ++i){
+        for(let i = 0; i <= 8; ++i){
           if(this.item.state & (Math.pow(2, i))){
             this.imgs.push({
               src: '/assets/images/ruby.png',
@@ -43,18 +43,27 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
         }
         return;
       case ItemTypes.GemVertical:
-          for(let i = 0; i < 7; ++i){
-            if(this.item.state & (Math.pow(2, i))){
-              this.imgs.push({
-                src: '/assets/images/ruby.png',
-                x: 0,
-                y: this.zoom * i * 0.01 * ItemDimensions.GemSpacingV,
-                width: this.zoom * 0.01 * ItemDimensions.GemWidth,
-                height: this.zoom * 0.01 * ItemDimensions.GemHeight
-              });
-            }
+        for(let i = 0; i < 7; ++i){
+          if(this.item.state & (Math.pow(2, i))){
+            this.imgs.push({
+              src: '/assets/images/ruby.png',
+              x: 0,
+              y: this.zoom * i * 0.01 * ItemDimensions.GemSpacingV,
+              width: this.zoom * 0.01 * ItemDimensions.GemWidth,
+              height: this.zoom * 0.01 * ItemDimensions.GemHeight
+            });
           }
-          return;
+        }
+        return;
+      case ItemTypes.MogurenEnemy:
+        this.imgs.push({
+          src: '/assets/images/evilmushroom.png',
+          x: 0,
+          y: 0,
+          width: this.zoom * 0.01 * ItemDimensions.MogurenWidth,
+          height: this.zoom * 0.01 * ItemDimensions.MogurenHeight
+        });
+        return;
       default:
         return;
     }

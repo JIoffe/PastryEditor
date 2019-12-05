@@ -1,4 +1,6 @@
 import { FormattingUtils } from 'src/utils/formatting-utils';
+import { ItemTypes, ItemDimensions } from 'src/assets/item-definitions/baolongtu-items';
+import { Level } from './level';
 
 export class Item{
     constructor(type: number){
@@ -31,7 +33,21 @@ export class Item{
     height: number;
 
     toCode(){
-        let code = `    dc.l ${FormattingUtils.padWord(this.positionY)}${FormattingUtils.padWord(this.positionX)}           ; position YYXX\r\n`    + 
-                   `    dc.w ${FormattingUtils.padByte(this.type)}${FormattingUtils.padByte(this.state)}                    ; type/state TTSS\r\n`
+        return      `* Item: ${Object.keys(ItemTypes).find(k => ItemTypes[k] === this.type)}\r\n` +
+                    `    dc.w ${FormattingUtils.padByte(this.type)}${FormattingUtils.padByte(this.state)}                    ; type/state TTSS\r\n`  +
+                    `    dc.l ${FormattingUtils.padWord(this.positionY)}${FormattingUtils.padWord(this.positionX)}           ; position YYXX\r\n`;
+    }
+
+    computeExtents(level: Level){
+        switch(this.type){
+            case ItemTypes.MogurenEnemy:
+                return [this.positionX, this.positionX + ItemDimensions.MogurenWidth];
+            case ItemTypes.GemHorizontal:
+                {
+                    return [0,0];
+                }
+            default:
+                return [this.positionX, this.positionX];
+        }
     }
 }

@@ -44,6 +44,7 @@ import { TileCollisionPageComponent } from './tile-collision-page/tile-collision
 import { TileCollisionEditorComponent } from './tile-collision-editor/tile-collision-editor.component';
 import { TileHeightmapRendererComponent } from './tile-heightmap-renderer/tile-heightmap-renderer.component';
 import { ObjectRendererComponent } from './object-renderer/object-renderer.component';
+import { SumPipe } from 'src/pipes/sum-array-pipe';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     HexPipe,
+    SumPipe,
     LevelSiblingsPipe,
     AppComponent,
     ColorPickerComponent,

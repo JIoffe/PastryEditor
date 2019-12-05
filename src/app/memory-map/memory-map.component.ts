@@ -28,12 +28,13 @@ export class MemoryMapComponent {
       address = this.memoryStart;
     }
 
-    this.applicationState.memoryMap.push({
-      label: 'MEM_' + this.applicationState.memoryMap.length,
-      description: '',
-      size: 1,
-      address: address
-    });
+    const entry = new MemoryMapEntry();
+    entry.label = 'MEM_' + this.applicationState.memoryMap.length;
+    entry.description = '';
+    entry.size = 1;
+    entry.address = address;
+    
+    this.applicationState.memoryMap.push(entry);
   }
 
   memoryMapRemove(ev: MouseEvent, i: number){
@@ -49,11 +50,16 @@ export class MemoryMapComponent {
   code_onClick(ev: MouseEvent){
     const sizeComments = ['(alias)', 'BYTE', 'WORD', null, 'LONG'];
 
-    let code = '';
+    let code = `* MEMORY USAGE: ${this.applicationState.memoryUsage} byte(s)\r\n`;
+
     this.applicationState.memoryMap.forEach(entry => {
       code += entry.label.padEnd(constantSpacing, ' ');
       code += 'EQU $' + entry.address.toString(16).toUpperCase();
-      code += (';' + sizeComments[entry.size]).padStart(12, ' ');
+      if(entry.isArray){
+        code += (`; ARRAY: ${entry.arrayLength} x ${entry.arrayElementSize} Byte(s)`).padStart(12, ' ');
+      }else{
+        code += (';' + sizeComments[entry.size]).padStart(12, ' ');
+      }
       code += '\r\n';
     });
 
@@ -86,15 +92,18 @@ export class MemoryMapComponent {
     if(!!code){
       this.applicationState.memoryMap = code
         .split(/[\r\n]+/g)
-        .filter(line => !!line.trim().length)
+        .filter(line => !!line.trim().length && line[0] !== '*')
         .map(line => {
-          const label = line.match(/(^.*)(EQU)/i)[1].trim();
-          return {
-            label: label,
-            description: '',
-            size: 1,
-            address: parseInt(line.match(/[a-f0-9]{8}/i)[0], 16)
-          }
+          var entry = new MemoryMapEntry();
+          entry.label = line.match(/(^.*)(EQU)/i)[1].trim();
+          entry.description = '';
+          entry.size = 1;
+          entry.address = parseInt(line.match(/[a-f0-9]{8}/i)[0], 16);
+          entry.isArray = false;
+          entry.arrayLength = 0;
+          entry.arrayElementSize = 0;
+
+          return entry;
         });
 
       for(let i = this.applicationState.memoryMap.length - 2; i >= 0; --i){
