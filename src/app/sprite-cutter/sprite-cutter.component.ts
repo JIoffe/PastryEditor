@@ -20,6 +20,7 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
   activeFrame: number = 0;
 
   showBounds: boolean = false;
+  showFlipped: boolean = false;
 
   zoom: number = 100;
   cursorFlash: boolean = false;
@@ -27,6 +28,9 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
   showImageSelection = false;
 
   assemblerImage: PalettizedImage = null;
+
+  cursorX: number = 0;
+  cursorY: number = 0;
 
   constructor(private applicationState: ApplicationState) {
     super();
@@ -143,18 +147,48 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
     }, 30);
   }
 
+  onMouseMove(ev: MouseEvent){
+    const dX = ev.pageX - this.cursorX,
+          dY = ev.pageY - this.cursorY;
+
+    this.cursorX = ev.pageX;
+    this.cursorY = ev.pageY;
+
+    if(ev.buttons === 0)
+      return;
+
+    this.activeAnimation.frames[this.activeFrame].sprites.forEach(s => {
+      if(this.showFlipped){
+        s.flippedOffsetX += dX;
+      }else{
+        s.offsetX += dX;
+      }
+
+      s.offsetY += dY;
+    });
+
+    this.render();
+  }
+
   render(){
     if(!this.activeAnimation || !this.activeAnimation.frames || !this.activeAnimation.frames.length)
       return;
 
     const canvas = this.drawCanvas.nativeElement,
-          ctx    = canvas.getContext('2d'),
-          rect   = canvas.getBoundingClientRect(),
-          w      = rect.right  - rect.left,
-          h      = rect.bottom - rect.top;
+      ctx    = canvas.getContext('2d'),
+      w = 256,
+      h = 256;
 
-    canvas.setAttribute('width', '' + w);
-    canvas.setAttribute('height', '' + h);
+    
+
+    // const canvas = this.drawCanvas.nativeElement,
+    //       ctx    = canvas.getContext('2d'),
+    //       rect   = canvas.getBoundingClientRect(),
+    //       w      = rect.right  - rect.left,
+    //       h      = rect.bottom - rect.top;
+
+    // canvas.setAttribute('width', '' + w);
+    // canvas.setAttribute('height', '' + h);
 
     ctx.fillStyle = this.applicationState.activePalette[0].toCSS();
     ctx.fillRect(0,0,w,h);
@@ -162,8 +196,8 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
     const buffer = ctx.getImageData(0,0,w, h);
     const data = buffer.data;
 
-    const tileScale = this.zoom * 0.08;
-    const pixelScale = this.zoom * 0.01;
+    const tileScale = 8;
+    const pixelScale = 1;
 
     this.activeAnimation.frames[this.activeFrame].sprites.forEach(s => {
       const sw = Math.floor(s.width * tileScale),
@@ -171,15 +205,20 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
 
       for(let x = sw - 1; x >= 0; --x){
         for(let y = sh - 1; y >= 0; --y){
-          const x1 = Math.floor(x + s.offsetX * pixelScale),
-                y1 = Math.floor(y + s.offsetY * pixelScale);
+          const xOffset = (this.showFlipped ? s.flippedOffsetX : s.offsetX) + 128;
+          const yOffset = s.offsetY + 128;
+
+          const x1 = Math.floor(x + xOffset * pixelScale),
+                y1 = Math.floor(y + yOffset * pixelScale);
 
           if(x1 >= w || y1 >= h)
             continue;
 
-          const srcX = Math.floor((x / sw) * (s.width * 8));
+          const srcX = Math.floor((x / sw) * (s.width * 8)),
+                flippedSrcX = (s.width * 8 - 1) - srcX;
+
           const srcY = Math.floor((y / sh) * (s.height * 8));
-          const index = s.getTexel(srcX, srcY);
+          const index = s.getTexel(this.showFlipped ? flippedSrcX : srcX, srcY);
           if(index < 0)
             continue;
             

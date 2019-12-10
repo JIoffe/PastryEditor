@@ -6,7 +6,7 @@ import { BaseSubscriberComponent } from '../base-subscriber.component';
 import { ApplicationState } from 'src/services/application-state';
 import { Color } from 'src/model/color';
 import { PalettizedImage } from 'src/model/palettized-image';
-import { SpriteFrame } from 'src/model/sprite-frame';
+import { SpriteFrame, calcFrameWidth } from 'src/model/sprite-frame';
 import { PositionedSprite } from 'src/model/positioned-sprite';
 
 @Component({
@@ -36,9 +36,13 @@ export class SpriteCutterAssemblerComponent extends BaseSubscriberComponent impl
 
   ok_click(ev: MouseEvent){
     //Time to assemble the frames
+    const framePixelWidth = calcFrameWidth(this.frame);
+
     this.frame.sprites.forEach(s => {
       const w = s.width * 8,
             h = s.height * 8;
+
+      s.flippedOffsetX = framePixelWidth - (s.offsetX + (s.width * 8));
       
       for(let x = w - 1; x >= 0; --x){
         for(let y = h - 1; y >= 0; --y){

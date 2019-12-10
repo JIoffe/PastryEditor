@@ -102,13 +102,20 @@ export class CompiledSprite{
 
                 const nSprites = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
                 for(let k = 0; k < nSprites; ++k){
-                    const offsetY = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16)
+                    //This would not account yet for a "flipped y" offset (maybe future state)
+                    const encodedYOffset = lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0],
+                          offsetY =   FormattingUtils.getSignedByte(encodedYOffset.substr(1));
+
                     const sizeCode = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
                     const tileId = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
-                    const offsetX = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(3), 16)
 
+                    const encodedOffset = lines[i++].match(/\$[0-9a-fA-F]{4}/g)[0];
+                    const offsetX = FormattingUtils.getSignedByte(encodedOffset.substr(3)),
+                          flippedOffsetX = FormattingUtils.getSignedByte(encodedOffset.substr(1,2));
+;
                     const sprite = PositionedSprite.fromSizeCode(sizeCode);
                     sprite.offsetX = offsetX;
+                    sprite.flippedOffsetX = flippedOffsetX
                     sprite.offsetY = offsetY;
 
                     sprite.tiles = tiles.slice(tileId, tileId + (sprite.width * sprite.height));
@@ -188,8 +195,8 @@ export class CompiledSprite{
                     code += `    dc.w $${FormattingUtils.padWord(tileDataSize)}           ; (total tiles in frame * 8) - 1\r\n`;
 
                     f.sprites.forEach(s => {
-                        for(let x = 0; x < s.width; ++x){
-                            for(let y = 0; y < s.height; ++y){
+                        for(let y = 0; y < s.height; ++y){
+                            for(let x = 0; x < s.width; ++x){
                                 const i = x + y * s.width;
                                 const tile = s.tiles[i];
 
@@ -207,8 +214,9 @@ export class CompiledSprite{
 
                 code += `        dc.w $${FormattingUtils.padWord(f.sprites.length - 1)}\r\n`;
 
+                //In the future could encode the "flipped y" offset here in the byte as well
                 f.sprites.forEach((s, k) => {                 
-                    code += `        dc.w $${FormattingUtils.padByte(s.offsetY)}           ; Offset Vertical\r\n`;
+                    code += `        dc.w $00${FormattingUtils.padByte(s.offsetY)}           ; Offset Vertical\r\n`;
                     code += `        dc.w $${FormattingUtils.padByte(s.getMDSize())}00     ; sprite Size\r\n`;
 
                     let index: number = -1;
@@ -226,8 +234,7 @@ export class CompiledSprite{
                     code += `        dc.w $${FormattingUtils.padWord(index)}           ; sprite tile ID\r\n`;
 
                     //Encode separate offsets for flipped and non-flipped varieties
-                    const flippedOffsetX = framePixelWidth - (s.offsetX + (s.width * 8));
-                    code += `        dc.w $${FormattingUtils.padByte(flippedOffsetX)}${FormattingUtils.padByte(s.offsetX)}           ; Offset Horizontal\r\n`;
+                    code += `        dc.w $${FormattingUtils.padByte(s.flippedOffsetX)}${FormattingUtils.padByte(s.offsetX)}           ; Offset Horizontal\r\n`;
                 });
             });
         });

@@ -4,6 +4,8 @@ export class PositionedSprite extends Sprite{
     offsetX: number;
     offsetY: number;
 
+    flippedOffsetX: number;
+
     static fromSizeCode(sizeCode: number){
         if(!(sizeCode & 0x00FF)){
             sizeCode = sizeCode >> 8;

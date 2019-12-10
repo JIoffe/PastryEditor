@@ -34,7 +34,7 @@
     </div>
     <div class="content clear">
         <app-draw-tool-selector></app-draw-tool-selector>
-        <div class="level-cursor" *ngIf="cursorX >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': (40 + cursorDisplayX) + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
+        <div class="level-cursor" *ngIf="cursorX >= 0 && cursorY >= 0" [ngStyle]="{'top': cursorDisplayY + 'px', 'left': (40 + cursorDisplayX) + 'px'}" [ngClass]="{'flipY': this.cursorFlipY, 'flipX': this.cursorFlipX}">
             <div *ngIf="applicationState.levelEditMode === 'tiles' && !!applicationState.activeTile">
                 <img [ngStyle]="{'width': (zoom*0.08) + 'px', 'height': (zoom*0.08) + 'px'}" src="{{applicationState.tileImageData.get(applicationState.activeTile)}}"/>
             </div>
@@ -49,9 +49,9 @@
             <div class="object-icon" [ngStyle]="{'top': (applicationState.activeLevel.playerStart[1] * zoom * 0.08) + 'px', 'left': (applicationState.activeLevel.playerStart[0] * zoom * 0.08) + 'px', 'width': (zoom*0.08) + 'px', 'height': (zoom*0.08)+'px'}" *ngIf="applicationState.activeLevel.mode === 'level'">
                 <img src="/assets/images/player-start.png"/>
             </div>
-            <app-object-renderer *ngFor="let item of applicationState.activeLevel.items" [item]="item" [zoom]="zoom">
-            </app-object-renderer>
-
+            <app-object-renderer *ngFor="let item of applicationState.activeLevel.items" [item]="item" [zoom]="zoom"></app-object-renderer>
+            <!-- Preview item placement -->
+            <app-object-renderer *ngIf="applicationState.levelEditMode === 'place-item' && cursorX >= 0 && cursorY >= 0 && !!applicationState.selectedItemDefinition" [item]="previewItem" [zoom]="zoom" style="z-index: 200;"></app-object-renderer>
             <!-- <div class="object-icon" *ngFor="let item of applicationState.activeLevel.items; index as i" [ngStyle]="{'top': (item.positionY * zoom * 0.01) + 'px', 'left': (item.positionX * zoom * 0.01) + 'px', 'width': (zoom*0.32) + 'px', 'height': (zoom*0.24)+'px'}">
                 <img src="/assets/images/ruby.png"/>
             </div> -->

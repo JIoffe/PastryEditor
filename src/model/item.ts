@@ -34,8 +34,8 @@ export class Item{
 
     toCode(){
         return      `* Item: ${Object.keys(ItemTypes).find(k => ItemTypes[k] === this.type)}\r\n` +
-                    `    dc.w ${FormattingUtils.padByte(this.type)}${FormattingUtils.padByte(this.state)}                    ; type/state TTSS\r\n`  +
-                    `    dc.l ${FormattingUtils.padWord(this.positionY)}${FormattingUtils.padWord(this.positionX)}           ; position YYXX\r\n`;
+                    `   dc.w $${FormattingUtils.padByte(this.type)}${FormattingUtils.padByte(this.state)}               ; type/state TTSS\r\n`  +
+                    `   dc.l $${FormattingUtils.padWord(this.positionY)}${FormattingUtils.padWord(this.positionX)}           ; position YYXX\r\n`;
     }
 
     computeExtents(level: Level){

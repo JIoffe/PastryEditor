@@ -73,7 +73,8 @@ export class Level{
 
         //Add items
         code += `${this.name}_items:\r\n`;
-        code += `   dc.w $${FormattingUtils.padWord(this.items.length)}   \r\n`
+        code += `   dc.w $${FormattingUtils.padWord(this.items.length - 1)}   \r\n`
+        code += this.items.map(item => item.toCode()).join('');
 
         //Here is an idea to sort everything in a presorted list by x position....
         // code += `   dc.w $${FormattingUtils.padWord(this.tiles.length - 1)}   ; items length - 1\r\n`
@@ -87,33 +88,35 @@ export class Level{
         //Item locations are PREDETERMINED by their maximum range.
         //eg. mushrooms can walk back and forth
 
+        //Likewise, here is an idea to preload the level into slices
         //Divide the level into slices of 40 tiles wide.
         //Only ever consider two slices at a time.
-        const slices: number[][] = new Array(Math.ceil(this.width / 40)).fill([]);
+        // const slices: number[][] = new Array(Math.ceil(this.width / 40)).fill([]);
 
-        this.items.forEach((item, i) => {
-            code += item.toCode();
+        // this.items.forEach((item, i) => {
+        //     code += item.toCode();
 
-            //Decide where this goes....
-            const extents = item.computeExtents(this);
-            const start = extents[0] >> 3,
-                  end = extents[1] >> 3;
+        //     //Decide where this goes....
+        //     const extents = item.computeExtents(this);
+        //     const start = Math.floor(extents[0] / 320),
+        //           end = Math.floor(extents[1] / 320);
 
-            for(let j = start; j <= end; ++j){
-                slices[i].push(i);
-            }
-        });
-        code += `${this.name}_items_slices:\r\n`;
-        slices.forEach((s, i) => {
-            code += `   dc.l ${this.name}_items_slices${i}   \r\n`
-        });
-        slices.forEach((s, i) => {
-            code += `${this.name}_items_slices${i}:   \r\n`
-            code += `   dc.w $${FormattingUtils.padWord(s.length)}   ; number of items in slice\r\n`
-            s.forEach(itemRef => {
-                code += `   dc.w $${itemRef}   \r\n`
-            });
-        });
+        //     for(let j = start; j <= end; ++j){
+        //         slices[j].push(i);
+        //     }
+        // });
+
+        // code += `${this.name}_items_slices:\r\n`;
+        // slices.forEach((s, i) => {
+        //     code += `   dc.l ${this.name}_items_slices${i}   \r\n`
+        // });
+        // slices.forEach((s, i) => {
+        //     code += `${this.name}_items_slices${i}:   \r\n`
+        //     code += `   dc.w $${FormattingUtils.padWord(s.length)}   ; number of items in slice\r\n`
+        //     s.forEach(itemRef => {
+        //         code += `   dc.w $${itemRef}   \r\n`
+        //     });
+        // });
             
         return code;
     }
@@ -124,7 +127,7 @@ export class Level{
     }
 
     static manyFromCode(code: string){
-        return code.split(/\*+[\r\n]*/g).filter(l => !!l.length).map(c => this.fromCode(c));
+        return code.split(/^\*+[\r\n]/g).filter(l => !!l.length).map(c => this.fromCode(c));
     }
 
     static fromCode(code: string){
@@ -141,7 +144,7 @@ export class Level{
 
         //Skip over any pointers to level data
         if(lines[i].indexOf('playerstart') >= 0){
-            ++i;
+            i += 2;
         }
 
         const size = lines[i].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
@@ -172,6 +175,24 @@ export class Level{
         const playerPos = lines[i++].match(/[a-f0-9]{8}\s*$/gi)[0].trim();
         level.playerStart[0] = parseInt(playerPos.substr(4), 16) / 8;
         level.playerStart[1] = parseInt(playerPos.substr(0, 4), 16) / 8;
+
+        //Now for items
+        i++;
+        const nItems = parseInt(lines[i++].match(/[a-f0-9]{4}\s*$/gi)[0].trim(), 16) + 1;
+        for(let j = 0; j < nItems; ++j){
+            i++;
+            const typeAndState = lines[i++].match(/[a-f0-9]{4}/gi)[0].trim(),
+                    type = parseInt(typeAndState.substr(0, 2), 16),
+                    state = parseInt(typeAndState.substr(2), 16),
+                    pos = lines[i++].match(/[a-f0-9]{8}/gi)[0].trim();
+            
+            let item = new Item(type);
+            item.positionX = parseInt(pos.substr(4), 16);
+            item.positionY = parseInt(pos.substr(0, 4), 16);
+            item.state = state;
+
+            level.items.push(item)
+        }
 
         return level;
     }

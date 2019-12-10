@@ -23,18 +23,23 @@
                 <label>Show Bounds: <input type="checkbox" [(ngModel)]="showBounds"/></label>
             </span>
             <span>
+                <label>Flipped: <input type="checkbox" [(ngModel)]="showFlipped" (change)="render()"/></label>
+            </span>
+            <!-- <span>
                 Zoom:
                 <input type="range" min="50" max="2500" [(ngModel)]="zoom" (change)="onZoomChange($event)"/>
                 {{zoom | number:'1.0-0'}}%
-            </span>
+            </span> -->
         </div>
         <div class="content">
             <div *ngIf="!!activeAnimation" class="frame-panel">
-                <div class="viewport" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}">
+                <div class="viewport" [ngStyle]="{background: applicationState.activePalette[0].toCSS()}" (mousemove)="onMouseMove($event)">
                     <div *ngIf="showBounds">
-                        <div class="bounds" *ngFor="let s of activeAnimation.frames[activeFrame].sprites" [ngClass]="{'flash': cursorFlash}" [ngStyle]="{'left': (s.offsetX * zoom * 0.01) + 'px', 'top': (s.offsetY * zoom * 0.01) + 'px', 'width': (s.width * zoom * 0.08) + 'px', 'height': (s.height * zoom * 0.08) + 'px'}"></div>
+                        <div class="bounds" *ngFor="let s of activeAnimation.frames[activeFrame].sprites" [ngClass]="{'flash': cursorFlash}" [ngStyle]="{'left': (256 + s.offsetX * zoom * 0.02) + 'px', 'top': (256 + s.offsetY * zoom * 0.02) + 'px', 'width': (s.width * zoom * 0.16) + 'px', 'height': (s.height * zoom * 0.16) + 'px'}"></div>
                     </div>
-                    <canvas #drawCanvas></canvas>
+                    <canvas #drawCanvas width="256" height="256" class="crisp"></canvas>
+                    <div class="origin h"></div>
+                    <div class="origin v"></div>
                 </div>
                 <nav>
                     <div>
