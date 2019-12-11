@@ -27,7 +27,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemHorizontal,
         label: '2 Gems - Horizontal',
-        defaultState: 0b00000011,
+        defaultState: 0b11000000,
         width: ItemDimensions.GemWidth + ItemDimensions.GemSpacingH * 1,
         height: ItemDimensions.GemHeight
     },
@@ -35,7 +35,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemHorizontal,
         label: '3 Gems - Horizontal',
-        defaultState: 0b00000111,
+        defaultState: 0b11100000,
         width: ItemDimensions.GemWidth + ItemDimensions.GemSpacingH * 2,
         height: ItemDimensions.GemHeight
     },
@@ -43,7 +43,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemHorizontal,
         label: '4 Gems - Horizontal',
-        defaultState: 0b00001111,
+        defaultState: 0b11110000,
         width: ItemDimensions.GemWidth + ItemDimensions.GemSpacingH * 3,
         height: ItemDimensions.GemHeight
     },
@@ -51,7 +51,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemHorizontal,
         label: '5 Gems - Horizontal',
-        defaultState: 0b00011111,
+        defaultState: 0b11111000,
         width: ItemDimensions.GemWidth + ItemDimensions.GemSpacingH * 4,
         height: ItemDimensions.GemHeight
     },
@@ -59,7 +59,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemHorizontal,
         label: '6 Gems - Horizontal',
-        defaultState: 0b00111111,
+        defaultState: 0b11111100,
         width: ItemDimensions.GemWidth + ItemDimensions.GemSpacingH * 5,
         height: ItemDimensions.GemHeight
     },
@@ -67,7 +67,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemHorizontal,
         label: '7 Gems - Horizontal',
-        defaultState: 0b01111111,
+        defaultState: 0b11111110,
         width: ItemDimensions.GemWidth + ItemDimensions.GemSpacingH * 6,
         height: ItemDimensions.GemHeight
     },
@@ -83,7 +83,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemVertical,
         label: '2 Gems - Vertical',
-        defaultState: 0b00000011,
+        defaultState: 0b11000000,
         width: ItemDimensions.GemWidth,
         height: ItemDimensions.GemHeight + ItemDimensions.GemSpacingV * 1
     },
@@ -91,7 +91,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemVertical,
         label: '3 Gems - Vertical',
-        defaultState: 0b00000111,
+        defaultState: 0b11100000,
         width: ItemDimensions.GemWidth,
         height: ItemDimensions.GemHeight + ItemDimensions.GemSpacingV * 2
     },
@@ -99,7 +99,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemVertical,
         label: '4 Gems - Vertical',
-        defaultState: 0b00001111,
+        defaultState: 0b11110000,
         width: ItemDimensions.GemWidth,
         height: ItemDimensions.GemHeight + ItemDimensions.GemSpacingV * 3
     },
@@ -107,7 +107,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemVertical,
         label: '5 Gems - Vertical',
-        defaultState: 0b00011111,
+        defaultState: 0b11111000,
         width: ItemDimensions.GemWidth,
         height: ItemDimensions.GemHeight + ItemDimensions.GemSpacingV * 4
     },
@@ -115,7 +115,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemVertical,
         label: '6 Gems - Vertical',
-        defaultState: 0b00111111,
+        defaultState: 0b11111100,
         width: ItemDimensions.GemWidth,
         height: ItemDimensions.GemHeight + ItemDimensions.GemSpacingV * 5
     },
@@ -123,7 +123,7 @@ export const Gems: ItemDefinition[] = [
     {
         type: ItemTypes.GemVertical,
         label: '7 Gems - Vertical',
-        defaultState: 0b01111111,
+        defaultState: 0b11111110,
         width: ItemDimensions.GemWidth,
         height: ItemDimensions.GemHeight + ItemDimensions.GemSpacingV * 6
     },

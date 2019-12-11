@@ -31,7 +31,7 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
     switch(this.item.type){
       case ItemTypes.GemHorizontal:
         for(let i = 0; i <= 8; ++i){
-          if(this.item.state & (Math.pow(2, i))){
+          if(this.item.state & (Math.pow(2, 7 - i))){
             this.imgs.push({
               src: '/assets/images/ruby.png',
               x: this.zoom * i * 0.01 * ItemDimensions.GemSpacingH,
@@ -43,8 +43,8 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
         }
         return;
       case ItemTypes.GemVertical:
-        for(let i = 0; i < 7; ++i){
-          if(this.item.state & (Math.pow(2, i))){
+        for(let i = 0; i < 8; ++i){
+          if(this.item.state & (Math.pow(2, 7 - i))){
             this.imgs.push({
               src: '/assets/images/ruby.png',
               x: 0,
