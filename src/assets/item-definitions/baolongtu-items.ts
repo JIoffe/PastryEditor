@@ -141,7 +141,7 @@ export const Enemies = [
     {
         type: ItemTypes.MogurenEnemy,
         label: 'Moguren - Mushroom Man',
-        defaultState: 0,
+        defaultState: 6,
         width: ItemDimensions.MogurenWidth,
         height: ItemDimensions.MogurenHeight
     }
