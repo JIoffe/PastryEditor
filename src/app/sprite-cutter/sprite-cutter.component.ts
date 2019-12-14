@@ -260,7 +260,7 @@ export class SpriteCutterComponent extends BaseSubscriberComponent implements On
     if(!this.applicationState.activeCompiledSprite)
       return;
 
-    this.code = this.applicationState.activeCompiledSprite.toCode();
+    this.code = this.applicationState.activeCompiledSprite.toCode(this.applicationState);
   }
 
   onCodeChanged(code: string){

@@ -32,14 +32,14 @@ export class SpriteCutterLibraryComponent extends BaseSubscriberComponent {
   }
 
   code_onClick(ev: MouseEvent){
-    this.code = CompiledSprite.manyToCode(this.applicationState.compiledSprites);
+    this.code = CompiledSprite.manyToCode(this.applicationState.compiledSprites, this.applicationState);
   }
 
   onCodeChanged(code: string){
 
     if(!!code){
       this.applicationState.removeCompiledSprites(...this.applicationState.compiledSprites);
-      const compiledSprites = CompiledSprite.manyFromCode(code);
+      const compiledSprites = CompiledSprite.manyFromCode(code, this.applicationState);
       this.applicationState.addCompiledSprites(...compiledSprites);
     }
 

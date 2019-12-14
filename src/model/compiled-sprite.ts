@@ -41,13 +41,13 @@ export class CompiledSprite{
             .reduce((p, c) => p.concat(c), [])
     }
 
-    static manyToCode(compiledSprites: CompiledSprite[]){
-        return compiledSprites.map(s => s.toCode())
+    static manyToCode(compiledSprites: CompiledSprite[], applicationState? :ApplicationState){
+        return compiledSprites.map(s => s.toCode(applicationState))
             .reduce((p,c) => p + c + SPRITE_SEPARATOR, '');
     }
 
-    static manyFromCode(code: string){
-        return code.split(/^\*+[\r\n]$/g).filter(l => !!l.length).map(c => CompiledSprite.fromCode(c));
+    static manyFromCode(code: string, applicationState?: ApplicationState){
+        return code.split(/^\*+[\r\n]$/g).filter(l => !!l.length).map(c => CompiledSprite.fromCode(c, applicationState));
     }
 
     static fromCode(code: string, applicationState?: ApplicationState): CompiledSprite{
@@ -107,7 +107,11 @@ export class CompiledSprite{
                           offsetY =   FormattingUtils.getSignedByte(encodedYOffset.substr(1));
 
                     const sizeCode = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
-                    const tileId = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
+                    let tileId = parseInt(lines[i++].match(/\$[0-9a-fA-F]{2,4}/g)[0].substr(1), 16);
+
+                    if(!compiledSprite.embedded){
+                        tileId -= 1;
+                    }
 
                     const encodedOffset = lines[i++].match(/\$[0-9a-fA-F]{4}/g)[0];
                     const offsetX = FormattingUtils.getSignedByte(encodedOffset.substr(3)),
@@ -220,8 +224,8 @@ export class CompiledSprite{
                     code += `        dc.w $${FormattingUtils.padByte(s.getMDSize())}00     ; sprite Size\r\n`;
 
                     let index: number = -1;
-                    if(!!applicationState){
-                        index = applicationState.tiles.indexOf(s.tiles[0]);
+                    if(!!applicationState && !this.embedded){
+                        index = applicationState.tiles.indexOf(s.tiles[0]) + 1;
                     }
 
                     if(index === -1){

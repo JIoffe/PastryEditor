@@ -3,7 +3,8 @@ import { ItemDefinition } from 'src/model/item-definition'
 export const ItemTypes = {
     GemHorizontal: 0,
     GemVertical: 1,
-    MogurenEnemy: 2
+    MogurenEnemy: 2,
+    ChickenEnemy: 3,
 }
 
 export const ItemDimensions = {
@@ -12,7 +13,9 @@ export const ItemDimensions = {
     GemWidth: 16,
     GemHeight: 12,
     MogurenWidth: 32,
-    MogurenHeight: 40
+    MogurenHeight: 40,
+    ChickenWidth: 27,
+    ChickenHeight: 24
 }
 
 export const Gems: ItemDefinition[] = [
@@ -144,7 +147,14 @@ export const Enemies = [
         defaultState: 6,
         width: ItemDimensions.MogurenWidth,
         height: ItemDimensions.MogurenHeight
-    }
+    },
+    {
+        type: ItemTypes.ChickenEnemy,
+        label: 'Chicken',
+        defaultState: 6,
+        width: ItemDimensions.ChickenWidth,
+        height: ItemDimensions.ChickenHeight
+    },
 ];
 
 export const Items = [].concat(Gems,Enemies);

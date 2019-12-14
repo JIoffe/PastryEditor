@@ -64,6 +64,15 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
           height: this.zoom * 0.01 * ItemDimensions.MogurenHeight
         });
         return;
+      case ItemTypes.ChickenEnemy:
+        this.imgs.push({
+          src: '/assets/images/chicken.png',
+          x: 0,
+          y: 0,
+          width: this.zoom * 0.01 * ItemDimensions.ChickenWidth,
+          height: this.zoom * 0.01 * ItemDimensions.ChickenHeight
+        });
+        return;
       default:
         return;
     }
