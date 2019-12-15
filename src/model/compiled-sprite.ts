@@ -47,7 +47,7 @@ export class CompiledSprite{
     }
 
     static manyFromCode(code: string, applicationState?: ApplicationState){
-        return code.split(/^\*+[\r\n]$/g).filter(l => !!l.length).map(c => CompiledSprite.fromCode(c, applicationState));
+        return code.split(/\*+[\r\n$]/g).filter(l => !!l.length).map(c => CompiledSprite.fromCode(c, applicationState));
     }
 
     static fromCode(code: string, applicationState?: ApplicationState): CompiledSprite{
@@ -68,7 +68,7 @@ export class CompiledSprite{
                 frames: []
             };
             
-
+            
             const nFrames = parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1;
             //skip over for the number of frames (array of pointers)
             i += nFrames;

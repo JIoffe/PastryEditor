@@ -82,7 +82,7 @@ export class SpriteLibraryComponent extends BaseSubscriberComponent implements O
       }
 
       code += `${name}:\r\n`;
-      code += `   dc.b $0${sprite.getMDSize().toString(16).toUpperCase()}\r\n`
+      code += `   dc.w $0${sprite.getMDSize().toString(16).toUpperCase()}00\r\n`
       code += `   dc.w $${indexWord}\r\n`;
       code += '\r\n';
 
