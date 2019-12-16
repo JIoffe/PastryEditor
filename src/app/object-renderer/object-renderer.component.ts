@@ -73,6 +73,15 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
           height: this.zoom * 0.01 * ItemDimensions.ChickenHeight
         });
         return;
+      case ItemTypes.ChipmunkEnemy:
+        this.imgs.push({
+          src: '/assets/images/chipmunk.png',
+          x: 0,
+          y: 0,
+          width: this.zoom * 0.01 * ItemDimensions.ChipmunkWidth,
+          height: this.zoom * 0.01 * ItemDimensions.ChipmunkHeight
+        });
+        return;
       default:
         return;
     }

@@ -5,6 +5,7 @@ export const ItemTypes = {
     GemVertical: 1,
     MogurenEnemy: 2,
     ChickenEnemy: 3,
+    ChipmunkEnemy: 4,
 }
 
 export const ItemDimensions = {
@@ -15,7 +16,9 @@ export const ItemDimensions = {
     MogurenWidth: 32,
     MogurenHeight: 40,
     ChickenWidth: 27,
-    ChickenHeight: 24
+    ChickenHeight: 24,
+    ChipmunkWidth: 45,
+    ChipmunkHeight: 46
 }
 
 export const Gems: ItemDefinition[] = [
@@ -154,6 +157,13 @@ export const Enemies = [
         defaultState: 6,
         width: ItemDimensions.ChickenWidth,
         height: ItemDimensions.ChickenHeight
+    },
+    {
+        type: ItemTypes.ChipmunkEnemy,
+        label: 'Chipmunk',
+        defaultState: 6,
+        width: ItemDimensions.ChipmunkWidth,
+        height: ItemDimensions.ChipmunkHeight
     },
 ];
 
