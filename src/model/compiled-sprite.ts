@@ -80,7 +80,7 @@ export class CompiledSprite{
 
                 if(compiledSprite.embedded){
                     //Get tiles
-                    const nTiles = (parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) + 1) / 8;
+                    const nTiles = (parseInt(lines[i++].match(/[0-9a-fA-F]{4}/g)[0], 16) >> 4);
                     tiles = new Array(nTiles);
                     for(let k = 0; k < nTiles; ++k){
                         let tileData = lines[i++].match(/[0-9a-fA-F]{8}/g)
@@ -195,8 +195,9 @@ export class CompiledSprite{
 
                 //Actual tile data for the frame
                 if(this.embedded){
-                    const tileDataSize = (f.sprites.map(s => s.tiles.length).reduce((p,c) => p + c, 0) * 8) - 1;
-                    code += `    dc.w $${FormattingUtils.padWord(tileDataSize)}           ; (total tiles in frame * 8) - 1\r\n`;
+                    //To help with DMA, store the total length of the tiles * 16 (the byte size / 2)
+                    const tileDataSize = (f.sprites.map(s => s.tiles.length).reduce((p,c) => p + c, 0) << 4);
+                    code += `    dc.w $${FormattingUtils.padWord(tileDataSize)}           ; (total byte size of tiles / 2)\r\n`;
 
                     f.sprites.forEach(s => {
                         for(let y = 0; y < s.height; ++y){

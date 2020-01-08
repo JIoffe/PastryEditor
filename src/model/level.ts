@@ -42,6 +42,9 @@ export class Level{
         this.width = src.width;
         this.height = src.height;
         this.tiles = src.tiles;
+        this.playerStart = src.playerStart;
+        this.items = src.items;
+        this.mode = src.mode;
     }
 
     toCode(){
@@ -127,7 +130,7 @@ export class Level{
     }
 
     static manyFromCode(code: string){
-        return code.split(/^\*+[\r\n]/g).filter(l => !!l.length).map(c => this.fromCode(c));
+        return code.split(/\*+[\r\n]/g).filter(l => !!l.length).map(c => this.fromCode(c));
     }
 
     static fromCode(code: string){
@@ -179,6 +182,7 @@ export class Level{
         //Now for items
         i++;
         const nItems = parseInt(lines[i++].match(/[a-f0-9]{4}\s*$/gi)[0].trim(), 16) + 1;
+        console.log('FOUND '  + nItems + ' items')
         for(let j = 0; j < nItems; ++j){
             i++;
             const typeAndState = lines[i++].match(/[a-f0-9]{4}/gi)[0].trim(),
@@ -193,6 +197,8 @@ export class Level{
 
             level.items.push(item)
         }
+
+        console.log(level);
 
         return level;
     }
