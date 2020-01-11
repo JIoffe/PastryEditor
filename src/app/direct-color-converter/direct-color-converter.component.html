@@ -1,0 +1,23 @@
+<main class="pastry-grid-1col" (paste)="onImagePaste($event)">
+    <div>
+        <div class="control-group">
+            <div class="caption">Image to Direct Color</div>
+            <div class="content">
+                <table>
+                    <tr>
+                        <th>Image</th><th>VDP Colors</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img #image (load)="reprocessImage()" [hidden]="selectedImage === null" src="{{selectedImage}}" crossorigin="anonymous"/>
+                        </td>
+                        <td>
+                            <textarea rows="16" cols="80" class="code" [(ngModel)]="code"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tool-status"></div>
+        </div>
+    </div>
+</main>

@@ -45,6 +45,7 @@ import { TileCollisionEditorComponent } from './tile-collision-editor/tile-colli
 import { TileHeightmapRendererComponent } from './tile-heightmap-renderer/tile-heightmap-renderer.component';
 import { ObjectRendererComponent } from './object-renderer/object-renderer.component';
 import { SumPipe } from 'src/pipes/sum-array-pipe';
+import { DirectColorConverterComponent } from './direct-color-converter/direct-color-converter.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -57,6 +58,7 @@ const appRoutes: Routes = [
   { path: 'vdp', component: VdpPageComponent},
   { path: 'memmap', component: MemoryMapComponent },
   { path: 'sprite-cutter', component: SpriteCutterPageComponent },
+  { path: 'direct-color', component: DirectColorConverterComponent },
   { path: '**', component: TilePageComponent }
 ];
 
@@ -102,7 +104,8 @@ const appRoutes: Routes = [
     TileCollisionPageComponent,
     TileCollisionEditorComponent,
     TileHeightmapRendererComponent,
-    ObjectRendererComponent
+    ObjectRendererComponent,
+    DirectColorConverterComponent
   ],
   imports: [
     RouterModule.forRoot(

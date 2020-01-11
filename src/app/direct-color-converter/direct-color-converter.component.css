@@ -1,0 +1,9 @@
+.control-group{
+    height: calc(100% - 28px);
+    width: 1280px;
+}
+
+table img{
+    width: 200px;
+    height: 200px;
+}
