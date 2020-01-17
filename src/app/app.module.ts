@@ -46,6 +46,7 @@ import { TileHeightmapRendererComponent } from './tile-heightmap-renderer/tile-h
 import { ObjectRendererComponent } from './object-renderer/object-renderer.component';
 import { SumPipe } from 'src/pipes/sum-array-pipe';
 import { DirectColorConverterComponent } from './direct-color-converter/direct-color-converter.component';
+import { SpawnEventEditorComponent } from './spawn-event-editor/spawn-event-editor.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -59,6 +60,7 @@ const appRoutes: Routes = [
   { path: 'memmap', component: MemoryMapComponent },
   { path: 'sprite-cutter', component: SpriteCutterPageComponent },
   { path: 'direct-color', component: DirectColorConverterComponent },
+  { path: 'spawn-events', component: SpawnEventEditorComponent },
   { path: '**', component: TilePageComponent }
 ];
 
@@ -105,7 +107,8 @@ const appRoutes: Routes = [
     TileCollisionEditorComponent,
     TileHeightmapRendererComponent,
     ObjectRendererComponent,
-    DirectColorConverterComponent
+    DirectColorConverterComponent,
+    SpawnEventEditorComponent
   ],
   imports: [
     RouterModule.forRoot(

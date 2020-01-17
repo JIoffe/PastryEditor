@@ -1,0 +1,45 @@
+<main class="pastry-grid-1col" (paste)="onImagePaste($event)">
+    <div>
+        <div class="control-group toolbar">
+            <div class="caption">Event To Spawn</div>
+            <div class="content">
+                <label>Event Type: <input type="number" [(ngModel)]="cursorEventType"/></label>
+            </div>
+            <div class="tool-status"></div>
+        </div>
+
+        <div class="control-group main">
+            <div class="caption">Spawn Events<button class="btn-code" (click)="code_onClick($event)">Edit Code</button></div>
+            <div class="content scroll-y">
+                <div class="controls">
+                    <label>
+                        Length of Timeline:&nbsp;
+                        <input type="number" [(ngModel)]="timelineLength"/>
+                    </label>
+                    <label>
+                        Length of Timeline:&nbsp;
+                        <input type="number" [(ngModel)]="timelineInterval"/>
+                    </label>
+                </div>
+
+                <div class="timeline">
+                    <div *ngFor="let keyframe of timeline; index as i">
+                        <div class="keyframe" *ngIf="i % timelineInterval === 0">
+                            <span class="frame">{{i}}</span>
+                            <div class="preview" (click)="keyframeOnClick($event, keyframe)" (mousemove)="keyframeOnHover($event, keyframe)">
+                                <div class="divider div-25"></div>
+                                <div class="divider div-50"></div>
+                                <div class="divider div-75"></div>
+                                <div *ngIf="keyframe === previewKeyframe" class="spawn no-select" [ngStyle]="{left: cursorX + 'px'}">{{cursorEventType}}</div>
+                                <div *ngFor="let spawn of keyframe; index as j" class="spawn no-select" [ngStyle]="{left: spawn.position + 'px'}">{{spawn.type}}</div>
+                            </div>
+                            <button (click)="clearKeyframe(keyframe)">CLEAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tool-status">Cursor: {{cursorX}}</div>
+        </div>
+    </div>
+</main>
+<app-code-editor *ngIf="code !== null" [code]="code" (codeChanged)="onCodeChanged($event)"></app-code-editor>
