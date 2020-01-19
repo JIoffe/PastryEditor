@@ -82,6 +82,15 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
           height: this.zoom * 0.01 * ItemDimensions.ChipmunkHeight
         });
         return;
+      case ItemTypes.GoalFlag:
+        this.imgs.push({
+          src: '/assets/images/goalflag.png',
+          x: 0,
+          y: 0,
+          width: this.zoom * 0.01 * ItemDimensions.GoalFlagWidth,
+          height: this.zoom * 0.01 * ItemDimensions.GoalFlagHeight
+        });
+        return;
       default:
         return;
     }

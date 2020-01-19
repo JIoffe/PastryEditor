@@ -6,6 +6,7 @@ export const ItemTypes = {
     MogurenEnemy: 2,
     ChickenEnemy: 3,
     ChipmunkEnemy: 4,
+    GoalFlag: 5
 }
 
 export const ItemDimensions = {
@@ -18,7 +19,9 @@ export const ItemDimensions = {
     ChickenWidth: 27,
     ChickenHeight: 24,
     ChipmunkWidth: 45,
-    ChipmunkHeight: 46
+    ChipmunkHeight: 46,
+    GoalFlagWidth: 32,
+    GoalFlagHeight: 72
 }
 
 export const Gems: ItemDefinition[] = [
@@ -167,4 +170,14 @@ export const Enemies = [
     },
 ];
 
-export const Items = [].concat(Gems,Enemies);
+export const Checkpoints = [
+    {
+        type: ItemTypes.GoalFlag,
+        label: 'Goal Flag',
+        defaultState: 0,
+        width: ItemDimensions.GoalFlagWidth,
+        height: ItemDimensions.GoalFlagHeight
+    }
+];
+
+export const Items = [].concat(Gems,Checkpoints,Enemies);
