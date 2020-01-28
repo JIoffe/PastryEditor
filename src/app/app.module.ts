@@ -47,6 +47,7 @@ import { ObjectRendererComponent } from './object-renderer/object-renderer.compo
 import { SumPipe } from 'src/pipes/sum-array-pipe';
 import { DirectColorConverterComponent } from './direct-color-converter/direct-color-converter.component';
 import { SpawnEventEditorComponent } from './spawn-event-editor/spawn-event-editor.component';
+import { MelodySequencerComponent } from './melody-sequencer/melody-sequencer.component';
 
 const appRoutes: Routes = [
   { path: 'edit-tiles', component: TilePageComponent },
@@ -61,6 +62,7 @@ const appRoutes: Routes = [
   { path: 'sprite-cutter', component: SpriteCutterPageComponent },
   { path: 'direct-color', component: DirectColorConverterComponent },
   { path: 'spawn-events', component: SpawnEventEditorComponent },
+  { path: 'melody-sequencer', component: MelodySequencerComponent},
   { path: '**', component: TilePageComponent }
 ];
 
@@ -108,7 +110,8 @@ const appRoutes: Routes = [
     TileHeightmapRendererComponent,
     ObjectRendererComponent,
     DirectColorConverterComponent,
-    SpawnEventEditorComponent
+    SpawnEventEditorComponent,
+    MelodySequencerComponent
   ],
   imports: [
     RouterModule.forRoot(

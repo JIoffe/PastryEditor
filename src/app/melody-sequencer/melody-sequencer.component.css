@@ -1,0 +1,112 @@
+.control-group{
+    height: calc(100% - 28px);
+    width: calc(100vw - 28px);
+}
+
+.sequencer-row .note-name {
+    background: white;
+    padding: 2px;
+    display: block;
+    width: 100px;
+    position: relative;
+}
+
+.sequencer-row:hover{
+    background: rgba(255,0,0,0.5);
+}
+
+.sequencer-row:hover .note-name{
+    box-shadow: inset 0 0 3px 5px #F00;
+}
+
+.sequencer-row {
+    height: 24px;
+    border-bottom: 1px solid black;
+
+    width: 100%;
+    z-index: 2;
+    position: relative;
+    background: none;
+}
+
+.sequencer-row .note-name.black {
+    background: #111;
+    color: #FFF;
+}
+
+.sequencer-table {
+    position: absolute;
+    width: calc(100% - 100px);
+    height: 1248px;
+    background: #227;
+    top: 0;
+    left: 100px;
+}
+
+.measure {
+    width: 256px;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    top: 0;
+}
+
+.measure .eigth {
+    border-right: 1px solid black;
+    height: 100%;
+    width: 50%;
+}
+
+.measure .measure-number {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #000;
+    right: 0;
+    border-right: 1px solid #FFF;
+    color: #FFF;
+    padding-left: 20px;
+    font-family: sans-serif;
+}
+
+.measure > div {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    background: #227;
+}
+
+.measure > div.alt {
+    background: #AAD;
+}
+
+.melody-note-node{
+    position: absolute;
+    height: 100%;
+    width: 32px;
+}
+.melody-note {
+    position: absolute;
+    width: 32px;
+    height: 24px;
+    top: 0;
+    left: 0;
+    background: red;
+    border-radius: 4px;
+    box-shadow: inset 0 0 5px;
+    padding: 3px;
+    text-align: center;
+    color: #FFF;
+    text-shadow: 0 0 4px #000;
+}
+
+.tracker-thumb {
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    background: #8F8;
+    box-shadow: 0 0 4px green;
+    top: 0;
+    z-index: 4;
+}

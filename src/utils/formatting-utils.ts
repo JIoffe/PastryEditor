@@ -41,4 +41,8 @@ export namespace FormattingUtils{
 
         return value;
     }
+
+    export function padByteBinary(value: number){
+        return padLeft(value.toString(2), '0', 8);
+    }
 }

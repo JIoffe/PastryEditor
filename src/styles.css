@@ -275,6 +275,9 @@ h1, h2, h3, h4,h5,h6, .tab-group {
 .scroll-y{
     overflow-y: scroll;
 }
+.scroll-x{
+    overflow-x: scroll;
+}
 .scroll-xy, .scroll{
     overflow: scroll;
 }
