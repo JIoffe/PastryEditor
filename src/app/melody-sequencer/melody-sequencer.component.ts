@@ -215,7 +215,7 @@ const notes = [
 
 interface MelodyNote{
   startTime: number,
-  //length: number,
+  length: number,
   channels: Int32Array,
   channelVolumes: Int32Array
 }
@@ -259,12 +259,19 @@ export class MelodySequencerComponent implements OnInit {
 
   trackerPos: number = -1;
 
+  activeNote: MelodyNote = null;
+
+  channelOscillators: any[];
+
+  channelsToPlay: boolean[] = [true,true,true,true];
+
   get measuresRange(){
     return new Array(this.measuresToShow);
   }
 
   channelSelection: number = 0;
   noteVolumeSelection: number =  0xF;
+  noteLengthSelection: number = 1;
 
   playMelodyInterval: any = null;
 
@@ -301,6 +308,25 @@ export class MelodySequencerComponent implements OnInit {
     }, 250);
   }
 
+  stopMelody(){
+    if(!!this.playMelodyInterval){
+      clearTimeout(this.playMelodyInterval);
+    }
+
+    if(!!this.channelOscillators){
+      this.channelOscillators.forEach(o => stopOscillator(o[0]));
+
+      this.channelOscillators[0][0].disconnect();
+      this.channelOscillators[1][0].disconnect();
+      this.channelOscillators[2][0].disconnect();
+
+      this.channelOscillators = null;
+    }
+
+    this.activeNote = null;
+    this.trackerPos = -1;
+  }
+
   playMelody(){
     if(!!this.playMelodyInterval){
       clearTimeout(this.playMelodyInterval);
@@ -310,42 +336,53 @@ export class MelodySequencerComponent implements OnInit {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const ctx = new AudioContext();
 
-    var channelOscillators = [
+    this.channelOscillators = [
       this.createSquareWaveOscillator(ctx),this.createSquareWaveOscillator(ctx),this.createSquareWaveOscillator(ctx)
     ];
+    var channelOscillators = this.channelOscillators;
 
     channelOscillators.forEach(o => {
       o[1].gain.value = 0;
       startOscillator(o[0]);
     });
 
+    let tempoAccumulator = 0;
+    let trackerTime = 0;
+
     this.trackerPos = 0;
     const _this = this;
     (function playMelodyLoop(){
-      const nextNote = _this.melody.find(n => Math.floor(n.startTime * (60/_this.tempo)) === _this.trackerPos);
-      if(!!nextNote){
+      _this.activeNote = _this.melody.find(n => {
+        let trackerPosStart = _this.trackerPos >> 5;
+        return n.startTime <= trackerPosStart && (n.startTime + n.length) > trackerPosStart;
+      });
+      if(!!_this.activeNote){
         for(let i = 0; i < 3; ++i){
-          if(nextNote.channels[i] > -1){
-            channelOscillators[i][0].frequency.value = notes[nextNote.channels[i]].freq;
-            channelOscillators[i][1].gain.value = nextNote.channelVolumes[i] / 15;
+          if(_this.activeNote.channels[i] > -1 && _this.channelsToPlay[i]){
+            channelOscillators[i][0].frequency.value = notes[_this.activeNote.channels[i]].freq;
+            channelOscillators[i][1].gain.value = _this.activeNote.channelVolumes[i] / 15;
           }else{
             channelOscillators[i][1].gain.value = 0;
           }
-        }
+        }      
       }else{
-        const futureNote = _this.melody.find(n => Math.floor(n.startTime * (60/_this.tempo)) > _this.trackerPos);
-        if(!futureNote){
-          channelOscillators.forEach(o => stopOscillator(o[0]));
-
-          channelOscillators[0][0].disconnect();
-          channelOscillators[1][0].disconnect();
-          channelOscillators[2][0].disconnect();
-          _this.trackerPos = -1;
-          return;
-        }
+        for(let i = 0; i < 3; ++i){
+          channelOscillators[i][1].gain.value = 0;
+        }      
       }
 
-      _this.trackerPos++;
+
+      //Adjust for tempo
+      //8th note duration = 60000 / (2*_this.tempo);
+      let pixelDuration = 60000 / (_this.tempo << 6);
+      _this.trackerPos += 32 / pixelDuration;
+      
+
+      // tempoAccumulator += (_this.tempo >> 2);
+      // if(tempoAccumulator > 0xFF){
+      //   tempoAccumulator = tempoAccumulator - 0xFF;
+      //   trackerTime++;
+      // }
       _this.playMelodyInterval = setTimeout(playMelodyLoop, 32);
     })();
   }
@@ -353,6 +390,7 @@ export class MelodySequencerComponent implements OnInit {
   //Returns a 10-bit value to feed the PSG
   getPSGFreqConversion(freq, channel){
     let value = Math.floor(3580000 /(32*freq));
+
     if(channel === 3)
       return `%${FormattingUtils.padByteBinary(0b11100000|(value&0b00001111))}`;
 
@@ -362,17 +400,18 @@ export class MelodySequencerComponent implements OnInit {
 
   copyMeasures(){
     let nodesToCopy: MelodyNote[] = this.melody.filter(node => {
-      let measure = Math.floor(node.startTime / 256);
+      let measure = Math.floor(node.startTime / 8);
       return measure >= this.measureCopyStart && measure <= this.measureCopyEnd;
     });
 
     // let offset = this.melody.map(n => n.startTime).reduce((p,c) => Math.max(p, c), 0);
     // offset += 256 - (offset % 256);
-    let offset = 256 * (this.measureCopyDest - this.measureCopyStart);
+    let offset = 8 * (this.measureCopyDest - this.measureCopyStart);
 
     nodesToCopy = nodesToCopy.map(n => {
       return {
         startTime: n.startTime + offset,
+        length: n.length,
         channelVolumes: new Int32Array(n.channelVolumes),
         channels: new Int32Array(n.channels)
       }
@@ -390,13 +429,13 @@ export class MelodySequencerComponent implements OnInit {
     let noteIndex = Math.min(notes.length-1,Math.floor((ev.pageY - tableRect.top) / 24));
     const note = notes[noteIndex];
 
-    let startTime = Math.floor(ev.pageX - tableRect.left);
-    startTime -= startTime & 31;
-
+    let startTime = Math.floor((ev.pageX - tableRect.left) >> 5);
+    
     let entry: MelodyNote = this.melody.find(m => m.startTime === startTime);
     if(!entry){
       entry = {
         startTime: startTime,
+        length: this.noteLengthSelection,
         channels: new Int32Array(4).fill(-1),
         channelVolumes: new Int32Array(4).fill(0)
       }
@@ -429,6 +468,22 @@ export class MelodySequencerComponent implements OnInit {
       .filter(n => n.channels[0] >= 0 || n.channels[1] >= 0 || n.channels[2] >= 0 || n.channels[3] >= 0)
       .sort((a,b) => a.startTime-b.startTime);
 
+    if(melodyToExport.length === 0){
+      this.code = code;
+      return;
+    }
+
+    //A bit silly, but insert a rest at the end of the last measure
+    const lastNote = melodyToExport[melodyToExport.length - 1];
+    const restStart = (((lastNote.startTime >> 3) + 1) << 3);
+
+    melodyToExport.push({
+      startTime: restStart,
+      channelVolumes: new Int32Array([0,0,0,0]),
+      length: 0,
+      channels: new Int32Array(lastNote.channels)
+    })
+
     melodyToExport.forEach((node, i) => {
       const channelVolumes = [
         
@@ -439,7 +494,7 @@ export class MelodySequencerComponent implements OnInit {
       ];
 
       //const startTime = Math.floor((node.startTime)*(60/this.tempo)) || 1;
-      const startTime = Math.floor( (i === 0 ? node.startTime : node.startTime - melodyToExport[i-1].startTime) * (60/this.tempo)) || 1;
+      const startTime = i === 0 ? node.startTime : node.startTime - melodyToExport[i-1].startTime;
 
       const channelFrequencies = [
         this.getPSGFreqConversion((notes[node.channels[0]]||notes[0]).freq, 0),
@@ -447,12 +502,12 @@ export class MelodySequencerComponent implements OnInit {
         this.getPSGFreqConversion((notes[node.channels[2]]||notes[0]).freq, 2),
         this.getPSGFreqConversion((notes[node.channels[3]]||notes[0]).freq, 3)
       ]
-      code += ` db  ${startTime},${channelVolumes[0]},${channelVolumes[1]},${channelVolumes[2]},${channelVolumes[3]}\r\n`+
+      code += ` db  ${startTime},${node.length},${channelVolumes[0]},${channelVolumes[1]},${channelVolumes[2]},${channelVolumes[3]}\r\n`+
               ` db    ${channelFrequencies[0]},${channelFrequencies[1]},${channelFrequencies[2]},${channelFrequencies[3]}\r\n`
 
     });
 
-    code +=   ' db  0\r\n';
+    code +=   ' db  0 ;END\r\n';
 
     this.code = code;
   }
@@ -467,7 +522,7 @@ export class MelodySequencerComponent implements OnInit {
       let i = 1;
       let offset = 0;
       while(i < lines.length){
-        if(lines[i].trim()[0] === '0')
+        if(lines[i].indexOf(';END') >= 0)
           break;
 
         if(!lines[i].trim().length){
@@ -477,54 +532,55 @@ export class MelodySequencerComponent implements OnInit {
         
         let timingAndVolumes = lines[i++].split(/[,\r\n]/g);
         let timing = +timingAndVolumes[0].trim();
-        if(timing === 1)
-          timing = 0;
 
         let startTime = timing + offset;
         offset += timing;
 
-        startTime /= (60/this.tempo);
-
-        let r = startTime & 31;
-        if(r < 16){
-          startTime -= r;
-        }else{
-          startTime += 32 - r;
-        }
-
-
-
-
         let channelVolumes = [
-          15 - parseInt(timingAndVolumes[1].substr(5), 2),
           15 - parseInt(timingAndVolumes[2].substr(5), 2),
           15 - parseInt(timingAndVolumes[3].substr(5), 2),
-          15 - parseInt(timingAndVolumes[4].substr(5), 2)
+          15 - parseInt(timingAndVolumes[4].substr(5), 2),
+          15 - parseInt(timingAndVolumes[5].substr(5), 2)
         ];
 
         let frequencies = lines[i++].split(/[,\r\n]/g);
-
-        let channel0 = parseInt(frequencies[0].substr(5), 2)|(parseInt(frequencies[1].substr(3), 2) << 4);
-        let channel1 = parseInt(frequencies[2].substr(5), 2)|(parseInt(frequencies[3].substr(3), 2) << 4);
-        let channel2 = parseInt(frequencies[4].substr(5), 2)|(parseInt(frequencies[5].substr(3), 2) << 4);
-        let channel3 = parseInt(frequencies[6].substr(5), 2);
+        let channel0 = parseInt(frequencies[0].trim().substr(5), 2)|(parseInt(frequencies[1].trim().substr(3), 2) << 4);
+        let channel1 = parseInt(frequencies[2].trim().substr(5), 2)|(parseInt(frequencies[3].trim().substr(3), 2) << 4);
+        let channel2 = parseInt(frequencies[4].trim().substr(5), 2)|(parseInt(frequencies[5].trim().substr(3), 2) << 4);
+        let channel3 = parseInt(frequencies[6].trim().substr(5), 2);
 
         let channels = [channel0,channel1,channel2,channel3]
           .map((c, i) => {
-            let index = notes.findIndex(n => c === Math.floor(3580000 /(32*n.freq)));
+            let index: number ;
+            if(i === 3){
+              //Noise is different because it only has one latch
+              index = notes.findIndex(n => c === (Math.floor(3580000 /(32*n.freq)) & 0x0F) );
+            }else{
+              index = notes.findIndex(n => c === Math.floor(3580000 /(32*n.freq)));
+            }
             if(channelVolumes[i] === 0 && index === 0)
               return -1;
-              
+      
             return index;
           });
 
-        this.melody.push({
-          startTime: startTime,
-          channelVolumes: new Int32Array(channelVolumes),
-          channels: new Int32Array(channels)
-        });
+        const noteLength = +timingAndVolumes[1];
+
+        if(noteLength > 0){
+          this.melody.push({
+            startTime: startTime,
+            length: +timingAndVolumes[1],
+            channelVolumes: new Int32Array(channelVolumes),
+            channels: new Int32Array(channels)
+          });
+        }
       }
     }
     this.code = null;
+  }
+
+  printRest(startTime){
+    return  ` db  ${startTime},%10011111,%10111111,%11011111,%11111111\r\n`+
+            ` db    %10000000,%00000000,%10100000,%00000000,%11000000,%00000000,%11100000 \r\n`
   }
 }

@@ -8,7 +8,24 @@
                     Tempo:
                     <input type="number" [(ngModel)]="tempo">
                     </label>
-                    <button (click)="playMelody()">PLAY</button>
+                    <button *ngIf="trackerPos < 0" (click)="playMelody()">PLAY</button>
+                    <button *ngIf="trackerPos > -1" (click)="stopMelody()">STOP</button>
+                    <label>
+                        Ch. 0
+                        <input type="checkbox" [(ngModel)]="channelsToPlay[0]"/>
+                    </label>
+                    <label>
+                        Ch. 1
+                        <input type="checkbox" [(ngModel)]="channelsToPlay[1]"/>
+                    </label>
+                    <label>
+                        Ch. 2
+                        <input type="checkbox" [(ngModel)]="channelsToPlay[2]"/>
+                    </label>
+                    <label>
+                        Ch. 3
+                        <input type="checkbox" [(ngModel)]="channelsToPlay[3]"/>
+                    </label>
                     <label>
                         Measures to Show:
                         <input type="number" [(ngModel)]="measuresToShow"/>
@@ -16,31 +33,40 @@
                     <label>
                         SFX Channel:
                         <select [(ngModel)]="channelSelection">
-                            <option [value]="0">PSG Tone 0</option>
-                            <option [value]="1">PSG Tone 1</option>
-                            <option [value]="2">PSG Tone 2</option>
-                            <option [value]="3">PSG Noise</option>
+                            <option [ngValue]="0">PSG Tone 0</option>
+                            <option [ngValue]="1">PSG Tone 1</option>
+                            <option [ngValue]="2">PSG Tone 2</option>
+                            <option [ngValue]="3">PSG Noise</option>
+                        </select>
+                    </label>
+                    <label>
+                        Note Length:
+                        <select [(ngModel)]="noteLengthSelection">
+                            <option [ngValue]="1">1/8</option>
+                            <option [ngValue]="2">1/4</option>
+                            <option [ngValue]="4">1/2</option>
+                            <option [ngValue]="8">1</option>
                         </select>
                     </label>
                     <label>
                         Note Volume:
                         <select [(ngModel)]="noteVolumeSelection">
-                            <option [value]="15">15 - FULL</option>
-                            <option [value]="14">14</option>
-                            <option [value]="13">13</option>
-                            <option [value]="12">12</option>
-                            <option [value]="11">11</option>
-                            <option [value]="10">10</option>
-                            <option [value]="9">9</option>
-                            <option [value]="8">8</option>
-                            <option [value]="7">7 - HALF</option>
-                            <option [value]="6">6</option>
-                            <option [value]="5">5</option>
-                            <option [value]="4">4</option>
-                            <option [value]="3">3</option>
-                            <option [value]="2">2</option>
-                            <option [value]="1">1</option>
-                            <option [value]="0">0 - MUTED</option>
+                            <option [ngValue]="15">15 - FULL</option>
+                            <option [ngValue]="14">14</option>
+                            <option [ngValue]="13">13</option>
+                            <option [ngValue]="12">12</option>
+                            <option [ngValue]="11">11</option>
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="9">9</option>
+                            <option [ngValue]="8">8</option>
+                            <option [ngValue]="7">7 - HALF</option>
+                            <option [ngValue]="6">6</option>
+                            <option [ngValue]="5">5</option>
+                            <option [ngValue]="4">4</option>
+                            <option [ngValue]="3">3</option>
+                            <option [ngValue]="2">2</option>
+                            <option [ngValue]="1">1</option>
+                            <option [ngValue]="0">0 - MUTED</option>
                         </select>
                     </label>
                     <label>
@@ -63,7 +89,7 @@
                     <span class="note-name" [ngClass]="{'black': note.label.indexOf('#') >= 0}">{{note.label}}</span>
                 </div>
                 <div #sequencerTable class="sequencer-table">
-                    <div *ngIf="trackerPos > -1" [ngStyle]="{left: (trackerPos/(60/tempo)) + 'px'}" class="tracker-thumb"></div>
+                    <div *ngIf="trackerPos > -1" [ngStyle]="{left: (trackerPos) + 'px'}" class="tracker-thumb"></div>
                     <div *ngFor="let m of measuresRange; index as i" class="measure" [ngStyle]="{left: (i*256)+'px'}">
                         <span class="measure-number">{{i}}</span>
                         <div>
@@ -83,11 +109,11 @@
                             <div class="eigth"></div>
                         </div>
                     </div>
-                    <div *ngFor="let n of melody; index as i" class="melody-note-node" [ngStyle]="{left: n.startTime + 'px'}">
-                        <div *ngIf="n.channels[0] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[0]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[0]*16) + ',0,0)'}">0</div>
-                        <div *ngIf="n.channels[1] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[1]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[1]*16) + ',0,0)'}">1</div>
-                        <div *ngIf="n.channels[2] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[2]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[2]*16) + ',0,0)'}">2</div>
-                        <div *ngIf="n.channels[3] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[3]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[3]*16) + ',0,0)'}">N</div>
+                    <div *ngFor="let n of melody; index as i" class="melody-note-node" [ngClass]="{'active': n === activeNote}" [ngStyle]="{left: (n.startTime*32) + 'px'}">
+                        <div *ngIf="n.channels[0] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[0]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[0]*16) + ',0,0)', 'width': (n.length * 32)+'px'}">0</div>
+                        <div *ngIf="n.channels[1] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[1]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[1]*16) + ',0,0)', 'width': (n.length * 32)+'px'}">1</div>
+                        <div *ngIf="n.channels[2] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[2]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[2]*16) + ',0,0)', 'width': (n.length * 32)+'px'}">2</div>
+                        <div *ngIf="n.channels[3] >= 0" class="melody-note" [ngStyle]="{top: (n.channels[3]*24)+'px', 'background-color': 'rgb(' + (n.channelVolumes[3]*16) + ',0,0)', 'width': (n.length * 32)+'px'}">N</div>
                     </div>
                 </div>
             </div>
