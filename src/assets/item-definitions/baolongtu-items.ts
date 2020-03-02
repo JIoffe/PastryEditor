@@ -6,7 +6,8 @@ export const ItemTypes = {
     MogurenEnemy: 2,
     ChickenEnemy: 3,
     ChipmunkEnemy: 4,
-    GoalFlag: 5
+    GoalFlag: 5,
+    SkeletalBoss: 6
 }
 
 export const ItemDimensions = {
@@ -21,7 +22,10 @@ export const ItemDimensions = {
     ChipmunkWidth: 45,
     ChipmunkHeight: 46,
     GoalFlagWidth: 32,
-    GoalFlagHeight: 72
+    GoalFlagHeight: 72,
+
+    SkeletalBossWidth: 82,
+    SkeletalBossHeight: 97
 }
 
 export const Gems: ItemDefinition[] = [
@@ -170,6 +174,16 @@ export const Enemies = [
     },
 ];
 
+export const Bosses = [
+    {
+        type: ItemTypes.SkeletalBoss,
+        label: 'BOSS - Forest Skeleton',
+        defaultState: 0,
+        width: ItemDimensions.SkeletalBossWidth,
+        height: ItemDimensions.SkeletalBossHeight
+    }
+];
+
 export const Checkpoints = [
     {
         type: ItemTypes.GoalFlag,
@@ -180,4 +194,4 @@ export const Checkpoints = [
     }
 ];
 
-export const Items = [].concat(Gems,Checkpoints,Enemies);
+export const Items = [].concat(Gems,Checkpoints,Enemies,Bosses);

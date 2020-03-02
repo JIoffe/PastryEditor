@@ -91,6 +91,14 @@ export class ObjectRendererComponent implements OnInit, OnChanges {
           height: this.zoom * 0.01 * ItemDimensions.GoalFlagHeight
         });
         return;
+      case ItemTypes.SkeletalBoss:
+        this.imgs.push({
+          src: '/assets/images/skeletalboss.png',
+          x: 0,
+          y: 0,
+          width: this.zoom * 0.01 * ItemDimensions.SkeletalBossWidth,
+          height: this.zoom * 0.01 * ItemDimensions.SkeletalBossHeight
+        });
       default:
         return;
     }
